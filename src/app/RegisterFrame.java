@@ -1,5 +1,5 @@
 
-package ui;
+package app;
 
 
 public class RegisterFrame extends javax.swing.JFrame {
