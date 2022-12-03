@@ -1,6 +1,9 @@
 package onlinebank.account;
 
 import java.util.ArrayList;
+import onlinebank.currency.Currency;
+import onlinebank.person.Person;
+import onlinebank.transaction.Transaction;
 public interface Loan {
     public Person person;
     public string password;

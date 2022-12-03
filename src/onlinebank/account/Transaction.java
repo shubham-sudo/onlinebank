@@ -1,11 +1,12 @@
 package onlinebank.account;
-
+import onlinebank.currency.Currency;
+import onlinebank.person.Person;
 public interface Transaction {
     public Currency c;
     public boolean TransactionSucc;
     public Person user;
 
-    public Currency getBalance();
+    public Currency getAmount();
     public boolean getSuccess();
     public Person getUser();
     /*

@@ -1,5 +1,9 @@
 package onlinebank.account;
 
+import onlinebank.currency.Currency;
+import onlinebank.person.Person;
+import onlinebank.transaction.Transaction;
+
 public interface CheckingAccount {
     public Person person;
     public string password;
