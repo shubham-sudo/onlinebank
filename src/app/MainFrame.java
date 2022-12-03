@@ -1,4 +1,4 @@
-package ui;
+package app;
 
 
 public class MainFrame extends javax.swing.JFrame {
