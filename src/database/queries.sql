@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS person;
+DROP TABLE IF EXISTS account;
 
 -- Person Table
 CREATE TABLE `person` (
@@ -19,8 +20,9 @@ insert into person (id, firstname, lastname, email, date_of_birth, age, password
 -- Account Table
 CREATE TABLE `account` (
     `id` INTEGER NOT NULL UNIQUE,
+    `pid` INTEGER NOT NULL,
     `account_no` INTEGER NOT NULL,
     `account_type` TEXT NOT NULL,   -- TODO (shubham) put a check constraint for 'saving', 'checking'
     `balance` DOUBLE PRECISION,   -- TODO (shubham) put a check constraint for MIN balance for account
-    PRIMARY KEY(id)
+    PRIMARY KEY(id), FOREIGN KEY(pid) REFERENCES person
 );
