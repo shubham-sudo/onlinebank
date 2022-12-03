@@ -6,8 +6,14 @@ public interface Loan {
     public string password;
     public ArrayList<Collateral> collaterals;
     public ArrayList<Currency> debt;
-    public boolean PayFinished(Currency c);
+    public ArraList<Transaction> history;
+    public Transaction Execute(Transaction t);// will record the transaction,
+    // only mark the transaction to false when debt is clear.
+    //should return the remaining when there is more Currency than debt.
+    //so the transaction returned is the actuall currency paid.
+    //by this you can calculate the extra money
     public ArrayList<Currency> viewDebt();
     public void printDebt();
+    //public Currency MorethanDebt();
     public void getInterest(float InterestRate);
 }
