@@ -1,7 +1,7 @@
 package onlinebank.account;
 
 public interface SavingAccount {
-    public string name;
+    public Person person;
     public string password;
 
     public ArrayList<Currency> money;

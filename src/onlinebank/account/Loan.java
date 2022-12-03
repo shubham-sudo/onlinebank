@@ -2,7 +2,7 @@ package onlinebank.account;
 
 import java.util.ArrayList;
 public interface Loan {
-    public string name;
+    public Person person;
     public string password;
     public ArrayList<Collateral> collaterals;
     public ArrayList<Currency> debt;
