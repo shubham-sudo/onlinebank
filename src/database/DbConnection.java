@@ -1,37 +1,45 @@
 package database;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.nio.file.Paths;
+import java.sql.*;
 
 
 public class DbConnection {
+    private static final String dbFile = "onlinebank.sqlite";
+    private static Connection conn = null;
 
     // DbConnection is singleton class
     private DbConnection(){}
 
     public static Connection getConnection(){
-        Connection conn = null;
+        String dbFilePath = Paths.get(".").normalize().toAbsolutePath() + dbFile;
+
         try {
-            String url = "jdbc:sqlite:onlinebank.sqlite";  // TODO (shubham): should be relative path
-            conn = DriverManager.getConnection(url);
-            System.out.println("Connection Established");  // TODO (shubham): remove this
+            if (conn == null || conn.isClosed()) {
+                String url = "jdbc:sqlite:" + dbFilePath;
+                conn = DriverManager.getConnection(url);
+            }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println(e.getMessage());  // TODO (shubham): Implement logging
         } finally {
             try {
                 if (conn != null) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                System.out.println(e.getMessage());
+                System.out.println(e.getMessage());  // TODO (shubham): Implement logging
             }
         }
         return conn;
     }
 
-    // TODO (shubham): remove this main, only for testing db connection
-    public static void main(String[] args) {
-        getConnection();
+    public static void closeConnection(){
+        try {
+            if (!conn.isClosed()) {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());  // TODO (shubham): Implement logging
+        }
     }
 }

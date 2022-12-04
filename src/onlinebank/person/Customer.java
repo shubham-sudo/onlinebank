@@ -1,5 +1,7 @@
 package onlinebank.person;
 
+import database.Database;
+
 import java.time.LocalDate;
 
 
@@ -77,5 +79,16 @@ public class Customer extends Person {
         }
 
         return String.valueOf(ssn);
+    }
+
+    public boolean isSafeToRegister() {
+        return !Database.isIdExists(tableName, idColumn, getId());
+    }
+
+    public int register() {
+        if (!isSafeToRegister()) {
+            throw new IllegalStateException("Customer already exists!");
+        }
+        return Database.addCustomer(this);
     }
 }
