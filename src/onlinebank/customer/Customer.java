@@ -1,4 +1,6 @@
-package onlinebank.person;
+package onlinebank.customer;
+
+import database.Database;
 
 import java.time.LocalDate;
 
@@ -11,6 +13,7 @@ public class Customer extends Person {
     private final String email;
     private int phoneNumber;
     private String SSN;
+    private String password;
 
     public Customer(int id, String firstName, String lastName, LocalDate dob, String email) {
         super(id, firstName, lastName, dob);
@@ -43,6 +46,10 @@ public class Customer extends Person {
         this.SSN = ssn.trim();
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -51,15 +58,11 @@ public class Customer extends Person {
         return phoneNumber;
     }
 
-    public String getSSN() {
-        return SSN != null ? this.SSN : "";
-    }
-
     /**
      * This wil mask the SSN to display on Customer profile.
      * @return eg - XXX-XX-1234
      */
-    public String displaySSN() {
+    public String getSSN() {
         if (SSN == null) {
             return "";
         }
@@ -77,5 +80,16 @@ public class Customer extends Person {
         }
 
         return String.valueOf(ssn);
+    }
+
+    public boolean validate() {
+        return !Database.isIdExists(tableName, idColumn, getId());
+    }
+
+    public int save() {
+        if (!validate()) {
+            throw new IllegalStateException("Customer already exists!");
+        }
+        return Database.addCustomer(this, this.SSN, this.password);
     }
 }

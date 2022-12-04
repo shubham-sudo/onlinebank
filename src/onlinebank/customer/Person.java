@@ -1,4 +1,6 @@
-package onlinebank.person;
+package onlinebank.customer;
+
+import database.Database;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -8,23 +10,29 @@ import java.time.Period;
  * Abstract base class for any Person
  */
 public abstract class Person {
+    protected static final String tableName = "customer";
+    protected static final String idColumn = "id";
     private final int id;
     private final String firstName;
     private final String lastName;
     private final int age;
     // don't ask age from person compute it from dob
-    private final LocalDate dateOfBrith;
+    private final LocalDate dateOfBirth;
 
     public Person(int id, String firstName, String lastName, LocalDate dob){
-        this.id = id;
+        this.id = id != 0 ? id : getNewId();
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = Period.between(dob, LocalDate.now()).getYears();
-        this.dateOfBrith = dob;
+        this.dateOfBirth = dob;
     }
 
     public int getId() {
         return id;
+    }
+
+    private int getNewId() {
+        return Database.getNewId(tableName, idColumn);
     }
 
     public String getFirstName() {
@@ -39,7 +47,7 @@ public abstract class Person {
         return age;
     }
 
-    public LocalDate getDateOfBrith() {
-        return dateOfBrith;
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
     }
 }
