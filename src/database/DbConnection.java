@@ -12,7 +12,7 @@ public class DbConnection {
     private DbConnection(){}
 
     public static Connection getConnection(){
-        String dbFilePath = Paths.get(".").normalize().toAbsolutePath() + dbFile;
+        String dbFilePath = Paths.get(".").normalize().toAbsolutePath() + "/" + dbFile;
 
         try {
             if (conn == null || conn.isClosed()) {
@@ -21,14 +21,6 @@ public class DbConnection {
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());  // TODO (shubham): Implement logging
-        } finally {
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());  // TODO (shubham): Implement logging
-            }
         }
         return conn;
     }

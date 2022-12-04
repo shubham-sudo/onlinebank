@@ -1,4 +1,4 @@
-package onlinebank.person;
+package onlinebank.customer;
 
 import database.Database;
 
@@ -17,14 +17,14 @@ public abstract class Person {
     private final String lastName;
     private final int age;
     // don't ask age from person compute it from dob
-    private final LocalDate dateOfBrith;
+    private final LocalDate dateOfBirth;
 
     public Person(int id, String firstName, String lastName, LocalDate dob){
         this.id = id != 0 ? id : getNewId();
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = Period.between(dob, LocalDate.now()).getYears();
-        this.dateOfBrith = dob;
+        this.dateOfBirth = dob;
     }
 
     public int getId() {
@@ -47,7 +47,7 @@ public abstract class Person {
         return age;
     }
 
-    public LocalDate getDateOfBrith() {
-        return dateOfBrith;
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
     }
 }

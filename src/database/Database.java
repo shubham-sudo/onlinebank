@@ -1,11 +1,11 @@
 package database;
 
-import onlinebank.person.Customer;
+import onlinebank.customer.Customer;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 
 /**
@@ -24,7 +24,8 @@ public class Database {
         String query = "SELECT MAX("+ idColumn +") AS max_id FROM " + tableName + " ;";
         int id = 0;
 
-        try (Statement stmt = connection.createStatement()) {
+        try { 
+            Statement stmt = connection.createStatement();
             ResultSet resultSet = stmt.executeQuery(query);
             while (resultSet.next()) {
                 id = resultSet.getInt("max_id");
@@ -47,7 +48,8 @@ public class Database {
         String query = "SELECT COUNT(*) AS total_count FROM " + tableName + " WHERE " + idColumn + "=" + id + ";";
         boolean found = false;
 
-        try (Statement stmt = connection.createStatement()) {
+        try {
+            Statement stmt = connection.createStatement();
             ResultSet resultSet = stmt.executeQuery(query);
             while (resultSet.next()) {
                 if (resultSet.getInt("total_count") > 0) {
@@ -67,8 +69,52 @@ public class Database {
      * @param customer Customer object
      * @return id of the inserted record
      */
-    public static int addCustomer(Customer customer) {
-        // add new customer into database
-        return 0;
+    public static int addCustomer(Customer customer, String ssn, String password) {
+        StringBuilder query = new StringBuilder("INSERT INTO customer (");
+        HashMap<String, String> requiredColumns = new HashMap<String, String>(){};
+        requiredColumns.put("id", String.valueOf(customer.getId()));
+        requiredColumns.put("firstname", customer.getFirstName());
+        requiredColumns.put("lastname", customer.getLastName());
+        requiredColumns.put("email", customer.getEmail());
+        requiredColumns.put("age", String.valueOf(customer.getAge()));
+        requiredColumns.put("date_of_birth", String.valueOf(customer.getDateOfBirth()));
+        requiredColumns.put("password", password);
+
+        if (customer.getPhoneNumber() != 0) {
+            requiredColumns.put("phone_number", String.valueOf(customer.getPhoneNumber()));
+        }
+        if (ssn != null){
+            requiredColumns.put("SSN", ssn);
+        }
+
+        List<String> columns = new ArrayList<String>(requiredColumns.keySet());
+        query.append(String.join(", ", columns)).append(") VALUES (");
+
+        for (String col : columns) {
+            query.append("'").append(requiredColumns.get(col)).append("'").append(",");
+        }
+        query.deleteCharAt(query.length() - 1);
+        query.append(");");
+
+        int id = -1;
+
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(query.toString(), Statement.RETURN_GENERATED_KEYS);
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                try {
+                    ResultSet resultSet = pstmt.getGeneratedKeys();
+                    if (resultSet.next()) {
+                        id = resultSet.getInt(1);
+                    }
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return id;
     }
 }

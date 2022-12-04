@@ -4,7 +4,7 @@ import onlinebank.account.Account;
 import onlinebank.account.Loan;
 import onlinebank.account.Transaction;
 import onlinebank.assets.Collateral;
-import onlinebank.person.Person;
+import onlinebank.customer.Person;
 
 import java.util.List;
 
