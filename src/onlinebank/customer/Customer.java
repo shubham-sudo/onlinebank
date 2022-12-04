@@ -82,12 +82,12 @@ public class Customer extends Person {
         return String.valueOf(ssn);
     }
 
-    public boolean validate() {
+    public boolean isValid() {
         return !Database.isIdExists(tableName, idColumn, getId());
     }
 
     public int save() {
-        if (!validate()) {
+        if (!isValid()) {
             throw new IllegalStateException("Customer already exists!");
         }
         return Database.addCustomer(this, this.SSN, this.password);

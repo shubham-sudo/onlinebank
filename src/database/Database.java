@@ -3,6 +3,8 @@ package database;
 import onlinebank.customer.Customer;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -116,5 +118,43 @@ public class Database {
         }
 
         return id;
+    }
+
+    /**
+     * Get customer from the database upon login
+     * @param email email entered by user
+     * @param password password entered by user
+     * @return Customer object
+     */
+    public static Customer getCustomer(String email, String password) {
+        String query = "SELECT * FROM customer WHERE email='" + email + "' AND password='" + password + "';";
+        Customer customer = null;
+        
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet resultSet = stmt.executeQuery(query);
+
+            while (resultSet.next()) {
+                if (resultSet.getRow() == 1) {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    customer = new Customer(
+                            resultSet.getInt(1),  // id
+                            resultSet.getString(2),  // firstname
+                            resultSet.getString(3),  // lastname
+                            LocalDate.parse(resultSet.getString(5), formatter),  // dob
+                            resultSet.getString(4)  // email
+                    );
+                    if (resultSet.getString(7) != null && !resultSet.getString(7).equals("")) {
+                        customer.setPhoneNumber(resultSet.getInt(7));
+                    }
+                    if (resultSet.getString(8) != null && !resultSet.getString(8).equals("")) {
+                        customer.setSSN(resultSet.getString(8));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());  // TODO (shubham): Implement logger
+        }
+        return customer;
     }
 }
