@@ -169,7 +169,7 @@ public class MainFrame extends javax.swing.JFrame {
             Customer customer = Database.getCustomer(userName, String.valueOf(pass));
             if (customer != null) {
                 // open a new window
-                DashboardFrame dashboardFrame = new DashboardFrame();
+                CustomerATMFrame dashboardFrame = new CustomerATMFrame();
                 dashboardFrame.setVisible(true);
                 dispose();
             } else {
