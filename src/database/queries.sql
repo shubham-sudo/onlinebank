@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS customer;
 DROP TABLE IF EXISTS account;
 
--- Person Table
+-- Customer Table
 CREATE TABLE `customer` (
     `id` INTEGER PRIMARY KEY AUTOINCREMENT,
     `firstname`	TEXT NOT NULL,
@@ -15,8 +15,6 @@ CREATE TABLE `customer` (
 );
 
 insert into customer (id, firstname, lastname, email, date_of_birth, age, password) values (1, 'admin', 'admin', 'admin@mail.com', '01/01/2000', 30, 'admin');
-
-select * from customer;
 
 -- Account Table
 CREATE TABLE `account` (
