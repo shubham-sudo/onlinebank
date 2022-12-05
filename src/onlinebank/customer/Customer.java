@@ -82,14 +82,27 @@ public class Customer extends Person {
         return String.valueOf(ssn);
     }
 
+    @Override
     public boolean isValid() {
         return !Database.isIdExists(tableName, idColumn, getId());
     }
 
+    @Override
     public int save() {
         if (!isValid()) {
             throw new IllegalStateException("Customer already exists!");
         }
         return Database.addCustomer(this, this.SSN, this.password);
+    }
+
+    @Override
+    public void delete() {
+        // TODO (shubham): delete this record from database
+    }
+
+    @Override
+    public int update() {
+        // TODO (shubham): update this record from database
+        return 0;
     }
 }

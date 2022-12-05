@@ -1,6 +1,7 @@
 package onlinebank.customer;
 
 import database.Database;
+import database.DbModel;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -9,7 +10,7 @@ import java.time.Period;
 /**
  * Abstract base class for any Person
  */
-public abstract class Person {
+public abstract class Person implements DbModel {
     protected static final String tableName = "customer";
     protected static final String idColumn = "id";
     private final int id;
