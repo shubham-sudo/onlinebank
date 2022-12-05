@@ -1,10 +1,10 @@
-package onlinebank.atm;
+package bank.atm;
 
-import onlinebank.account.*;
-import onlinebank.assets.Collateral;
-import onlinebank.currency.Currency;
-import onlinebank.customer.Customer;
-import onlinebank.loan.Loan;
+import bank.account.*;
+import bank.assets.Collateral;
+import bank.currency.Currency;
+import bank.customer.Customer;
+import bank.loan.Loan;
 
 import java.util.List;
 

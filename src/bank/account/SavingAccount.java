@@ -1,6 +1,6 @@
-package onlinebank.account;
+package bank.account;
 
-import onlinebank.currency.Currency;
+import bank.currency.Currency;
 
 
 public class SavingAccount extends Account {

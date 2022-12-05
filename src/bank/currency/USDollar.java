@@ -1,11 +1,11 @@
-package onlinebank.currency;
+package bank.currency;
 
 
-public class USD implements Currency {
+public class USDollar implements Currency {
     private final double value;
     private final CurrencyType currencyType;
 
-    public USD(double value) {
+    public USDollar(double value) {
         this.value = value;
         this.currencyType = CurrencyType.EURO;
     }
@@ -26,7 +26,7 @@ public class USD implements Currency {
     }
 
     @Override
-    public double getConversion(USD usd) {
+    public double getConversion(USDollar usd) {
         return this.value;
     }
 }

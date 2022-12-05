@@ -1,8 +1,8 @@
-package onlinebank.atm;
+package bank.atm;
 
-import onlinebank.account.Transaction;
-import onlinebank.customer.Customer;
-import onlinebank.trade.Stock;
+import bank.account.Transaction;
+import bank.customer.Customer;
+import bank.trade.Stock;
 
 import java.time.LocalDate;
 import java.util.List;

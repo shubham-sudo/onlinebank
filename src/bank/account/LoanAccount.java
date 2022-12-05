@@ -1,7 +1,7 @@
-package onlinebank.account;
+package bank.account;
 
-import onlinebank.assets.Collateral;
-import onlinebank.currency.Currency;
+import bank.assets.Collateral;
+import bank.currency.Currency;
 
 
 public class LoanAccount extends Account {

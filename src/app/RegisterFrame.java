@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
-import onlinebank.customer.Customer;
+import bank.customer.Customer;
 
 
 public class RegisterFrame extends javax.swing.JFrame {

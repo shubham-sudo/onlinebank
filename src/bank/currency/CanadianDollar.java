@@ -1,13 +1,13 @@
-package onlinebank.currency;
+package bank.currency;
 
 
-public class CanadaDollar implements Currency{
+public class CanadianDollar implements Currency{
     private static final double BASE_CURRENCY_RATE = 0.74;  // IDEALLY, should be fetched from web
     private static final double BASE_TO_THIS_RATE = 1.33;   // IDEALLY, should be fetched from web
     private final double value;
     private final CurrencyType currencyType;
 
-    public CanadaDollar(double value) {
+    public CanadianDollar(double value) {
         this.value = value;
         currencyType = CurrencyType.EURO;
     }
@@ -28,7 +28,7 @@ public class CanadaDollar implements Currency{
     }
 
     @Override
-    public double getConversion(USD usd) {
+    public double getConversion(USDollar usd) {
         return usd.getCurrencyValue() * BASE_TO_THIS_RATE;
     }
 }

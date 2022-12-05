@@ -1,4 +1,4 @@
-package onlinebank.customer;
+package bank.customer;
 
 import database.Database;
 
@@ -97,12 +97,11 @@ public class Customer extends Person {
 
     @Override
     public void delete() {
-        // TODO (shubham): delete this record from database
+        Database.deleteCustomer(this, idColumn);
     }
 
     @Override
     public int update() {
-        // TODO (shubham): update this record from database
-        return 0;
+        return Database.updateCustomer(this, idColumn);
     }
 }

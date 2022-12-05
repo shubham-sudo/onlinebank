@@ -1,4 +1,4 @@
-package onlinebank.currency;
+package bank.currency;
 
 public enum CurrencyType {
     USD("usd"),
