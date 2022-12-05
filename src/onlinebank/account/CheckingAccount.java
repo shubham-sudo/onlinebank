@@ -1,17 +1,23 @@
 package onlinebank.account;
 
-import onlinebank.currency.Currency;
-import onlinebank.person.Person;
-import onlinebank.transaction.Transaction;
+public class CheckingAccount extends Account{
+    public CheckingAccount(int id, int cid, long accountNo, double balance) {
+        super(id, cid, accountNo, balance);
+        this.accountType = AccountType.CHECKING;
+    }
 
-public interface CheckingAccount {
-    public Person person;
-    public string password;
+    @Override
+    protected boolean isSafeToDebit(double amount, Currency currency) {
+        return false;
+    }
 
-    public ArrayList<Currency> money;
-    public ArraList<Transaction> history;
-    public Transaction Execute(Transaction t);// will edit if the transcation is successed and record the transaction
-    public ArrayList<Currency> viewMoney();
-    public ArraList<Transaction> getHistory();
-    public void printMoney();
+    @Override
+    protected double creditAmount(double amount, Currency currency) {
+        return 0;
+    }
+
+    @Override
+    protected double debitAmount(double amount, Currency currency) {
+        return 0;
+    }
 }

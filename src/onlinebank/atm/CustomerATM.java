@@ -3,6 +3,7 @@ package onlinebank.atm;
 import onlinebank.account.*;
 import onlinebank.assets.Collateral;
 import onlinebank.customer.Customer;
+import onlinebank.loan.Loan;
 
 import java.util.List;
 
@@ -99,7 +100,7 @@ public interface CustomerATM extends ATM {
      * @param account Account object
      * @return true if bought success, false otherwise
      */
-    boolean buyStock(Customer customer, Securities account);
+    boolean buyStock(Customer customer, SecuritiesAccount account);
 
     /**
      * Sell stock using securities account
@@ -107,5 +108,5 @@ public interface CustomerATM extends ATM {
      * @param account Account object
      * @return true if sold success, false otherwise
      */
-    boolean sellStock(Customer customer, Securities account);
+    boolean sellStock(Customer customer, SecuritiesAccount account);
 }
