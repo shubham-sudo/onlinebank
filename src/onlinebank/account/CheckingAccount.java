@@ -1,5 +1,8 @@
 package onlinebank.account;
 
+import onlinebank.currency.Currency;
+
+
 public class CheckingAccount extends Account{
     public CheckingAccount(int id, int cid, long accountNo, double balance) {
         super(id, cid, accountNo, balance);

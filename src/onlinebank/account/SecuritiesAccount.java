@@ -1,5 +1,8 @@
 package onlinebank.account;
 
+import onlinebank.currency.Currency;
+
+
 public class SecuritiesAccount extends Account{
     public SecuritiesAccount(int id, int cid, long accountNo, double balance) {
         super(id, cid, accountNo, balance);
