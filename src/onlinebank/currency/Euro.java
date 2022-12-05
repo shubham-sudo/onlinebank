@@ -1,13 +1,36 @@
 package onlineback.currency;
 
+import onlinebank.currency.currency;
+
 import java.util.ArrayList;
 
-public class Euro implements Currency{
-    public float Euro_to_USD(float amount){
-        return amount*1.056
+public class Euro implements currency {
+
+
+    @Override
+    public boolean setAmount(float a) {
+        return false;
     }
-   public float USD_to_Euro(float amount)
-   {
-       return amount*0.946
-   }
+
+    @Override
+    public float getAmount() {
+        return 0;
+    }
+
+    @Override
+    public float getExchanges(int index) {
+        return 0;
+    }
+
+    @Override
+    public float getExchanges(String name) {
+        return 0;
+    }
+    public double Euro_to_USD(double amount){
+        return amount*1.056;
+    }
+    public double USD_to_Euro(double amount)
+    {
+        return amount*0.946;
+    }
 }

@@ -1,12 +1,33 @@
-package onlineback.currency;
+package onlinebank.currency;
 
-import java.util.ArrayList;
+import onlinebank.currency.currency;
 
-public class CanadaDollar implements Currency{
-    public float CND_to_USD(float amount){
-        return amount*0.74
+public class CanadaDollar implements currency {
+    @Override
+    public boolean setAmount(float a) {
+        return false;
     }
-    public float USD_to_CND(float amount){
-        return amount*1.33
+
+    @Override
+    public float getAmount() {
+        return 0;
     }
+
+    @Override
+    public float getExchanges(int index) {
+        return 0;
+    }
+
+    @Override
+    public float getExchanges(String name) {
+        return 0;
+    }
+    public double CND_to_USD(float amount){
+        return amount*0.74;
+    }
+    public double USD_to_CND(float amount){
+        return amount*1.33;
+    }
+
+
 }
