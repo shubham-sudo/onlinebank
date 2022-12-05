@@ -1,8 +1,8 @@
-package onlinebank.account;
+package bank.account;
 
 import database.Database;
 import database.DbModel;
-import onlinebank.currency.Currency;
+import bank.currency.Currency;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,13 +119,12 @@ public abstract class Account implements DbModel {
      */
     @Override
     public int update() {
-        // TODO (shubham): update the record in database
-        return 0;
+        return Database.updateAccount(this, idColumn);
     }
 
     @Override
     public void delete() {
-        // TODO (shubham): delete this record from database
+        Database.deleteAccount(this, idColumn);
     }
 
     @Override

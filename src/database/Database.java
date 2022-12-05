@@ -1,8 +1,8 @@
 package database;
 
-import onlinebank.account.Account;
-import onlinebank.account.Transaction;
-import onlinebank.customer.Customer;
+import bank.account.Account;
+import bank.account.Transaction;
+import bank.customer.Customer;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -74,7 +75,7 @@ public class Database {
      * @return id of the inserted record
      */
     public static int addCustomer(Customer customer, String ssn, String password) {
-        StringBuilder query = new StringBuilder("INSERT INTO customer (");
+        StringBuilder query = new StringBuilder("INSERT INTO customer");
         HashMap<String, String> requiredColumns = new HashMap<String, String>(){
             {
                 put("id", String.valueOf(customer.getId()));
@@ -95,6 +96,40 @@ public class Database {
         }
 
         return addRecord(prepareInsertQuery(query, requiredColumns));
+    }
+
+    /**
+     * Update Customer record into database
+     * @param customer Customer object to be updated
+     * @param idColumn id column of the customer table
+     * @return number of records updated
+     */
+    public static int updateCustomer(Customer customer, String idColumn) {
+        StringBuilder query = new StringBuilder("UPDATE customer");
+
+        HashMap<String, String> columnsToUpdate = new HashMap<String, String>() {
+            {
+                put("firstname", customer.getFirstName());
+                put("lastname", customer.getLastName());
+                put("age", String.valueOf(customer.getAge()));
+                put("date_of_birth", String.valueOf(customer.getDateOfBirth()));
+            }
+        };
+        if (customer.getPhoneNumber() != 0) {
+            columnsToUpdate.put("phone_number", String.valueOf(customer.getPhoneNumber()));
+        }
+
+        return updateRecord(prepareUpdateQuery(query, columnsToUpdate, idColumn, customer.getId()));
+    }
+
+    /**
+     * Delete a customer from database
+     * @param customer Customer object
+     * @param idColumn id column name
+     */
+    public static void deleteCustomer(Customer customer, String idColumn) {
+        StringBuilder query = new StringBuilder("DELETE FROM customer");
+        deleteRecord(prepareDeleteQuery(query, idColumn, customer.getId()));
     }
 
     /**
@@ -141,7 +176,7 @@ public class Database {
      * @return id of the inserted record
      */
     public static int addAccount(Account account) {
-        StringBuilder query = new StringBuilder("INSERT INTO account (");
+        StringBuilder query = new StringBuilder("INSERT INTO account");
         HashMap<String, String> requiredColumns = new HashMap<String, String>(){
             {
                 put("id", String.valueOf(account.getId()));
@@ -155,6 +190,55 @@ public class Database {
         return addRecord(prepareInsertQuery(query, requiredColumns));
     }
 
+    /**
+     * Update Account record into database
+     * @param account Account object to be updated
+     * @param idColumn id column of the account table
+     * @return number of records updated
+     */
+    public static int updateAccount(Account account, String idColumn) {
+        StringBuilder query = new StringBuilder("UPDATE account");
+
+        HashMap<String, String> columnsToUpdate = new HashMap<String, String>() {
+            {
+                put("balance", String.valueOf(account.getBalance()));
+            }
+        };
+
+        return updateRecord(prepareUpdateQuery(query, columnsToUpdate, idColumn, account.getId()));
+    }
+
+    /**
+     * Delete an account from database
+     * @param account Account object
+     * @param idColumn id column name
+     */
+    public static void deleteAccount(Account account, String idColumn) {
+        StringBuilder query = new StringBuilder("DELETE FROM account");
+        deleteRecord(prepareDeleteQuery(query, idColumn, account.getId()));
+    }
+
+    /**
+     * Add new transaction record to the transaction table
+     * @param transaction Transaction object
+     * @return id of the inserted record
+     */
+    public static int addTransaction(Transaction transaction) {
+        StringBuilder query = new StringBuilder("INSERT INTO transaction");
+        HashMap<String, String> requiredColumns = new HashMap<String, String>(){
+            {
+                put("id", String.valueOf(transaction.getId()));
+                put("aid", String.valueOf(transaction.getAid()));
+                put("message", transaction.getMessage());
+                put("date", transaction.getTodayDate().toString());
+                put("old_value", String.valueOf(transaction.getOldValue()));
+                put("new_value", String.valueOf(transaction.getNewValue()));
+            }
+        };
+        return addRecord(prepareInsertQuery(query, requiredColumns));
+    }
+
+
     // ================
     // Private Methods
     // ================
@@ -164,10 +248,38 @@ public class Database {
      * @return id of the inserted record
      */
     private static int addRecord(String query) {
+        return executeQuery(query);
+    }
+
+    /**
+     * Execute query to update records into database
+     * @param query string query to execute
+     * @return number of records affected
+     */
+    private static int updateRecord(String query) {
+        return executeQuery(query);
+    }
+
+    /**
+     * Execute query to delete records from database
+     * @param query string query to execute
+     * @return number of records affected
+     */
+    private static int deleteRecord(String query) {
+        return executeQuery(query);
+    }
+
+    /**
+     * Execute given query string
+     * @param query query to execute
+     * @return rows affected when update
+     * or inserted id when insert
+     */
+    private static int executeQuery(String query) {
         int id = -1;
 
         try {
-            PreparedStatement pstmt = connection.prepareStatement(query.toString(), Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement pstmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
                 try {
@@ -194,7 +306,7 @@ public class Database {
      */
     private static String prepareInsertQuery(StringBuilder query, HashMap<String, String> requiredColumns) {
         List<String> columns = new ArrayList<String>(requiredColumns.keySet());
-        query.append(String.join(", ", columns)).append(") VALUES (");
+        query.append(" (").append(String.join(", ", columns)).append(") VALUES (");
 
         for (String col : columns) {
             query.append("'").append(requiredColumns.get(col)).append("'").append(",");
@@ -205,7 +317,36 @@ public class Database {
         return query.toString();
     }
 
-    public static int addTransaction(Transaction transaction) {
-        return 0;  // TODO (shubham): add new transaction to the transaction table
+    /**
+     * Prepare update query using columns to update HashMap
+     * @param query query part to prepare
+     * @param columnToUpdate columns to update
+     * @param idColumn id column name
+     * @param id id of the record to update
+     * @return String of prepared query
+     */
+    private static String prepareUpdateQuery(StringBuilder query, HashMap<String, String> columnToUpdate, String idColumn, int id) {
+        List<String> columns = new ArrayList<>(columnToUpdate.keySet());
+        query.append(" SET ");
+
+        for (String col : columns) {
+            query.append(col).append(" = '").append(columnToUpdate.get(col)).append("', ");
+        }
+        query.deleteCharAt(query.length() - 1);
+        query.append("WHERE ").append(idColumn).append(" = '").append(id).append("';");
+
+        return query.toString();
+    }
+
+    /**
+     * Prepare delete query using id column
+     * @param query query part to prepare
+     * @param idColumn id column name
+     * @param id id of the record to delete
+     * @return String of prepared query
+     */
+    private static String prepareDeleteQuery(StringBuilder query, String idColumn, int id) {
+        query.append(" WHERE ").append(idColumn).append(" = '").append(id).append("';");
+        return query.toString();
     }
 }

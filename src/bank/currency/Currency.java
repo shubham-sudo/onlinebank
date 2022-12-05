@@ -1,4 +1,4 @@
-package onlinebank.currency;
+package bank.currency;
 
 
 /**
@@ -37,5 +37,5 @@ public interface Currency {
      * @param usd usd value of any other currency
      * @return double converted value
      */
-    double getConversion(USD usd);
+    double getConversion(USDollar usd);
 }

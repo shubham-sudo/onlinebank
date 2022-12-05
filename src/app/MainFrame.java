@@ -2,7 +2,7 @@ package app;
 
 import database.Database;
 import javax.swing.JOptionPane;
-import onlinebank.customer.Customer;
+import bank.customer.Customer;
 
 
 public class MainFrame extends javax.swing.JFrame {

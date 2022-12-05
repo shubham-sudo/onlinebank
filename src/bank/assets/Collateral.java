@@ -1,4 +1,4 @@
-package onlinebank.assets;
+package bank.assets;
 
 public interface Collateral {
 }

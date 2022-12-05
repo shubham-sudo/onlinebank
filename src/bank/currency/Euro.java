@@ -1,4 +1,4 @@
-package onlinebank.currency;
+package bank.currency;
 
 
 public class Euro implements Currency {
@@ -28,7 +28,7 @@ public class Euro implements Currency {
     }
 
     @Override
-    public double getConversion(USD usd) {
+    public double getConversion(USDollar usd) {
         return usd.getCurrencyValue() * BASE_TO_THIS_RATE;
     }
 }
