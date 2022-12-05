@@ -2,6 +2,7 @@ package onlinebank.account;
 
 import database.Database;
 import database.DbModel;
+import onlinebank.currency.Currency;
 
 import java.util.ArrayList;
 import java.util.List;

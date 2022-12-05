@@ -2,6 +2,7 @@ package onlinebank.atm;
 
 import onlinebank.account.*;
 import onlinebank.assets.Collateral;
+import onlinebank.currency.Currency;
 import onlinebank.customer.Customer;
 import onlinebank.loan.Loan;
 
