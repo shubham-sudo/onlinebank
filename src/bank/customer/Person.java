@@ -11,8 +11,8 @@ import java.time.Period;
  * Abstract base class for any Person
  */
 public abstract class Person implements DbModel {
-    protected static final String tableName = "customer";
-    protected static final String idColumn = "id";
+    public static final String tableName = "customer";
+    public static final String idColumn = "id";
     private final int id;
     private final String firstName;
     private final String lastName;

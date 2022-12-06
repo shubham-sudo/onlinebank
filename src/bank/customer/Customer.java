@@ -97,11 +97,11 @@ public class Customer extends Person {
 
     @Override
     public void delete() {
-        Database.deleteCustomer(this, idColumn);
+        Database.deleteCustomer(this);
     }
 
     @Override
     public int update() {
-        return Database.updateCustomer(this, idColumn);
+        return Database.updateCustomer(this);
     }
 }
