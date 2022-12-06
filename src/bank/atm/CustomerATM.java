@@ -1,7 +1,7 @@
 package bank.atm;
 
 import bank.account.*;
-import bank.assets.Collateral;
+import bank.customer.assets.Collateral;
 import bank.currency.Currency;
 import bank.customer.Customer;
 import bank.loan.Loan;
