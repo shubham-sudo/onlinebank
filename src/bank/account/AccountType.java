@@ -1,6 +1,7 @@
-package onlinebank.account;
+package bank.account;
 
 public enum AccountType {
+    LOAN("loan"),
     SAVING("saving"),
     CHECKING("checking"),
     SECURITIES("securities");

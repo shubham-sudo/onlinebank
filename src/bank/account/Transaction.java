@@ -1,4 +1,4 @@
-package onlinebank.account;
+package bank.account;
 
 import database.Database;
 import database.DbModel;
@@ -73,12 +73,13 @@ public class Transaction implements DbModel {
 
     @Override
     public void delete() {
-        // TODO (shubham): delete this record from database
+        // Transaction history would never be deleted
     }
 
     @Override
     public int update() {
-        // TODO (shubham): update this record in database
+        // Transactions are write only, can't be updated
+        // this can be done in some cases, like message update
         return 0;
     }
 }

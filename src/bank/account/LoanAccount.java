@@ -1,12 +1,15 @@
-package onlinebank.account;
+package bank.account;
 
-import onlinebank.assets.Collateral;
+import bank.assets.Collateral;
+import bank.currency.Currency;
+
 
 public class LoanAccount extends Account {
     private final Collateral collateral;  // TODO (shubham): create table for collateral [id, name, value, isUsed, aid(if under use)]
 
     public LoanAccount(int id, int cid, long accountNo, double balance, Collateral collateral) {
         super(id, cid, accountNo, balance);
+        this.accountType = AccountType.LOAN;
         this.collateral = collateral;
     }
 

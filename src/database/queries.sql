@@ -25,3 +25,14 @@ CREATE TABLE `account` (
     `balance` REAL,   -- TODO (shubham) put a check constraint for MIN balance for account
     FOREIGN KEY(cid) REFERENCES customer
 );
+
+-- Transaction Table
+CREATE TABLE `transaction` (
+    `id` INTEGER PRIMARY KEY AUTOINCREMENT,
+    `aid` INTEGER NOT NULL,
+    `message` TEXT NOT NULL,
+    `date` TEXT NOT NULL,
+    `old_value` REAL,
+    `new_value` REAL,
+    FOREIGN KEY(aid) REFERENCES account
+);

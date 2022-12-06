@@ -1,9 +1,12 @@
-package onlinebank.account;
+package bank.account;
 
-public class CheckingAccount extends Account{
-    public CheckingAccount(int id, int cid, long accountNo, double balance) {
+import bank.currency.Currency;
+
+
+public class SavingAccount extends Account {
+    public SavingAccount(int id, int cid, long accountNo, double balance) {
         super(id, cid, accountNo, balance);
-        this.accountType = AccountType.CHECKING;
+        this.accountType = AccountType.SAVING;
     }
 
     @Override

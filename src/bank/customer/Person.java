@@ -1,4 +1,4 @@
-package onlinebank.customer;
+package bank.customer;
 
 import database.Database;
 import database.DbModel;

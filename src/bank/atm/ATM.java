@@ -1,4 +1,4 @@
-package onlinebank.atm;
+package bank.atm;
 
 public interface ATM {
 }
