@@ -36,3 +36,24 @@ CREATE TABLE `transaction` (
     `new_value` REAL,
     FOREIGN KEY(aid) REFERENCES account
 );
+
+-- Loan Table
+CREATE TABLE `loan` (
+    `id` INTEGER PRIMARY KEY AUTOINCREMENT,
+    `aid` INTEGER NOT NULL UNIQUE,
+    `cid` INTEGER NOT NULL,
+    `name` TEXT NOT NULL,
+    `amount` REAL,
+    `collateral_id` INTEGER NOT NULL,
+    FOREIGN KEY(aid) REFERENCES account, FOREIGN KEY(cid) REFERENCES customer,
+    FOREIGN KEY(collateral_id) REFERENCES collateral
+);
+
+-- Collateral Table
+CREATE TABLE `collateral` (
+    `id` INTEGER PRIMARY KEY AUTOINCREMENT,
+    `cid` INTEGER NOT NULL,
+    `name` TEXT NOT NULL,
+    `value` REAL,
+    FOREIGN KEY(cid) REFERENCES customer
+)

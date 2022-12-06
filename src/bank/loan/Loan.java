@@ -8,6 +8,8 @@ import database.DbModel;
 public class Loan implements DbModel {
     public static final String tableName = "loan";
     public static final String idColumn = "id";
+    public static final String aidColumn = "aid";
+    public static final String cidColumn = "cid";
     private int aid;
     private final int id;
     private final int cid;
@@ -70,21 +72,18 @@ public class Loan implements DbModel {
     @Override
     public int save() {
         if (!isValid()) {
-            throw new IllegalStateException("Account already exists!");
+            throw new IllegalStateException("Loan already exists!");
         }
-//        return Database.addLoan(this); // TODO (shubham): add loan to database
-        return 0;
+        return Database.addLoan(this);
     }
 
     @Override
     public void delete() {
-//        Database.deleteLoan(this);
+        Database.deleteLoan(this);
     }
 
     @Override
     public int update() {
-        // TODO (shubham): this would be required to add interest into the loan.
-        //  just only value amount would be updated most probably. CHECK AGAIN ?
-        return 0;
+        return Database.updateLoan(this);
     }
 }
