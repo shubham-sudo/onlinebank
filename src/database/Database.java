@@ -1,8 +1,8 @@
 package database;
 
 import bank.account.*;
-import bank.assets.Collateral;
 import bank.customer.Customer;
+import bank.loan.Loan;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -10,8 +10,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 
 /**
@@ -244,8 +242,8 @@ public class Database {
                         case SECURITIES:
                             account = new SecuritiesAccount(pk_id, customer_id, account_no, balance);
                         case LOAN:
-                            Collateral collateral = null;  // TODO (shubham): add collateral table and fetch this record
-                            account = new LoanAccount(pk_id, customer_id, account_no, balance, collateral);
+                            Loan loan = null;  // TODO (shubham): add loan & collateral table and fetch this record
+                            account = new LoanAccount(pk_id, customer_id, account_no, balance, loan);
                     }
                 }
             }
@@ -294,8 +292,8 @@ public class Database {
                         case SECURITIES:
                             accounts.add(new SecuritiesAccount(pkId, cid, accountNo, balance));
                         case LOAN:
-                            Collateral collateral = null;  // TODO (shubham): add collateral table and fetch this record
-                            accounts.add(new LoanAccount(pkId, cid, accountNo, balance, collateral));
+                            Loan loan = null;  // TODO (shubham): add loan & collateral table and fetch this record
+                            accounts.add(new LoanAccount(pkId, cid, accountNo, balance, loan));
                     }
                 }
             }

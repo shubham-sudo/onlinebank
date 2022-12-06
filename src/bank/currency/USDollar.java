@@ -7,7 +7,7 @@ public class USDollar implements Currency {
 
     public USDollar(double value) {
         this.value = value;
-        this.currencyType = CurrencyType.EURO;
+        this.currencyType = CurrencyType.USD;
     }
 
     @Override

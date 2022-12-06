@@ -1,6 +1,7 @@
 package bank.account;
 
 import bank.currency.Currency;
+import bank.currency.USDollar;
 
 
 public class CheckingAccount extends Account{
@@ -11,16 +12,29 @@ public class CheckingAccount extends Account{
 
     @Override
     protected boolean isSafeToDebit(double amount, Currency currency) {
-        return false;
+        return this.balance > currency.baseValue();
     }
 
     @Override
     protected double creditAmount(double amount, Currency currency) {
-        return 0;
+        // TODO (shubham): add this service charge value to bank wallet
+        return currency.baseValue() - TRANSACTION_SERVICE_CHARGE;
     }
 
     @Override
     protected double debitAmount(double amount, Currency currency) {
-        return 0;
+        // TODO (shubham): add this service charge value to bank wallet
+        return currency.baseValue() + TRANSACTION_SERVICE_CHARGE;
+    }
+
+    @Override
+    protected boolean transfer(double amount, Account account) {
+        synchronized (this) {
+            if (this.debit(amount, new USDollar(amount))) {
+                account.credit(amount, new USDollar(amount));
+                return true;
+            }
+        }
+        return false;
     }
 }

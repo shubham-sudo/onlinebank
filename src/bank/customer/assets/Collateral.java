@@ -1,4 +1,4 @@
-package bank.assets;
+package bank.customer.assets;
 
 public interface Collateral {
 }

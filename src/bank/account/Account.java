@@ -18,6 +18,8 @@ import java.util.List;
  * @see LoanAccount
  */
 public abstract class Account implements DbModel {
+    protected static final double TRANSACTION_SERVICE_CHARGE = 0.10;
+    protected static final double ACCOUNT_STARTING_MIN_BALANCE = 1;
     public static final long ACCOUNT_NO_BASE = 1000;
     public static final String tableName = "account";
     public static final String idColumn = "id";
@@ -26,7 +28,7 @@ public abstract class Account implements DbModel {
     private final int cid;
     private final long accountNo;
     protected AccountType accountType;
-    private double balance;
+    protected double balance;
 
     /**
      * Create a new account object with provided fields
@@ -36,6 +38,9 @@ public abstract class Account implements DbModel {
      * @param balance starting balance
      */
     public Account(int id, int cid, long accountNo, double balance){
+        if (balance < ACCOUNT_STARTING_MIN_BALANCE) {
+            throw new IllegalArgumentException("Starting balance should be at-least $ 1!");
+        }
         this.id = id != 0 ? id : getNewId();
         this.cid = cid;
         this.accountNo = accountNo != 0 ? accountNo : getNewAcNo();
@@ -107,6 +112,7 @@ public abstract class Account implements DbModel {
     protected abstract boolean isSafeToDebit(double amount, Currency currency);
     protected abstract double creditAmount(double amount, Currency currency);
     protected abstract double debitAmount(double amount, Currency currency);
+    protected abstract boolean transfer(double amount, Account account);
 
     public List<Transaction> history(){
         return Database.getTransactions(new ArrayList<>(Collections.singletonList(this)));
@@ -126,6 +132,8 @@ public abstract class Account implements DbModel {
         if (!isValid()) {
             throw new IllegalStateException("Account already exists!");
         }
+        this.balance -= TRANSACTION_SERVICE_CHARGE;  // new account open service
+        // TODO (shubham): add this amount to bank wallet/ account.
         return Database.addAccount(this);
     }
 
