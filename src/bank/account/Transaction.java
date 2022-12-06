@@ -12,8 +12,9 @@ import java.time.LocalDate;
  * This works similar to the logs of an application.
  */
 public class Transaction implements DbModel {
-    private static final String tableName = "transaction";
-    private static final String idColumn = "id";
+    public static final String tableName = "transaction";
+    public static final String idColumn = "id";
+    public static final String aidColumn = "aid";
     private final int id;
     private final int aid;
     private final String message;
@@ -21,13 +22,13 @@ public class Transaction implements DbModel {
     private final double oldValue;
     private final double newValue;
 
-    public Transaction(int id, int aid, String message, double oldValue, double newValue) {
+    public Transaction(int id, int aid, String message, double oldValue, double newValue, LocalDate date) {
         this.id = id != 0 ? id :getNewId();
         this.aid = aid;
         this.message = message;
-        this.todayDate = LocalDate.now();
         this.oldValue = oldValue;
         this.newValue = newValue;
+        this.todayDate = date;
     }
 
     public int getId() {

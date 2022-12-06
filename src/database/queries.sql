@@ -20,7 +20,7 @@ insert into customer (id, firstname, lastname, email, date_of_birth, age, passwo
 CREATE TABLE `account` (
     `id` INTEGER PRIMARY KEY AUTOINCREMENT,
     `cid` INTEGER NOT NULL,
-    `account_no` INTEGER NOT NULL,
+    `account_no` INTEGER NOT NULL UNIQUE,
     `account_type` TEXT NOT NULL,   -- TODO (shubham) put a check constraint for 'saving', 'checking'
     `balance` REAL,   -- TODO (shubham) put a check constraint for MIN balance for account
     FOREIGN KEY(cid) REFERENCES customer

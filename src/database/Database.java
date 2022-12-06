@@ -1,7 +1,7 @@
 package database;
 
-import bank.account.Account;
-import bank.account.Transaction;
+import bank.account.*;
+import bank.assets.Collateral;
 import bank.customer.Customer;
 
 import java.sql.*;
@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -75,10 +76,10 @@ public class Database {
      * @return id of the inserted record
      */
     public static int addCustomer(Customer customer, String ssn, String password) {
-        StringBuilder query = new StringBuilder("INSERT INTO customer");
+        StringBuilder query = new StringBuilder("INSERT INTO " + Customer.tableName);
         HashMap<String, String> requiredColumns = new HashMap<String, String>(){
             {
-                put("id", String.valueOf(customer.getId()));
+                put(Customer.idColumn, String.valueOf(customer.getId()));
                 put("firstname", customer.getFirstName());
                 put("lastname", customer.getLastName());
                 put("email", customer.getEmail());
@@ -101,11 +102,10 @@ public class Database {
     /**
      * Update Customer record into database
      * @param customer Customer object to be updated
-     * @param idColumn id column of the customer table
      * @return number of records updated
      */
-    public static int updateCustomer(Customer customer, String idColumn) {
-        StringBuilder query = new StringBuilder("UPDATE customer");
+    public static int updateCustomer(Customer customer) {
+        StringBuilder query = new StringBuilder("UPDATE " + Customer.tableName);
 
         HashMap<String, String> columnsToUpdate = new HashMap<String, String>() {
             {
@@ -119,21 +119,20 @@ public class Database {
             columnsToUpdate.put("phone_number", String.valueOf(customer.getPhoneNumber()));
         }
 
-        return updateRecord(prepareUpdateQuery(query, columnsToUpdate, idColumn, customer.getId()));
+        return updateRecord(prepareUpdateQuery(query, columnsToUpdate, Customer.idColumn, customer.getId()));
     }
 
     /**
      * Delete a customer from database
      * @param customer Customer object
-     * @param idColumn id column name
      */
-    public static void deleteCustomer(Customer customer, String idColumn) {
-        StringBuilder query = new StringBuilder("DELETE FROM customer");
-        deleteRecord(prepareDeleteQuery(query, idColumn, customer.getId()));
+    public static void deleteCustomer(Customer customer) {
+        StringBuilder query = new StringBuilder("DELETE FROM " + Customer.tableName);
+        deleteRecord(prepareDeleteQuery(query, Customer.idColumn, customer.getId()));
     }
 
     /**
-     * Get customer from the database upon login
+     * Get customer from the database upon whenever required
      * @param email email entered by user
      * @param password password entered by user
      * @return Customer object
@@ -176,10 +175,10 @@ public class Database {
      * @return id of the inserted record
      */
     public static int addAccount(Account account) {
-        StringBuilder query = new StringBuilder("INSERT INTO account");
+        StringBuilder query = new StringBuilder("INSERT INTO " + Account.tableName);
         HashMap<String, String> requiredColumns = new HashMap<String, String>(){
             {
-                put("id", String.valueOf(account.getId()));
+                put(Account.idColumn, String.valueOf(account.getId()));
                 put("cid", String.valueOf(account.getCid()));
                 put("account_no", String.valueOf(account.getAccountNo()));
                 put("account_type", account.getAccountType().toString());
@@ -193,11 +192,10 @@ public class Database {
     /**
      * Update Account record into database
      * @param account Account object to be updated
-     * @param idColumn id column of the account table
      * @return number of records updated
      */
-    public static int updateAccount(Account account, String idColumn) {
-        StringBuilder query = new StringBuilder("UPDATE account");
+    public static int updateAccount(Account account) {
+        StringBuilder query = new StringBuilder("UPDATE " + Account.tableName);
 
         HashMap<String, String> columnsToUpdate = new HashMap<String, String>() {
             {
@@ -205,17 +203,107 @@ public class Database {
             }
         };
 
-        return updateRecord(prepareUpdateQuery(query, columnsToUpdate, idColumn, account.getId()));
+        return updateRecord(prepareUpdateQuery(query, columnsToUpdate, Account.idColumn, account.getId()));
     }
 
     /**
      * Delete an account from database
      * @param account Account object
-     * @param idColumn id column name
      */
-    public static void deleteAccount(Account account, String idColumn) {
-        StringBuilder query = new StringBuilder("DELETE FROM account");
-        deleteRecord(prepareDeleteQuery(query, idColumn, account.getId()));
+    public static void deleteAccount(Account account) {
+        StringBuilder query = new StringBuilder("DELETE FROM " + Account.tableName);
+        deleteRecord(prepareDeleteQuery(query, Account.idColumn, account.getId()));
+    }
+
+    /**
+     * Get account with account id from database
+     * @param id PK id the record in database
+     * @return Account object
+     */
+    public static Account getAccount(int id) {
+        String query = "SELECT * FROM " + Account.tableName + " WHERE " + Account.idColumn + " = '" + id + "';";
+        Account account = null;
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet resultSet = stmt.executeQuery(query);
+
+            while (resultSet.next()) {
+                if (resultSet.getRow() == 1) {
+                    int pk_id = resultSet.getInt(1);
+                    int customer_id = resultSet.getInt(2);
+                    long account_no = resultSet.getLong(3);
+                    double balance = resultSet.getDouble(5);
+                    AccountType accountType = AccountType.valueOf(resultSet.getString(4));
+
+                    switch (accountType) {
+                        case SAVING:
+                            account = new SavingAccount(pk_id, customer_id, account_no, balance);
+                        case CHECKING:
+                            account = new CheckingAccount(pk_id, customer_id, account_no, balance);
+                        case SECURITIES:
+                            account = new SecuritiesAccount(pk_id, customer_id, account_no, balance);
+                        case LOAN:
+                            Collateral collateral = null;  // TODO (shubham): add collateral table and fetch this record
+                            account = new LoanAccount(pk_id, customer_id, account_no, balance, collateral);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());  // TODO (shubham): Implement logger
+        }
+        return account;
+    }
+
+    /**
+     * Get account with account number from database
+     * @param accountNo account number
+     * @return Account object
+     */
+    public static Account getAccount(long accountNo) {
+        int id = (int) (accountNo - Account.ACCOUNT_NO_BASE);
+        return getAccount(id);
+    }
+
+    /**
+     * Fetch all accounts for a customer
+     * @param customerId customer id
+     * @return list of all accounts
+     */
+    public static List<Account> getAccounts(int customerId) {
+        String query = "SELECT * FROM " + Account.tableName + " WHERE " + Account.cidColumn + " = '" + customerId + "';";
+        List<Account> accounts = new ArrayList<>();
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet resultSet = stmt.executeQuery(query);
+
+            while (resultSet.next()) {
+                if (resultSet.getRow() == 1) {
+                    int pkId = resultSet.getInt(1);
+                    int cid = resultSet.getInt(2);
+                    long accountNo = resultSet.getLong(3);
+                    double balance = resultSet.getDouble(5);
+                    AccountType accountType = AccountType.valueOf(resultSet.getString(4));
+
+                    switch (accountType) {
+                        case SAVING:
+                            accounts.add(new SavingAccount(pkId, cid, accountNo, balance));
+                        case CHECKING:
+                            accounts.add(new CheckingAccount(pkId, cid, accountNo, balance));
+                        case SECURITIES:
+                            accounts.add(new SecuritiesAccount(pkId, cid, accountNo, balance));
+                        case LOAN:
+                            Collateral collateral = null;  // TODO (shubham): add collateral table and fetch this record
+                            accounts.add(new LoanAccount(pkId, cid, accountNo, balance, collateral));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());  // TODO (shubham): Implement logger
+        }
+
+        return accounts;
     }
 
     /**
@@ -224,10 +312,10 @@ public class Database {
      * @return id of the inserted record
      */
     public static int addTransaction(Transaction transaction) {
-        StringBuilder query = new StringBuilder("INSERT INTO transaction");
+        StringBuilder query = new StringBuilder("INSERT INTO " + Transaction.tableName);
         HashMap<String, String> requiredColumns = new HashMap<String, String>(){
             {
-                put("id", String.valueOf(transaction.getId()));
+                put(Transaction.idColumn, String.valueOf(transaction.getId()));
                 put("aid", String.valueOf(transaction.getAid()));
                 put("message", transaction.getMessage());
                 put("date", transaction.getTodayDate().toString());
@@ -236,6 +324,54 @@ public class Database {
             }
         };
         return addRecord(prepareInsertQuery(query, requiredColumns));
+    }
+
+    /**
+     * Fetch all transactions of a particular account
+     * @param accounts list of Account objects
+     * @return list of transactions
+     */
+    public static List<Transaction> getTransactions(List<Account> accounts) {
+        StringBuilder aids = new StringBuilder();
+
+        for (Account account : accounts) {
+            aids.append("'").append(account.getId()).append("', ");
+        }
+        aids.deleteCharAt(aids.length() - 1);
+
+        String query = "SELECT * FROM " + Transaction.tableName + " WHERE " + Transaction.aidColumn + " IN (" + aids + ");";
+        List<Transaction> transactions = new ArrayList<>();
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet resultSet = stmt.executeQuery(query);
+
+            while (resultSet.next()) {
+                if (resultSet.getRow() == 1) {
+                    int tid = resultSet.getInt(1);
+                    int aid = resultSet.getInt(2);
+                    String message = resultSet.getString(3);
+                    double oldValue = resultSet.getDouble(5);
+                    double newValue = resultSet.getDouble(6);
+                    LocalDate date = LocalDate.parse(resultSet.getString(4));
+
+                    transactions.add(new Transaction(tid, aid, message, oldValue, newValue, date));
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());  // TODO (shubham): Implement logger
+        }
+        return transactions;
+    }
+
+    /**
+     * Fetch all transactions of a particular customer
+     * @param customerId Customer id
+     * @return list of transactions
+     */
+    public static List<Transaction> getTransactions(int customerId) {
+        List<Account> accounts = getAccounts(customerId);
+        return getTransactions(accounts);
     }
 
 
