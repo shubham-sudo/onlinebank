@@ -2,6 +2,7 @@ package database;
 
 import bank.account.*;
 import bank.customer.Customer;
+import bank.customer.assets.Collateral;
 import bank.loan.Loan;
 
 import java.sql.*;
@@ -242,7 +243,7 @@ public class Database {
                         case SECURITIES:
                             account = new SecuritiesAccount(pk_id, customer_id, account_no, balance);
                         case LOAN:
-                            Loan loan = null;  // TODO (shubham): add loan & collateral table and fetch this record
+                            Loan loan = getLoanWithAcId(pk_id);  // TODO (shubham): add loan & collateral table and fetch this record
                             account = new LoanAccount(pk_id, customer_id, account_no, balance, loan);
                     }
                 }
@@ -370,6 +371,158 @@ public class Database {
     public static List<Transaction> getTransactions(int customerId) {
         List<Account> accounts = getAccounts(customerId);
         return getTransactions(accounts);
+    }
+
+    /**
+     * Add loan as a new record in database
+     * @param loan Loan object
+     * @return inserted record id
+     */
+    public static int addLoan(Loan loan) {
+        StringBuilder query = new StringBuilder("INSERT INTO " + Loan.tableName);
+        HashMap<String, String> requiredColumns = new HashMap<String, String>(){
+            {
+                put(Loan.idColumn, String.valueOf(loan.getId()));
+                put(Loan.aidColumn, String.valueOf(loan.getAid()));
+                put(Loan.cidColumn, String.valueOf(loan.getCid()));
+                put("name", loan.getName());
+                put("amount", String.valueOf(loan.getAmount()));
+                put("collateral_id", String.valueOf(loan.getCollateral().getId()));
+            }
+        };
+
+        return addRecord(prepareInsertQuery(query, requiredColumns));
+    }
+
+    /**
+     * Update the loan object
+     * @param loan Loan object to be updated
+     * @return number of records updated
+     */
+    public static int updateLoan(Loan loan) {
+        StringBuilder query = new StringBuilder("UPDATE " + Loan.tableName);
+
+        HashMap<String, String> columnsToUpdate = new HashMap<String, String>() {
+            {
+                put("amount", String.valueOf(loan.getAmount()));
+            }
+        };
+
+        return updateRecord(prepareUpdateQuery(query, columnsToUpdate, Loan.idColumn, loan.getId()));
+    }
+
+    /**
+     * Get loan object with account id
+     * @param aid Account id
+     * @return Loan object
+     */
+    public static Loan getLoanWithAcId(int aid) {
+        return getLoan(Loan.aidColumn, aid);
+    }
+
+    /**
+     * Get loan from database using idColumn name and id
+     * @param idColumn String name of the id column
+     * @param id integer id to be looked for
+     * @return Loan object
+     */
+    public static Loan getLoan(String idColumn, int id) {
+        String query = "SELECT * FROM " + Loan.tableName + " WHERE " + idColumn + " = '" + id + "';";
+        Loan loan = null;
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet resultSet = stmt.executeQuery(query);
+
+            while (resultSet.next()) {
+                if (resultSet.getRow() == 1) {
+                    int pk_id = resultSet.getInt(1);
+                    int aid = resultSet.getInt(2);
+                    int cid = resultSet.getInt(3);
+                    String name = resultSet.getString(4);
+                    double amount = resultSet.getDouble(5);
+                    Collateral collateral = getCollateral(resultSet.getInt(6));
+                    loan = new Loan(pk_id, cid, aid, name, amount, collateral);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());  // TODO (shubham): Implement logger
+        }
+        return loan;
+    }
+
+    /**
+     * Get loan from database
+     * @param id id of the loan
+     * @return return Loan object
+     */
+    public static Loan getLoanWithId(int id) {
+        return getLoan(Loan.idColumn, id);
+    }
+
+    /**
+     * Delete an loan entry from database
+     * @param loan Loan object
+     */
+    public static void deleteLoan(Loan loan) {
+        StringBuilder query = new StringBuilder("DELETE FROM " + Loan.tableName);
+        deleteRecord(prepareDeleteQuery(query, Loan.idColumn, loan.getId()));
+    }
+
+    /**
+     * Add collateral as a new record in database
+     * @param collateral Collateral object
+     * @return inserted record id
+     */
+    public static int addCollateral(Collateral collateral) {
+        StringBuilder query = new StringBuilder("INSERT INTO " + Collateral.tableName);
+        HashMap<String, String> requiredColumns = new HashMap<String, String>(){
+            {
+                put(Collateral.idColumn, String.valueOf(collateral.getId()));
+                put(Collateral.cidColumn, String.valueOf(collateral.getCid()));
+                put("name", collateral.getName());
+                put("value", String.valueOf(collateral.getValue()));
+            }
+        };
+
+        return addRecord(prepareInsertQuery(query, requiredColumns));
+    }
+
+    /**
+     * Delete an collateral entry from database
+     * @param collateral Collateral object
+     */
+    public static void deleteCollateral(Collateral collateral) {
+        StringBuilder query = new StringBuilder("DELETE FROM " + Collateral.tableName);
+        deleteRecord(prepareDeleteQuery(query, Collateral.idColumn, collateral.getId()));
+    }
+
+    /**
+     * Get collateral from database using given id
+     * @param id integer id to be looked for
+     * @return Collateral object
+     */
+    public static Collateral getCollateral(int id) {
+        String query = "SELECT * FROM " + Collateral.tableName + " WHERE " + Collateral.idColumn + " = '" + id + "';";
+        Collateral collateral = null;
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet resultSet = stmt.executeQuery(query);
+
+            while (resultSet.next()) {
+                if (resultSet.getRow() == 1) {
+                    int pk_id = resultSet.getInt(1);
+                    int cid = resultSet.getInt(2);
+                    String name = resultSet.getString(3);
+                    double value = resultSet.getDouble(4);
+                    collateral = new Collateral(pk_id, cid, name, value);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());  // TODO (shubham): Implement logger
+        }
+        return collateral;
     }
 
 
