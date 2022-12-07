@@ -15,8 +15,8 @@ public class Customer extends Person {
     private String SSN;
     private String password;
 
-    public Customer(int id, String firstName, String lastName, LocalDate dob, String email) {
-        super(id, firstName, lastName, dob);
+    public Customer(int id, String firstName, String lastName, LocalDate dob, String email, boolean isManager) {
+        super(id, firstName, lastName, dob, isManager);
         this.email = email;
     }
 

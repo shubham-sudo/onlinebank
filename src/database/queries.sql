@@ -1,5 +1,8 @@
-DROP TABLE IF EXISTS customer;
-DROP TABLE IF EXISTS account;
+DROP TABLE IF EXISTS "customer";
+DROP TABLE IF EXISTS "account";
+DROP TABLE IF EXISTS "transaction";
+DROP TABLE IF EXISTS "loan";
+DROP TABLE IF EXISTS "collateral";
 
 -- Customer Table
 CREATE TABLE `customer` (
@@ -11,7 +14,8 @@ CREATE TABLE `customer` (
     `age` INTEGER NOT NULL,
     `phone_number` INTEGER,
     `SSN` TEXT,  -- TODO (shubham) should be masked when storing on database
-    `password`	TEXT NOT NULL
+    `password`	TEXT NOT NULL,
+    `is_manager` INTEGER NOT NULL
 );
 
 insert into customer (id, firstname, lastname, email, date_of_birth, age, password) values (1, 'admin', 'admin', 'admin@mail.com', '01/01/2000', 30, 'admin');
@@ -55,5 +59,6 @@ CREATE TABLE `collateral` (
     `cid` INTEGER NOT NULL,
     `name` TEXT NOT NULL,
     `value` REAL,
+    `in_use` INTEGER NOT NULL,
     FOREIGN KEY(cid) REFERENCES customer
 )

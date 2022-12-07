@@ -85,6 +85,7 @@ public class Database {
                 put("age", String.valueOf(customer.getAge()));
                 put("date_of_birth", String.valueOf(customer.getDateOfBirth()));
                 put("password", password);
+                put("is_manager", String.valueOf(customer.isManager()));
             }
         };
 
@@ -152,7 +153,8 @@ public class Database {
                             resultSet.getString(2),  // firstname
                             resultSet.getString(3),  // lastname
                             LocalDate.parse(resultSet.getString(5), formatter),  // dob
-                            resultSet.getString(4)  // email
+                            resultSet.getString(4),  // email
+                            resultSet.getBoolean(5)  // is manager
                     );
                     if (resultSet.getString(7) != null && !resultSet.getString(7).equals("")) {
                         customer.setPhoneNumber(resultSet.getInt(7));
@@ -238,13 +240,17 @@ public class Database {
                     switch (accountType) {
                         case SAVING:
                             account = new SavingAccount(pk_id, customer_id, account_no, balance);
+                            break;
                         case CHECKING:
                             account = new CheckingAccount(pk_id, customer_id, account_no, balance);
+                            break;
                         case SECURITIES:
                             account = new SecuritiesAccount(pk_id, customer_id, account_no, balance);
+                            break;
                         case LOAN:
-                            Loan loan = getLoanWithAcId(pk_id);  // TODO (shubham): add loan & collateral table and fetch this record
+                            Loan loan = getLoanWithAcId(pk_id);
                             account = new LoanAccount(pk_id, customer_id, account_no, balance, loan);
+                            break;
                     }
                 }
             }
@@ -288,13 +294,17 @@ public class Database {
                     switch (accountType) {
                         case SAVING:
                             accounts.add(new SavingAccount(pkId, cid, accountNo, balance));
+                            break;
                         case CHECKING:
                             accounts.add(new CheckingAccount(pkId, cid, accountNo, balance));
+                            break;
                         case SECURITIES:
                             accounts.add(new SecuritiesAccount(pkId, cid, accountNo, balance));
+                            break;
                         case LOAN:
-                            Loan loan = null;  // TODO (shubham): add loan & collateral table and fetch this record
+                            Loan loan = getLoanWithAcId(pkId);
                             accounts.add(new LoanAccount(pkId, cid, accountNo, balance, loan));
+                            break;
                     }
                 }
             }
@@ -482,10 +492,28 @@ public class Database {
                 put(Collateral.cidColumn, String.valueOf(collateral.getCid()));
                 put("name", collateral.getName());
                 put("value", String.valueOf(collateral.getValue()));
+                put("in_use", String.valueOf(collateral.inUse()));
             }
         };
 
         return addRecord(prepareInsertQuery(query, requiredColumns));
+    }
+
+    /**
+     * Update the collateral object
+     * @param collateral Loan object to be updated
+     * @return number of records updated
+     */
+    public static int updateCollateral(Collateral collateral) {
+        StringBuilder query = new StringBuilder("UPDATE " + Collateral.tableName);
+
+        HashMap<String, String> columnsToUpdate = new HashMap<String, String>() {
+            {
+                put("in_use", String.valueOf(collateral.inUse()));
+            }
+        };
+
+        return updateRecord(prepareUpdateQuery(query, columnsToUpdate, Collateral.idColumn, collateral.getId()));
     }
 
     /**
@@ -516,7 +544,13 @@ public class Database {
                     int cid = resultSet.getInt(2);
                     String name = resultSet.getString(3);
                     double value = resultSet.getDouble(4);
+                    boolean inUse = resultSet.getBoolean(5);
                     collateral = new Collateral(pk_id, cid, name, value);
+                    if (inUse) {
+                        collateral.setInUse();
+                    } else {
+                        collateral.setNotInUse();
+                    }
                 }
             }
         } catch (SQLException e) {

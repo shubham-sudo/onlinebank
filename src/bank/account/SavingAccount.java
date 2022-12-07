@@ -29,7 +29,7 @@ public class SavingAccount extends Account {
     }
 
     @Override
-    protected boolean transfer(double amount, Account account) {
+    public boolean transfer(double amount, Account account) {
         synchronized (this) {
             if (this.debit(amount, new USDollar(amount))) {
                 account.credit(amount, new USDollar(amount));
