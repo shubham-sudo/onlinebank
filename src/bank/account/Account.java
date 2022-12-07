@@ -155,4 +155,8 @@ public abstract class Account implements DbModel {
     public String toString() {
         return "Account<" + this.accountNo + ">";
     }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
 }

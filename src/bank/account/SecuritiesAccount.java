@@ -14,6 +14,10 @@ public class SecuritiesAccount extends Account{
         super(id, cid, accountNo, balance);
         this.accountType = AccountType.SECURITIES;
     }
+    public double getbalance(){
+        double balance =0; //just initialised for namesake
+        return balance;
+    }
 
     @Override
     protected boolean isSafeToDebit(double amount, Currency currency) {
@@ -93,4 +97,6 @@ public class SecuritiesAccount extends Account{
         }
         return savingAccount;
     }
+
+
 }
