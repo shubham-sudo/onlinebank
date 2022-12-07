@@ -18,7 +18,7 @@ CREATE TABLE `customer` (
     `is_manager` INTEGER NOT NULL
 );
 
-insert into customer (id, firstname, lastname, email, date_of_birth, age, password) values (1, 'admin', 'admin', 'admin@mail.com', '01/01/2000', 30, 'admin');
+insert into customer (id, firstname, lastname, email, date_of_birth, age, password, is_manager) values (1, 'admin', 'admin', 'admin@mail.com', '01/01/2000', 30, 'admin', true);
 
 -- Account Table
 CREATE TABLE `account` (
