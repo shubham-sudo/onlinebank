@@ -33,9 +33,9 @@ public class SecuritiesAccount extends Account{
     }
 
     @Override
-    protected boolean transfer(double amount, Account account) {
+    public boolean transfer(double amount, Account account) throws IllegalStateException {
         if (!(account instanceof SavingAccount)) {
-            return false;  // can only transfer to Saving Account from Securities Account
+            throw new IllegalStateException("Can only transfer to Saving Account");  // can only transfer to Saving Account from Securities Account
         }
         synchronized (this) {
             if (this.debit(amount, new USDollar(amount))) {

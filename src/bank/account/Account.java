@@ -94,10 +94,11 @@ public abstract class Account implements DbModel {
      * @param amount amount value
      * @param currency Currency object
      * @return true if successful, false otherwise
+     * @throws IllegalStateException operation not possible
      */
-    public boolean debit(double amount, Currency currency) {
+    public boolean debit(double amount, Currency currency) throws IllegalStateException{
         if (!isSafeToDebit(amount, currency)) {
-            return false;
+            throw new IllegalStateException("Operation not possible!");
         }
 
         double amountToDebit = debitAmount(amount, currency);
@@ -112,7 +113,7 @@ public abstract class Account implements DbModel {
     protected abstract boolean isSafeToDebit(double amount, Currency currency);
     protected abstract double creditAmount(double amount, Currency currency);
     protected abstract double debitAmount(double amount, Currency currency);
-    protected abstract boolean transfer(double amount, Account account);
+    public abstract boolean transfer(double amount, Account account) throws IllegalStateException;
 
     public List<Transaction> history(){
         return Database.getTransactions(new ArrayList<>(Collections.singletonList(this)));

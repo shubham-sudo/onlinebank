@@ -11,12 +11,14 @@ public class Collateral implements DbModel {
     private final int cid;
     private final String name;
     private final double value;
+    private boolean inUse;
 
     public Collateral(int id, int cid, String name, double value) {
         this.id = id != 0 ? id : getNewId();
         this.cid = cid;
         this.name = name;
         this.value = value;
+        this.inUse = false;
     }
 
     private int getNewId(){
@@ -39,6 +41,20 @@ public class Collateral implements DbModel {
         return value;
     }
 
+    public boolean inUse() {
+        return inUse;
+    }
+
+    public void setInUse(){
+        this.inUse = true;
+        this.update();
+    }
+
+    public void setNotInUse(){
+        this.inUse = false;
+        this.update();
+    }
+
     @Override
     public boolean isValid() {
         return !Database.isIdExists(tableName, idColumn, getId());
@@ -59,7 +75,6 @@ public class Collateral implements DbModel {
 
     @Override
     public int update() {
-        // Collateral can't be updated once added
-        return 0;
+        return Database.updateCollateral(this);
     }
 }
