@@ -113,6 +113,11 @@ public class CustomerATMController implements CustomerATM{
     }
 
     @Override
+    public boolean changePassword() {
+        return customer.changePassword();
+    }
+
+    @Override
     public boolean buyStock(Customer customer, SecuritiesAccount account) {
         return false;
     }

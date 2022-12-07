@@ -100,6 +100,12 @@ public interface CustomerATM extends ATM {
     boolean logout();
 
     /**
+     * Change password of the customer
+     * @return true if changed
+     */
+    boolean changePassword();
+
+    /**
      * Buy stock using securities account
      * @param customer Customer object
      * @param account Account object

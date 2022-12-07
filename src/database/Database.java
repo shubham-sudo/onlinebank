@@ -2,6 +2,7 @@ package database;
 
 import bank.account.*;
 import bank.customer.Customer;
+import bank.customer.CustomerFactory;
 import bank.customer.assets.Collateral;
 import bank.loan.Loan;
 
@@ -17,6 +18,7 @@ import java.util.List;
  * Database is a helper class for online bank
  */
 public class Database {
+    private static final CustomerFactory customerFactory = new CustomerFactory();
     private static final Connection connection = DbConnection.getConnection();
 
     /**
@@ -100,6 +102,27 @@ public class Database {
     }
 
     /**
+     * Update password of the customer
+     * @param customer Customer object
+     * @param password new password
+     * @return
+     */
+    public static boolean updatePassword(Customer customer, String password) {
+        StringBuilder query = new StringBuilder("UPDATE " + Customer.tableName);
+
+        HashMap<String, String> columnsToUpdate = new HashMap<String, String>() {
+            {
+                put("password", password);
+            }
+        };
+        if (customer.getPhoneNumber() != 0) {
+            columnsToUpdate.put("phone_number", String.valueOf(customer.getPhoneNumber()));
+        }
+
+        return updateRecord(prepareUpdateQuery(query, columnsToUpdate, Customer.idColumn, customer.getId())) == 1;
+    }
+
+    /**
      * Update Customer record into database
      * @param customer Customer object to be updated
      * @return number of records updated
@@ -140,28 +163,55 @@ public class Database {
     public static Customer getCustomer(String email, String password) {
         String query = "SELECT * FROM customer WHERE email='" + email + "' AND password='" + password + "';";
         Customer customer = null;
-        
+
         try {
             Statement stmt = connection.createStatement();
             ResultSet resultSet = stmt.executeQuery(query);
 
             while (resultSet.next()) {
                 if (resultSet.getRow() == 1) {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                    customer = new Customer(
-                            resultSet.getInt(1),  // id
-                            resultSet.getString(2),  // firstname
-                            resultSet.getString(3),  // lastname
-                            LocalDate.parse(resultSet.getString(5), formatter),  // dob
-                            resultSet.getString(4),  // email
-                            resultSet.getBoolean(5)  // is manager
+                    customer = customerFactory.createCustomer(
+                            resultSet.getInt(1),      // id
+                            resultSet.getString(2),   // firstname
+                            resultSet.getString(3),   // lastname
+                            resultSet.getString(5),   // dob
+                            resultSet.getString(4),   // email
+                            resultSet.getBoolean(5),  // is manager
+                            resultSet.getString(7),   // phoneNumber
+                            resultSet.getString(8)    // ssn
                     );
-                    if (resultSet.getString(7) != null && !resultSet.getString(7).equals("")) {
-                        customer.setPhoneNumber(resultSet.getInt(7));
-                    }
-                    if (resultSet.getString(8) != null && !resultSet.getString(8).equals("")) {
-                        customer.setSSN(resultSet.getString(8));
-                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());  // TODO (shubham): Implement logger
+        }
+        return customer;
+    }
+
+    /**
+     * Get customer from database using email
+     * @param email email id to look for
+     */
+    public static Customer getCustomer(String email) {
+        String query = "SELECT * FROM customer WHERE email='" + email + "';";
+        Customer customer = null;
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet resultSet = stmt.executeQuery(query);
+
+            while (resultSet.next()) {
+                if (resultSet.getRow() == 1) {
+                    customer = customerFactory.createCustomer(
+                            resultSet.getInt(1),      // id
+                            resultSet.getString(2),   // firstname
+                            resultSet.getString(3),   // lastname
+                            resultSet.getString(5),   // dob
+                            resultSet.getString(4),   // email
+                            resultSet.getBoolean(5),  // is manager
+                            resultSet.getString(7),   // phoneNumber
+                            resultSet.getString(8)    // ssn
+                    );
                 }
             }
         } catch (SQLException e) {
