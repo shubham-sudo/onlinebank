@@ -19,13 +19,15 @@ public abstract class Person implements DbModel {
     private final int age;
     // don't ask age from person compute it from dob
     private final LocalDate dateOfBirth;
+    private final boolean isManager;
 
-    public Person(int id, String firstName, String lastName, LocalDate dob){
+    public Person(int id, String firstName, String lastName, LocalDate dob, boolean isManager){
         this.id = id != 0 ? id : getNewId();
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = Period.between(dob, LocalDate.now()).getYears();
         this.dateOfBirth = dob;
+        this.isManager = isManager;
     }
 
     public int getId() {
@@ -50,5 +52,9 @@ public abstract class Person implements DbModel {
 
     public LocalDate getDateOfBirth() {
         return dateOfBirth;
+    }
+
+    public boolean isManager() {
+        return isManager;
     }
 }

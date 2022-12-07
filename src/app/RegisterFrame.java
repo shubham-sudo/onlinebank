@@ -205,7 +205,7 @@ public class RegisterFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Password should be of at-least length 8!");
         } else {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            Customer newCustomer = new Customer(0, fName, lName, LocalDate.parse(dob, formatter), mail);
+            Customer newCustomer = new Customer(0, fName, lName, LocalDate.parse(dob, formatter), mail, false);
             newCustomer.setPassword(pass);
             if (newCustomer.getAge() < 18) {
                 JOptionPane.showMessageDialog(this, "Age should be 18 to open an account!");
