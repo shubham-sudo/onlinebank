@@ -84,10 +84,14 @@ public class managerDashBoard extends JFrame {
         });
 
     }
+    public Customer getCustomer(String email){
+        Customer ans= Database.getCustomer(email);
+        return ans;
+    }
     private void customerInfoButtonMouseClicked(java.awt.event.MouseEvent evt){
         String email=Email.getText();
         //String password="example";
-        //cus= Database.getCustomer(email);
+        cus= getCustomer(email);
     }
     private void transactionHistoryButtonMouseClicked(java.awt.event.MouseEvent evt){
         //TodaytransactionFrame todaytransactionFrame = new TodaytransactionFrame();
