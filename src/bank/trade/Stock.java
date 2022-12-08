@@ -1,4 +1,8 @@
 package bank.trade;
 
-public interface Stock {
+
+public class Stock {
+
+
 }
+

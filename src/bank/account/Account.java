@@ -110,6 +110,16 @@ public abstract class Account implements DbModel {
         return true;
     }
 
+    public boolean deposit(double amount, Currency currency) throws IllegalStateException{
+        double amountToDeposit = amount * currency.baseValue() / currency.getCurrencyValue();
+        Transaction transaction = new Transaction(0, id, "debit amount in " + currency.toString(),
+                this.balance, this.balance + amountToDeposit, LocalDate.now());
+        transaction.save();
+        this.balance += amountToDeposit;
+        this.update();
+        return true;
+    }
+
     protected abstract boolean isSafeToDebit(double amount, Currency currency);
     protected abstract double creditAmount(double amount, Currency currency);
     protected abstract double debitAmount(double amount, Currency currency);
