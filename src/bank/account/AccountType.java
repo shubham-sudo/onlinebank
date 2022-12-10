@@ -1,10 +1,10 @@
 package bank.account;
 
 public enum AccountType {
-    LOAN("loan"),
-    SAVING("saving"),
-    CHECKING("checking"),
-    SECURITIES("securities");
+    SAVING("Saving"),
+    CHECKING("Checking"),
+    SECURITIES("Securities"),
+    LOAN("Loan");
 
     private final String typeVal;
 

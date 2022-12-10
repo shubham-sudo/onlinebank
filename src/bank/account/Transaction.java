@@ -83,4 +83,9 @@ public class Transaction implements DbModel {
         // this can be done in some cases, like message update
         return 0;
     }
+    
+    @Override
+    public String toString() {
+        return "<Transaction" + id +"> " + message;
+    }
 }

@@ -1,6 +1,7 @@
-package bank.customer.assets;
+package bank.factory;
 
 import bank.customer.Customer;
+import bank.customer.assets.Collateral;
 
 public class CollateralFactory {
     public Collateral createCollateral(Customer customer, String name, double value) {
