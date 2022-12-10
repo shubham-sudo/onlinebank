@@ -57,6 +57,10 @@ public class Customer extends Person {
     public int getPhoneNumber() {
         return phoneNumber;
     }
+    
+    public boolean verifyPassword(String password) {
+        return this.password.equals(password.trim());
+    }
 
     /**
      * This wil mask the SSN to display on Customer profile.

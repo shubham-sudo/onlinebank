@@ -34,7 +34,7 @@ public class DashBoardScreen extends javax.swing.JFrame {
         DefaultListModel<String> accountsList = new DefaultListModel<>();
         
         for (Account a : this.customerATM.getAccounts()) {
-            accountsList.addElement(a.toString());
+            accountsList.addElement(a.getAccountType() + " | " + a.toString());
         }
         
         accounts.setModel(accountsList);
@@ -224,6 +224,11 @@ public class DashBoardScreen extends javax.swing.JFrame {
         });
 
         jButton3.setText("Close Account");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Collateral");
         jButton4.setToolTipText("");
@@ -406,6 +411,13 @@ public class DashBoardScreen extends javax.swing.JFrame {
         newAccount.setVisible(true);
         dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        CloseAccountScreen closeAccount = new CloseAccountScreen();
+        closeAccount.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments

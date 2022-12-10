@@ -163,6 +163,6 @@ public abstract class Account implements DbModel {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + " Account No. - " + getAccountNo();
+        return "Account No.<" + getAccountNo() + ">";
     }
 }

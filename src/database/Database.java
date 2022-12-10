@@ -9,7 +9,6 @@ import bank.trade.Stock;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -181,6 +180,7 @@ public class Database {
                             resultSet.getString(7),   // phoneNumber
                             resultSet.getString(8)    // ssn
                     );
+                    customer.setPassword(resultSet.getString(9));  // password
                 }
             }
         } catch (SQLException e) {

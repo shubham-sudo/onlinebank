@@ -35,10 +35,11 @@ public interface CustomerATM extends ATM {
     /**
      * Customer can request for closing this account
      * @param account Account to be closed
+     * @param password to double check
      * @return true if closed successfully, false otherwise
      * @throws IllegalStateException exception if illegal state
      */
-    boolean closeAccount(Account account) throws IllegalStateException;
+    boolean closeAccount(Account account, String password) throws IllegalStateException;
 
     /**
      * Add new collateral for requesting loan

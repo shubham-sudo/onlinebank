@@ -99,7 +99,10 @@ public class CustomerATMController implements CustomerATM{
     }
 
     @Override
-    public boolean closeAccount(Account account) throws IllegalStateException {
+    public boolean closeAccount(Account account, String password) throws IllegalStateException {
+        if (!customer.verifyPassword(password)) {
+            throw new IllegalStateException("Password didn't match, Try again!");
+        }
         account.delete();
         accounts.remove(account.getId());
         return true;
