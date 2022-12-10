@@ -1,5 +1,6 @@
 package bank.atm;
 
+import bank.customer.Customer;
 import bank.trade.Stock;
 import database.Database;
 import java.util.List;
@@ -26,14 +27,24 @@ public interface ATM {
      * @param email Email address of user
      * @param password of user
      * 
-     * @return true if successful
+     * @return Customer if successful
      */
-    boolean login(String email, String password);
+    default Customer login(String email, String password) {
+        Customer customer = Database.getCustomer(email, password);
+        if (customer != null) {
+            startSession(customer);
+        }
+        return customer;
+    }
 
     /**
      * Logout anyone from ATM
-     * @return true
      */
-    boolean logout();
+    default void logout() {
+        endSession();
+    }
 
+    void startSession(Customer customer);
+
+    void endSession();
 }

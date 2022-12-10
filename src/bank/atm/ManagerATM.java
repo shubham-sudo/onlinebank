@@ -13,6 +13,9 @@ import java.util.List;
  * check specific customer, should see the daily reports on transactions.
  */
 public interface ManagerATM extends ATM {
+    double LOAN_INTEREST_RATE = 0.05;
+    double SAVING_INTEREST_RATE = 0.03;
+
     /**
      * Get a customer based on the customer email id
      * @param email email id
@@ -66,12 +69,14 @@ public interface ManagerATM extends ATM {
     /**
      * Manager would pay interest on all saving accounts
      * IDEALLY, this should be automatic
+     * @param rate rate to pay interest
      */
     void payInterest(double rate);
 
     /**
      * Charge interest on all loans
      * IDEALLY, this should be automatic
+     * @param rate rate to charge interest
      */
     void chargeInterest(double rate);
 }

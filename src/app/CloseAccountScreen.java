@@ -24,7 +24,7 @@ public class CloseAccountScreen extends javax.swing.JFrame {
         this.customerATM = CustomerATMController.getInstance();
         initComponents();
         
-        DefaultComboBoxModel accountsComboBoxList = new DefaultComboBoxModel();
+        DefaultComboBoxModel<String> accountsComboBoxList = new DefaultComboBoxModel<String>();
         for (Account account : this.customerATM.getAccounts()) {
             accountsComboBoxList.addElement(account.getAccountNo() + " | " + account.getAccountType());
         }
@@ -130,6 +130,7 @@ public class CloseAccountScreen extends javax.swing.JFrame {
         // TODO add your handling code here:
         String accountString = (String) accounts.getSelectedItem();
         String passw = password.getText();
+        assert accountString != null;
         String[] accounts = accountString.split(" | ");
         int accountNo = Integer.parseInt(accounts[0]);
         

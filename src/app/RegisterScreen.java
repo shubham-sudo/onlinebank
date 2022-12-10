@@ -284,7 +284,7 @@ public class RegisterScreen extends javax.swing.JFrame {
             if (newCustomer.getAge() < 18) {
                 JOptionPane.showMessageDialog(this, "Age should be 18 to open an account!");
             } else {
-                int id = newCustomer.save();
+                int id = newCustomer.create();
                 if (id == -1) {
                     JOptionPane.showMessageDialog(this, "Email already exists!");
                 }else {

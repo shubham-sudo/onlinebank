@@ -93,7 +93,7 @@ public class CustomerATMController implements CustomerATM{
     @Override
     public boolean openAccount(AccountType accountType, double balance) throws IllegalStateException{
         Account account = accountFactory.createAccount(this.customer, accountType, balance);
-        account.save();
+        account.create();
         accounts.put(account.getId(), account);
         return true;
     }
@@ -111,7 +111,7 @@ public class CustomerATMController implements CustomerATM{
     @Override
     public boolean addCollateral(String name, double value) {  // Assuming the customer will add true value
         Collateral  collateral = collateralFactory.createCollateral(customer, name, value);
-        collateral.save();
+        collateral.create();
         return true;
     }
 
@@ -163,24 +163,18 @@ public class CustomerATMController implements CustomerATM{
     public String greet() {
         return "Hi " + this.customer.getLastName();
     }
-    
+
     @Override
-    public boolean login(String email, String password) {
-        Customer customer = Database.getCustomer(email, password);
-        if (customer != null) {
-            this.customer = customer;
-            setUpDashBoard();
-            return true;
-        }
-        return false;
+    public void startSession(Customer customer) {
+        this.customer = customer;
+        setUpDashBoard();
     }
 
     @Override
-    public boolean logout() {
-        this.customerATM = null;
+    public void endSession() {
+        customerATM = null;
         this.customer = null;
         this.accounts = null;
-        return true;
     }
 
     @Override

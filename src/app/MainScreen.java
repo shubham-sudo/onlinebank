@@ -6,6 +6,8 @@ package app;
 
 import bank.atm.CustomerATM;
 import bank.atm.CustomerATMController;
+import bank.customer.Customer;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
@@ -192,10 +194,15 @@ public class MainScreen extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Invalid, Password cannot be empty!", "Invalid", JOptionPane.ERROR_MESSAGE);
         } else if (!validEmail(email)) {
             JOptionPane.showMessageDialog(this, "Invalid email, Try again!", "Invalid", JOptionPane.ERROR_MESSAGE);
-        } else if (customerATM.login(email, password)) {
-            DashBoardScreen dashBoardScreen = new DashBoardScreen();
-            dashBoardScreen.setVisible(true);
-            dispose();
+        } else if (customerATM.login(email, password) != null) {
+            Customer customer = customerATM.login(email, password);
+            if (customer.isManager()) {
+                // TODO (shubham) POP manager dashboard
+            } else {
+                DashBoardScreen dashBoardScreen = new DashBoardScreen();
+                dashBoardScreen.setVisible(true);
+                dispose();
+            }
         } else {
             JOptionPane.showMessageDialog(this, "Invalid email or password, Try again!", "Invalid", JOptionPane.ERROR_MESSAGE);
         }

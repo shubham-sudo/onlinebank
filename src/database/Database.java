@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -189,6 +190,36 @@ public class Database {
         return customer;
     }
 
+    public static List<Customer> getCustomers() {
+        String query = "SELECT * FROM " + Customer.tableName + ";";
+        List<Customer> customers = new ArrayList<>();
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet resultSet = stmt.executeQuery(query);
+
+            while (resultSet.next()) {
+
+                Customer customer = customerFactory.createCustomer(
+                        resultSet.getInt(1),      // id
+                        resultSet.getString(2),   // firstname
+                        resultSet.getString(3),   // lastname
+                        resultSet.getString(5),   // dob
+                        resultSet.getString(4),   // email
+                        resultSet.getBoolean(5),  // is manager
+                        resultSet.getString(7),   // phoneNumber
+                        resultSet.getString(8)    // ssn
+                );
+                if (!customer.isManager()) {
+                    customers.add(customer);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return customers;
+    }
+
     /**
      * Get customer from database using email
      * @param email email id to look for
@@ -268,12 +299,13 @@ public class Database {
     }
 
     /**
-     * Get account with account id from database
-     * @param id PK id the record in database
+     * Get account with account number from database
+     * @param accountNo account number
      * @return Account object
      */
-    public static Account getAccount(int id) {
-        String query = "SELECT * FROM " + Account.tableName + " WHERE " + Account.idColumn + " = '" + id + "';";
+    public static Account getAccount(long accountNo) {
+        int id = (int) (accountNo - Account.ACCOUNT_NO_BASE);
+        String query = "SELECT * FROM " + Account.tableName + " WHERE " + Account.accountNoColumn + " = '" + id + "';";
         Account account = null;
 
         try {
@@ -312,22 +344,58 @@ public class Database {
     }
 
     /**
-     * Get account with account number from database
-     * @param accountNo account number
-     * @return Account object
-     */
-    public static Account getAccount(long accountNo) {
-        int id = (int) (accountNo - Account.ACCOUNT_NO_BASE);
-        return getAccount(id);
-    }
-
-    /**
      * Fetch all accounts for a customer
      * @param customerId customer id
      * @return list of all accounts
      */
     public static List<Account> getAccounts(int customerId) {
         String query = "SELECT * FROM " + Account.tableName + " WHERE " + Account.cidColumn + " = '" + customerId + "';";
+        List<Account> accounts = new ArrayList<>();
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet resultSet = stmt.executeQuery(query);
+
+            while (resultSet.next()) {
+                int pkId = resultSet.getInt(1);
+                int cid = resultSet.getInt(2);
+                long accountNo = resultSet.getLong(3);
+                double balance = resultSet.getDouble(5);
+                AccountType accountType = AccountType.valueOf(resultSet.getString(4).toUpperCase());
+
+                switch (accountType) {
+                    case SAVING:
+                        accounts.add(new SavingAccount(pkId, cid, accountNo, balance));
+                        break;
+                    case CHECKING:
+                        accounts.add(new CheckingAccount(pkId, cid, accountNo, balance));
+                        break;
+                    case SECURITIES:
+                        accounts.add(new SecuritiesAccount(pkId, cid, accountNo, balance));
+                        break;
+                    case LOAN:
+                        Loan loan = getLoanWithAcId(pkId);
+                        accounts.add(new LoanAccount(pkId, cid, accountNo, balance, loan));
+                        break;
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());  // TODO (shubham): Implement logger
+        }
+
+        return accounts;
+    }
+
+    /**
+     * Fetch all accounts of a type
+     * @param accountTypes types of account
+     * @return list of all accounts
+     */
+    public static List<Account> getAccounts(List<AccountType> accountTypes) {
+        String inTypes = "'" +
+                accountTypes.stream().map(AccountType::toString).collect(Collectors.joining("', '"))
+                + "'";
+        String query = "SELECT * FROM " + Account.tableName + " WHERE account_type IN [" + inTypes + "];";
         List<Account> accounts = new ArrayList<>();
 
         try {
@@ -451,6 +519,30 @@ public class Database {
         };
 
         return addRecord(prepareInsertQuery(query, requiredColumns));
+    }
+
+    public static List<Transaction> getTransactions() {
+        String query = "SELECT * FROM " + Transaction.tableName;
+        List<Transaction> transactions = new ArrayList<>();
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet resultSet = stmt.executeQuery(query);
+
+            while (resultSet.next()) {
+                int tid = resultSet.getInt(1);
+                int aid = resultSet.getInt(2);
+                String message = resultSet.getString(3);
+                double oldValue = resultSet.getDouble(5);
+                double newValue = resultSet.getDouble(6);
+                LocalDate date = LocalDate.parse(resultSet.getString(4));
+                transactions.add(new Transaction(tid, aid, message, oldValue, newValue, date));
+
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return transactions;
     }
 
     /**

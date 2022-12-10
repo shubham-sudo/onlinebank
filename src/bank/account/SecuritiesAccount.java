@@ -60,13 +60,13 @@ public class SecuritiesAccount extends Account{
     }
 
     @Override
-    public int save() {
+    public int create() {
         if (!super.isValid()) {
             throw new IllegalStateException("Account already exists!");
         } else if (!isValid()) {
             throw new IllegalStateException("Not have enough funds in Saving Account!");
         } else {
-            return super.save();
+            return super.create();
         }
     }
 

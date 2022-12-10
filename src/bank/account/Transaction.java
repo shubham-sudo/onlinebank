@@ -65,7 +65,7 @@ public class Transaction implements DbModel {
     }
 
     @Override
-    public int save() {
+    public int create() {
         if (!isValid()) {
             throw new IllegalStateException("Account already exists!");
         }

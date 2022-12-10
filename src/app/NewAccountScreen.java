@@ -289,7 +289,7 @@ public class NewAccountScreen extends javax.swing.JFrame {
                 this.customerATM.getLoggedInCustomer().setSSN(SSN);
             }
             if (customerChanged) {
-                this.customerATM.getLoggedInCustomer().save();
+                this.customerATM.getLoggedInCustomer().create();
             }
             this.customerATM.openAccount(accountType, bal);            
             JOptionPane.showMessageDialog(this, "" + accountType.toString() + " Account Opened Successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);

@@ -24,6 +24,7 @@ public abstract class Account implements DbModel {
     public static final String tableName = "account";
     public static final String idColumn = "id";
     public static final String cidColumn = "cid";
+    public static final String accountNoColumn = "account_no";
     private final int id;
     private final int cid;
     private final long accountNo;
@@ -84,7 +85,7 @@ public abstract class Account implements DbModel {
         double amountToCredit = creditAmount(amount, currency);
         Transaction transaction = new Transaction(0, id, "credited amount in " + currency.toString(),
                 this.balance, this.balance + amountToCredit, LocalDate.now());
-        transaction.save();
+        transaction.create();
         this.balance += amountToCredit;
         this.update();
     }
@@ -104,18 +105,8 @@ public abstract class Account implements DbModel {
         double amountToDebit = debitAmount(amount, currency);
         Transaction transaction = new Transaction(0, id, "debit amount in " + currency.toString(),
                 this.balance, this.balance - amountToDebit, LocalDate.now());
-        transaction.save();
+        transaction.create();
         this.balance -= amountToDebit;
-        this.update();
-        return true;
-    }
-
-    public boolean deposit(double amount, Currency currency) throws IllegalStateException{
-        double amountToDeposit = amount * currency.baseValue() / currency.getCurrencyValue();
-        Transaction transaction = new Transaction(0, id, "debit amount in " + currency.toString(),
-                this.balance, this.balance + amountToDeposit, LocalDate.now());
-        transaction.save();
-        this.balance += amountToDeposit;
         this.update();
         return true;
     }
@@ -139,7 +130,7 @@ public abstract class Account implements DbModel {
      * @return id of newly inserted record
      */
     @Override
-    public int save() {
+    public int create() {
         if (!isValid()) {
             throw new IllegalStateException("Account already exists!");
         }

@@ -61,7 +61,7 @@ public class Collateral implements DbModel {
     }
 
     @Override
-    public int save() {
+    public int create() {
         if (!isValid()) {
             throw new IllegalStateException("Collateral already exists!");
         }

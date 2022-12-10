@@ -92,7 +92,7 @@ public class Customer extends Person {
     }
 
     @Override
-    public int save() {
+    public int create() {
         if (!isValid()) {
             throw new IllegalStateException("Customer already exists!");
         }

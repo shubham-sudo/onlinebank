@@ -70,7 +70,7 @@ public class Loan implements DbModel {
     }
 
     @Override
-    public int save() {
+    public int create() {
         if (!isValid()) {
             throw new IllegalStateException("Loan already exists!");
         }

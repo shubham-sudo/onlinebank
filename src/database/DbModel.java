@@ -13,7 +13,7 @@ public interface DbModel {
      * Save a new record into database
      * @return id of newly inserted record
      */
-    int save();
+    int create();
 
     /**
      * Delete a record from database

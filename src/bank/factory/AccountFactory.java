@@ -32,9 +32,9 @@ public class AccountFactory {
     public Account createLoanAccount(Customer customer, double amount, Collateral collateral) {
         Loan loan = new Loan(0, customer.getId(), 0, "New Loan", amount, collateral);
         Account account = new LoanAccount(0, customer.getId(), 0, amount, loan);
-        account.save();
+        account.create();
         loan.setAid(account.getId());
-        loan.save();
+        loan.create();
         return account;
     }
 }
