@@ -4,6 +4,7 @@ import bank.account.*;
 import bank.customer.assets.Collateral;
 import bank.currency.Currency;
 import bank.customer.Customer;
+import bank.trade.Holding;
 
 import java.util.List;
 
@@ -14,6 +15,13 @@ import java.util.List;
  * one session for ManagerATM.
  */
 public interface CustomerATM extends ATM {
+    
+    List<Account> getAccounts();
+    List<Collateral> getCollaterals();
+    List<Holding> getHoldings();
+    List<Transaction> getLatestTransactions();
+    Customer getLoggedInCustomer();
+    
     /**
      * Customer can open a new account, the account
      * type would mention the type of account it is.
@@ -92,13 +100,7 @@ public interface CustomerATM extends ATM {
      * @throws IllegalStateException if not possible
      */
     boolean transferAmount(Account from, Account to, double amount) throws IllegalStateException;
-
-    /**
-     * Logout a customer from ATM
-     * @return boolean
-     */
-    boolean logout();
-
+    
     /**
      * Change password of the customer
      * @return true if changed
