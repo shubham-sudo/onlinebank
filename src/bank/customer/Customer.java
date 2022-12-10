@@ -104,4 +104,8 @@ public class Customer extends Person {
     public int update() {
         return Database.updateCustomer(this);
     }
+
+    public boolean changePassword() {
+        return Database.updatePassword(this, this.password);
+    }
 }

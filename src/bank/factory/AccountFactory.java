@@ -1,5 +1,11 @@
-package bank.account;
+package bank.factory;
 
+import bank.account.Account;
+import bank.account.AccountType;
+import bank.account.CheckingAccount;
+import bank.account.LoanAccount;
+import bank.account.SavingAccount;
+import bank.account.SecuritiesAccount;
 import bank.customer.Customer;
 import bank.customer.assets.Collateral;
 import bank.loan.Loan;

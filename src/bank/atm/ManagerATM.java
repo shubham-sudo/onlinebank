@@ -67,11 +67,11 @@ public interface ManagerATM extends ATM {
      * Manager would pay interest on all saving accounts
      * IDEALLY, this should be automatic
      */
-    void payInterest();
+    void payInterest(double rate);
 
     /**
      * Charge interest on all loans
      * IDEALLY, this should be automatic
      */
-    void chargeInterest();
+    void chargeInterest(double rate);
 }
