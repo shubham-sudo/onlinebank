@@ -11,7 +11,7 @@ import java.time.LocalDate;
  */
 public class Customer extends Person {
     private final String email;
-    private int phoneNumber;
+    private long phoneNumber;
     private String SSN;
     private String password;
 
@@ -54,7 +54,7 @@ public class Customer extends Person {
         return email;
     }
 
-    public int getPhoneNumber() {
+    public long getPhoneNumber() {
         return phoneNumber;
     }
     

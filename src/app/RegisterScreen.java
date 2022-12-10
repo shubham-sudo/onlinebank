@@ -222,7 +222,7 @@ public class RegisterScreen extends javax.swing.JFrame {
         }
         
         try {
-            int num = Integer.parseInt(number);
+            long num = Long.parseLong(number);
             if (String.valueOf(num).length() != 10) {
                 return false;
             }

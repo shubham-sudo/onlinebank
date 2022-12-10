@@ -88,7 +88,7 @@ public class Database {
                 put("age", String.valueOf(customer.getAge()));
                 put("date_of_birth", String.valueOf(customer.getDateOfBirth()));
                 put("password", password);
-                put("is_manager", String.valueOf(customer.isManager()));
+                put("is_manager", String.valueOf(customer.isManager() ? 1 : 0));
             }
         };
 
@@ -177,7 +177,7 @@ public class Database {
                             resultSet.getString(3),   // lastname
                             resultSet.getString(5),   // dob
                             resultSet.getString(4),   // email
-                            resultSet.getBoolean(5),  // is manager
+                            resultSet.getInt(10) > 0,  // is manager
                             resultSet.getString(7),   // phoneNumber
                             resultSet.getString(8)    // ssn
                     );
@@ -206,7 +206,7 @@ public class Database {
                         resultSet.getString(3),   // lastname
                         resultSet.getString(5),   // dob
                         resultSet.getString(4),   // email
-                        resultSet.getBoolean(5),  // is manager
+                        resultSet.getBoolean(10),  // is manager
                         resultSet.getString(7),   // phoneNumber
                         resultSet.getString(8)    // ssn
                 );
@@ -240,7 +240,7 @@ public class Database {
                             resultSet.getString(3),   // lastname
                             resultSet.getString(5),   // dob
                             resultSet.getString(4),   // email
-                            resultSet.getBoolean(5),  // is manager
+                            resultSet.getBoolean(10),  // is manager
                             resultSet.getString(7),   // phoneNumber
                             resultSet.getString(8)    // ssn
                     );
