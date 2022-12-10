@@ -39,7 +39,7 @@ public abstract class Account implements DbModel {
      */
     public Account(int id, int cid, long accountNo, double balance){
         if (balance < ACCOUNT_STARTING_MIN_BALANCE) {
-            throw new IllegalArgumentException("Starting balance should be at-least $ 1!");
+            throw new IllegalArgumentException("Starting balance should be at-least $ 2!");
         }
         this.id = id != 0 ? id : getNewId();
         this.cid = cid;
@@ -163,6 +163,6 @@ public abstract class Account implements DbModel {
 
     @Override
     public String toString() {
-        return "Account<" + this.accountNo + ">";
+        return this.getClass().getSimpleName() + " Account No. - " + getAccountNo();
     }
 }

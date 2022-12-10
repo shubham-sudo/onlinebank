@@ -2,9 +2,10 @@ package database;
 
 import bank.account.*;
 import bank.customer.Customer;
-import bank.customer.CustomerFactory;
+import bank.factory.CustomerFactory;
 import bank.customer.assets.Collateral;
 import bank.loan.Loan;
+import bank.trade.Stock;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -285,7 +286,7 @@ public class Database {
                     int customer_id = resultSet.getInt(2);
                     long account_no = resultSet.getLong(3);
                     double balance = resultSet.getDouble(5);
-                    AccountType accountType = AccountType.valueOf(resultSet.getString(4));
+                    AccountType accountType = AccountType.valueOf(resultSet.getString(4).toUpperCase());
 
                     switch (accountType) {
                         case SAVING:
@@ -334,28 +335,26 @@ public class Database {
             ResultSet resultSet = stmt.executeQuery(query);
 
             while (resultSet.next()) {
-                if (resultSet.getRow() == 1) {
-                    int pkId = resultSet.getInt(1);
-                    int cid = resultSet.getInt(2);
-                    long accountNo = resultSet.getLong(3);
-                    double balance = resultSet.getDouble(5);
-                    AccountType accountType = AccountType.valueOf(resultSet.getString(4));
+                int pkId = resultSet.getInt(1);
+                int cid = resultSet.getInt(2);
+                long accountNo = resultSet.getLong(3);
+                double balance = resultSet.getDouble(5);
+                AccountType accountType = AccountType.valueOf(resultSet.getString(4).toUpperCase());
 
-                    switch (accountType) {
-                        case SAVING:
-                            accounts.add(new SavingAccount(pkId, cid, accountNo, balance));
-                            break;
-                        case CHECKING:
-                            accounts.add(new CheckingAccount(pkId, cid, accountNo, balance));
-                            break;
-                        case SECURITIES:
-                            accounts.add(new SecuritiesAccount(pkId, cid, accountNo, balance));
-                            break;
-                        case LOAN:
-                            Loan loan = getLoanWithAcId(pkId);
-                            accounts.add(new LoanAccount(pkId, cid, accountNo, balance, loan));
-                            break;
-                    }
+                switch (accountType) {
+                    case SAVING:
+                        accounts.add(new SavingAccount(pkId, cid, accountNo, balance));
+                        break;
+                    case CHECKING:
+                        accounts.add(new CheckingAccount(pkId, cid, accountNo, balance));
+                        break;
+                    case SECURITIES:
+                        accounts.add(new SecuritiesAccount(pkId, cid, accountNo, balance));
+                        break;
+                    case LOAN:
+                        Loan loan = getLoanWithAcId(pkId);
+                        accounts.add(new LoanAccount(pkId, cid, accountNo, balance, loan));
+                        break;
                 }
             }
         } catch (SQLException e) {
@@ -607,6 +606,10 @@ public class Database {
             System.out.println(e.getMessage());  // TODO (shubham): Implement logger
         }
         return collateral;
+    }
+    
+    public static List<Stock> fetchAllStocks() {
+        return new ArrayList<Stock>();
     }
 
 

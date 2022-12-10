@@ -1,44 +1,93 @@
 package bank.atm;
 
+import bank.factory.AccountFactory;
 import bank.account.*;
 import bank.currency.Currency;
 import bank.customer.Customer;
 import bank.customer.assets.Collateral;
-import bank.customer.assets.CollateralFactory;
+import bank.factory.CollateralFactory;
+import bank.trade.Holding;
 import database.Database;
+import java.util.ArrayList;
 
 import java.util.HashMap;
 import java.util.List;
 
+
 public class CustomerATMController implements CustomerATM{
     private static final AccountFactory accountFactory = new AccountFactory();
     private static final CollateralFactory collateralFactory = new CollateralFactory();
-    private CustomerATM customerATM = null;
+    private static CustomerATM customerATM = null;
     private HashMap<Integer, Account> accounts;
+    private HashMap<Integer, Collateral> collaterals;
+    private HashMap<Integer, Holding> holdings;
+    private List<Transaction> transactions;
     private Customer customer;
 
-    private CustomerATMController(Customer customer) {
-        this.customer = customer;
+    private CustomerATMController() {
         this.accounts = new HashMap<>();
-        setUpDashBoard();
+        this.collaterals = new HashMap<>();
+        this.holdings = new HashMap<>();
+        this.transactions = new ArrayList<>();
     }
 
-    public CustomerATM getInstance(Customer customer) {
+    public static CustomerATM getInstance() {
         if (customerATM == null) {
-            customerATM = new CustomerATMController(customer);
+            customerATM = new CustomerATMController();
         }
         return customerATM;
     }
 
     private void setUpDashBoard() {
         pullCustomerAccounts();
+        pullCustomerCollaterals();
+        pullCustomerHoldings();
+        pullLatestTransactions();
+        pullAllStocks();
     }
 
+    private void pullCustomerCollaterals() {
+        // TODO : pull customer collaterals
+    }
+    
+    private void pullCustomerHoldings() {
+        // TODO: pull customer bought holdings
+    }
+    
     private void pullCustomerAccounts() {
         List<Account> accounts = Database.getAccounts(this.customer.getId());
         for (Account account : accounts) {
             this.accounts.put(account.getId(), account);
         }
+    }
+    
+    private void pullLatestTransactions() {
+        // TOOD: pull latest transactions of the customer
+    }
+    
+    @Override
+    public List<Account> getAccounts() {
+        return new ArrayList<>(this.accounts.values());
+    }
+    
+    @Override
+    public List<Collateral> getCollaterals() {
+        return new ArrayList<>(this.collaterals.values());
+    }
+    
+    @Override
+    public List<Holding> getHoldings() {
+        return new ArrayList<>(this.holdings.values());
+    }
+    
+    @Override
+    public List<Transaction> getLatestTransactions() {
+        return this.transactions;
+    }
+    
+    @Override
+    public Customer getLoggedInCustomer(){
+        return this.customer;
     }
 
     @Override
@@ -94,6 +143,9 @@ public class CustomerATMController implements CustomerATM{
 
     @Override
     public boolean withdrawal(Account account, double amount, Currency currency) throws IllegalStateException{
+        if (account.getAccountType() == AccountType.SECURITIES) {
+            throw new IllegalStateException("Can't withdrawal money from Securities account");
+        }
         account.debit(amount, currency);
         return true;
     }
@@ -102,6 +154,22 @@ public class CustomerATMController implements CustomerATM{
     public boolean transferAmount(Account from, Account to, double amount) throws IllegalStateException {
         from.transfer(amount, to);
         return true;
+    }
+    
+    @Override
+    public String greet() {
+        return "Hi " + this.customer.getLastName();
+    }
+    
+    @Override
+    public boolean login(String email, String password) {
+        Customer customer = Database.getCustomer(email, password);
+        if (customer != null) {
+            this.customer = customer;
+            setUpDashBoard();
+            return true;
+        }
+        return false;
     }
 
     @Override
