@@ -25,7 +25,7 @@ public class Customer extends Person {
      * @param phoneNumber integer
      * @throws IllegalArgumentException exception if invalid
      */
-    public void setPhoneNumber(int phoneNumber) throws IllegalArgumentException {
+    public void setPhoneNumber(long phoneNumber) throws IllegalArgumentException {
         if (String.valueOf(phoneNumber).length() != 10) {
             throw new IllegalArgumentException("Invalid Phone Number!");
         }
@@ -106,7 +106,7 @@ public class Customer extends Person {
 
     @Override
     public int update() {
-        return Database.updateCustomer(this);
+        return Database.updateCustomer(this, this.SSN);
     }
 
     public boolean changePassword() {

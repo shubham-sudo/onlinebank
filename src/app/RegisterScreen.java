@@ -239,8 +239,8 @@ public class RegisterScreen extends javax.swing.JFrame {
         }
         
         try {
-            int ssnNumber = Integer.parseInt(ssn);
-            if (String.valueOf(ssnNumber).length() != 10) {
+            long ssnNumber = Long.parseLong(ssn);
+            if (String.valueOf(ssnNumber).length() != 9) {
                 return false;
             }
         } catch (Exception e) {

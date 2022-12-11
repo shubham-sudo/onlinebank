@@ -1,9 +1,9 @@
 package bank.currency;
 
 public enum CurrencyType {
-    USD("usd"),
-    EURO("euro"),
-    CND("cnd");
+    USD("USD"),
+    EURO("EURO"),
+    CND("CND");
 
     private final String typeName;
 

@@ -62,7 +62,7 @@ public class CustomerATMController implements CustomerATM{
     }
     
     private void pullLatestTransactions() {
-        // TOOD: pull latest transactions of the customer
+        this.transactions = Database.getTransactions();
     }
     
     @Override
@@ -82,6 +82,9 @@ public class CustomerATMController implements CustomerATM{
     
     @Override
     public List<Transaction> getLatestTransactions() {
+        if (this.transactions.size() > 10) {
+            return this.transactions.subList(0, 10);
+        }
         return this.transactions;
     }
     

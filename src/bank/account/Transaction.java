@@ -12,7 +12,7 @@ import java.time.LocalDate;
  * This works similar to the logs of an application.
  */
 public class Transaction implements DbModel {
-    public static final String tableName = "transaction";
+    public static final String tableName = "operations";
     public static final String idColumn = "id";
     public static final String aidColumn = "aid";
     private final int id;
@@ -86,6 +86,6 @@ public class Transaction implements DbModel {
     
     @Override
     public String toString() {
-        return "<Transaction" + id +"> " + message;
+        return "" + id +" | " + message;
     }
 }

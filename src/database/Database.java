@@ -128,7 +128,7 @@ public class Database {
      * @param customer Customer object to be updated
      * @return number of records updated
      */
-    public static int updateCustomer(Customer customer) {
+    public static int updateCustomer(Customer customer, String ssn) {
         StringBuilder query = new StringBuilder("UPDATE " + Customer.tableName);
 
         HashMap<String, String> columnsToUpdate = new HashMap<String, String>() {
@@ -141,6 +141,9 @@ public class Database {
         };
         if (customer.getPhoneNumber() != 0) {
             columnsToUpdate.put("phone_number", String.valueOf(customer.getPhoneNumber()));
+        }
+        if (!ssn.equals("")) {
+            columnsToUpdate.put("SSN", ssn);
         }
 
         return updateRecord(prepareUpdateQuery(query, columnsToUpdate, Customer.idColumn, customer.getId()));
@@ -444,7 +447,7 @@ public class Database {
                 put(Transaction.idColumn, String.valueOf(transaction.getId()));
                 put("aid", String.valueOf(transaction.getAid()));
                 put("message", transaction.getMessage());
-                put("date", transaction.getTodayDate().toString());
+                put("today_date", transaction.getTodayDate().toString());
                 put("old_value", String.valueOf(transaction.getOldValue()));
                 put("new_value", String.valueOf(transaction.getNewValue()));
             }
@@ -798,6 +801,7 @@ public class Database {
         for (String col : columns) {
             query.append(col).append(" = '").append(columnToUpdate.get(col)).append("', ");
         }
+        query.deleteCharAt(query.length() - 1);
         query.deleteCharAt(query.length() - 1);
         query.append("WHERE ").append(idColumn).append(" = '").append(id).append("';");
 

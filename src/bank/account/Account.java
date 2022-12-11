@@ -83,7 +83,7 @@ public abstract class Account implements DbModel {
      */
     public void credit(double amount, Currency currency) {
         double amountToCredit = creditAmount(amount, currency);
-        Transaction transaction = new Transaction(0, id, "credited amount in " + currency.toString(),
+        Transaction transaction = new Transaction(0, id, currency.getCurrencyValue() + "credited amount in " + currency.getCurrencyType().toString(),
                 this.balance, this.balance + amountToCredit, LocalDate.now());
         transaction.create();
         this.balance += amountToCredit;
@@ -103,7 +103,7 @@ public abstract class Account implements DbModel {
         }
 
         double amountToDebit = debitAmount(amount, currency);
-        Transaction transaction = new Transaction(0, id, "debit amount in " + currency.toString(),
+        Transaction transaction = new Transaction(0, id, currency.getCurrencyValue() + "debit amount in " + currency.getCurrencyType().toString(),
                 this.balance, this.balance - amountToDebit, LocalDate.now());
         transaction.create();
         this.balance -= amountToDebit;

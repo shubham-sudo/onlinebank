@@ -254,10 +254,10 @@ public class NewAccountScreen extends javax.swing.JFrame {
         String SSN = ssn.getText().trim();
 
         if (!phoneNumber.equals("") && !RegisterScreen.validPhone(phoneNumber)) {
-            JOptionPane.showMessageDialog(this, "Phone number is required for Securities Account!", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Invalid Phone number!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         } else if (!SSN.equals("") && !RegisterScreen.validSSN(SSN)) {
-            JOptionPane.showMessageDialog(this, "SSN is required for Securities Account!", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Invalid SSN!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
         
@@ -274,7 +274,7 @@ public class NewAccountScreen extends javax.swing.JFrame {
                 throw new NumberFormatException();
             }
         } catch (NumberFormatException nfe) {
-            JOptionPane.showMessageDialog(this, "Invalid, balance", "Balance", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Invalid, balance!", "Balance", JOptionPane.ERROR_MESSAGE);
             return;
         }
         
@@ -282,14 +282,14 @@ public class NewAccountScreen extends javax.swing.JFrame {
             boolean customerChanged = false;
             if (!phoneNumber.equals("")) {
                 customerChanged = true;
-                this.customerATM.getLoggedInCustomer().setPhoneNumber(Integer.parseInt(phoneNumber));
+                this.customerATM.getLoggedInCustomer().setPhoneNumber(Long.parseLong(phoneNumber));
             }
             if (!SSN.equals("")) {
                 customerChanged = true;
                 this.customerATM.getLoggedInCustomer().setSSN(SSN);
             }
             if (customerChanged) {
-                this.customerATM.getLoggedInCustomer().create();
+                this.customerATM.getLoggedInCustomer().update();
             }
             this.customerATM.openAccount(accountType, bal);            
             JOptionPane.showMessageDialog(this, "" + accountType.toString() + " Account Opened Successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
