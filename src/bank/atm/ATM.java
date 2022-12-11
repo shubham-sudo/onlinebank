@@ -1,27 +1,57 @@
 package bank.atm;
 
-import bank.customer.Customer;
-import bank.trade.Stock;
-import database.Database;
+import bank.customers.Customer;
+import bank.factories.AccountFactory;
+import bank.factories.CollateralFactory;
+import bank.factories.LoanFactory;
+import bank.factories.TransactionFactory;
+import bank.repositories.*;
+import bank.trades.Stock;
+import databases.DbConnection;
+
+import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 
 
-public interface ATM {
-    
+public abstract class ATM {
+    protected Customer loggedInPerson;
+
+    private static final Connection connection = DbConnection.getConnection();
+
+    protected final AccountRepository accountRepository;
+    protected final LoanRepository loanRepository;
+    protected final CustomerRepository customerRepository;
+    protected final CollateralRepository collateralRepository;
+    protected final TransactionRepository transactionRepository;
+
+    protected static final AccountFactory accountFactory = new AccountFactory();
+    protected static final LoanFactory loanFactory = new LoanFactory();
+    protected static final CollateralFactory collateralFactory = new CollateralFactory();
+    protected static final TransactionFactory transactionFactory = new TransactionFactory();
+
+    public ATM() {
+        this.accountRepository = AccountAdapter.getInstance(connection);
+        this.loanRepository = LoanAdapter.getInstance(connection);
+        this.collateralRepository = CollateralAdapter.getInstance(connection);
+        this.transactionRepository = TransactionAdapter.getInstance(connection);
+        this.customerRepository = CustomerAdapter.getInstance(connection);
+    }
+
     /**
      * Fetch all stocks list from database
      * @return List of stock
      */
-    default List<Stock> pullAllStocks() {
-        return Database.fetchAllStocks();
+    public List<Stock> pullAllStocks() {
+        return new ArrayList<>(); // TODO (shubham) fix this
     }
-    
+
      /**
      * Greet upon login!
      * @return Greeting message
      */
-    String greet();
-    
+    abstract String greet();
+
     /**
      * Login anyone from ATM
      * @param email Email address of user
@@ -29,8 +59,8 @@ public interface ATM {
      * 
      * @return Customer if successful
      */
-    default Customer login(String email, String password) {
-        Customer customer = Database.getCustomer(email, password);
+    public Customer login(String email, String password) {
+        Customer customer = customerRepository.readByEmailAndPassword(email, password);
         if (customer != null) {
             startSession(customer);
         }
@@ -40,11 +70,11 @@ public interface ATM {
     /**
      * Logout anyone from ATM
      */
-    default void logout() {
+    public void logout() {
         endSession();
     }
 
-    void startSession(Customer customer);
+    abstract void startSession(Customer customer);
 
-    void endSession();
+    abstract void endSession();
 }

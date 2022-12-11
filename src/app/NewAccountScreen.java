@@ -4,10 +4,14 @@
  */
 package app;
 
-import bank.account.AccountType;
+import bank.accounts.AccountType;
 import bank.atm.CustomerATM;
 import bank.atm.CustomerATMController;
-import bank.customer.Customer;
+import bank.customers.Customer;
+import bank.repositories.CustomerAdapter;
+import bank.repositories.CustomerRepository;
+import databases.DbConnection;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
@@ -17,11 +21,13 @@ import javax.swing.JOptionPane;
  */
 public class NewAccountScreen extends javax.swing.JFrame {
     private final CustomerATM customerATM;
+    private final CustomerRepository customerRepository;
 
     /**
      * Creates new form NewAccountScreen
      */
     public NewAccountScreen() {
+        this.customerRepository = CustomerAdapter.getInstance(DbConnection.getConnection());
         this.customerATM = CustomerATMController.getInstance();
         Customer customer = customerATM.getLoggedInCustomer();
         initComponents();        
@@ -289,7 +295,7 @@ public class NewAccountScreen extends javax.swing.JFrame {
                 this.customerATM.getLoggedInCustomer().setSSN(SSN);
             }
             if (customerChanged) {
-                this.customerATM.getLoggedInCustomer().update();
+                customerRepository.update(this.customerATM.getLoggedInCustomer());
             }
             this.customerATM.openAccount(accountType, bal);            
             JOptionPane.showMessageDialog(this, "" + accountType.toString() + " Account Opened Successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);

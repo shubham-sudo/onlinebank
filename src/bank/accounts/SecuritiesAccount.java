@@ -2,9 +2,6 @@ package bank.accounts;
 
 import bank.currencies.Currency;
 import bank.currencies.USDollar;
-//import databases.Database;
-
-import java.util.List;
 
 
 public class SecuritiesAccount extends Account{
@@ -45,52 +42,4 @@ public class SecuritiesAccount extends Account{
         }
         return false;
     }
-
-//    @Override
-//    public boolean isValid() {
-//        boolean isValid = false;
-//        List<Account> accounts = Database.getAccounts(getCid());
-//        for (Account account : accounts) {
-//            if (account instanceof SavingAccount && account.getBalance() >= MINIMUM_SAVING_ACCOUNT_BALANCE) {
-//                isValid = true;
-//                break;
-//            }
-//        }
-//        return isValid;
-//    }
-//
-//    @Override
-//    public int create() {
-//        if (!super.isValid()) {
-//            throw new IllegalStateException("Account already exists!");
-//        } else if (!isValid()) {
-//            throw new IllegalStateException("Not have enough funds in Saving Account!");
-//        } else {
-//            return super.create();
-//        }
-//    }
-//
-//    @Override
-//    public void delete() {
-//        if (this.balance > 0) {
-//            Account account = getSavingAccount();
-//            if (account == null) {
-//                throw new IllegalStateException("No Saving account Found to Transfer funds!");
-//            }
-//            this.transfer(this.balance, account);
-//        }
-//        super.delete();
-//    }
-
-//    private Account getSavingAccount() {
-//        Account savingAccount = null;
-//        List<Account> accounts = Database.getAccounts(getCid());
-//        for (Account account : accounts) {
-//            if (account instanceof SavingAccount) {
-//                savingAccount = account;
-//                break;
-//            }
-//        }
-//        return savingAccount;
-//    }
 }

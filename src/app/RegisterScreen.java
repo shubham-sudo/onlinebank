@@ -4,7 +4,12 @@
  */
 package app;
 
-import bank.customer.Customer;
+import bank.customers.Customer;
+import bank.factories.CustomerFactory;
+import bank.repositories.CustomerAdapter;
+import bank.repositories.CustomerRepository;
+import databases.DbConnection;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -21,12 +26,15 @@ import javax.swing.JOptionPane;
 public class RegisterScreen extends javax.swing.JFrame {
     private static final String EMAIL_PATTERN = "^(.+)@(\\S+)$";
     private static final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
+    private static final CustomerFactory customerFactory = new CustomerFactory();
+    private final CustomerRepository customerRepository;
 
     /**
      * Creates new form RegisterScreen
      */
     public RegisterScreen() {
         initComponents();
+        customerRepository = CustomerAdapter.getInstance(DbConnection.getConnection());
     }
 
     /**
@@ -79,7 +87,7 @@ public class RegisterScreen extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Liberation Sans", 1, 14)); // NOI18N
         jLabel7.setText("SSN");
 
-        phoneNo.setToolTipText("MM/DD/YYYY");
+        phoneNo.setToolTipText("YYYY-MM-DD");
 
         jLabel4.setFont(new java.awt.Font("Liberation Sans", 1, 14)); // NOI18N
         jLabel4.setText("Date Of Birth");
@@ -200,7 +208,7 @@ public class RegisterScreen extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private boolean isValidDate(String date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String formatedDate;
         try{
             formatedDate = sdf.format(sdf.parse(date));            
@@ -278,14 +286,22 @@ public class RegisterScreen extends javax.swing.JFrame {
         } else if (!SSN.equals("") && !validSSN(SSN)) {
             JOptionPane.showMessageDialog(this, "SSN should be of 9 digit, all numbers", "SSN", JOptionPane.ERROR_MESSAGE);
         } else {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            Customer newCustomer = new Customer(0, fName, lName, LocalDate.parse(dob, formatter), mail, false);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            Customer newCustomer = customerFactory.createCustomer(0, fName, lName, dob, mail, false, "", "");
+//            Customer newCustomer = new Customer(0, fName, lName, LocalDate.parse(dob, formatter), mail, false);
             newCustomer.setPassword(pass);
+            if (!phoneNumber.equals("") && validPhone(phoneNumber)) {
+                newCustomer.setPhoneNumber(Long.parseLong(phoneNumber));
+            }
+            if (!SSN.equals("") && validSSN(SSN)) {
+                newCustomer.setSSN(SSN);
+            }
             if (newCustomer.getAge() < 18) {
                 JOptionPane.showMessageDialog(this, "Age should be 18 to open an account!");
             } else {
-                int id = newCustomer.create();
-                if (id == -1) {
+                Customer customer = customerRepository.create(newCustomer);
+                customer = customerRepository.update(customer, pass);
+                if (customer.getId() < 1) {
                     JOptionPane.showMessageDialog(this, "Email already exists!");
                 }else {
                     JOptionPane.showMessageDialog(this, "Registered Successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);

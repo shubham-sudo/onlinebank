@@ -1,7 +1,6 @@
-package bank.customer;
+package bank.customers;
 
-import database.Database;
-import database.DbModel;
+import databases.DbModel;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -22,7 +21,7 @@ public abstract class Person implements DbModel {
     private final boolean isManager;
 
     public Person(int id, String firstName, String lastName, LocalDate dob, boolean isManager){
-        this.id = id != 0 ? id : getNewId();
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = Period.between(dob, LocalDate.now()).getYears();
@@ -32,10 +31,6 @@ public abstract class Person implements DbModel {
 
     public int getId() {
         return id;
-    }
-
-    private int getNewId() {
-        return Database.getNewId(tableName, idColumn);
     }
 
     public String getFirstName() {

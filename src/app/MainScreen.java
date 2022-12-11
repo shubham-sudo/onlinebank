@@ -6,7 +6,7 @@ package app;
 
 import bank.atm.CustomerATM;
 import bank.atm.CustomerATMController;
-import bank.customer.Customer;
+import bank.customers.Customer;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,7 +20,7 @@ import javax.swing.JOptionPane;
 public class MainScreen extends javax.swing.JFrame {
     private static final String EMAIL_PATTERN = "^(.+)@(\\S+)$";
     private static final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
-    private final CustomerATM customerATM;
+    private final CustomerATMController customerATM;
 
     /**
      * Creates new form MainScreen

@@ -1,6 +1,5 @@
-package bank.customer;
+package bank.customers;
 
-import database.Database;
 
 import java.time.LocalDate;
 
@@ -73,43 +72,20 @@ public class Customer extends Person {
         char[] ssn = new char[11];
         char[] ssnToChar = SSN.toCharArray();
 
-        for (int i = 0; i < ssn.length; i++) {
-            if (i == 3 || i == 6) {
-                ssn[i] = '-';
-            } else if (i > 6) {
-                ssn[i] = ssnToChar[i];
-            } else {
-                ssn[i] = 'X';
-            }
-        }
+//        for (int i = 0; i < ssn.length; i++) {
+//            if (i == 3 || i == 6) {
+//                ssn[i] = '-';
+//            } else if (i > 6) {
+//                ssn[i] = ssnToChar[i];
+//            } else {
+//                ssn[i] = 'X';
+//            }
+//        }
 
-        return String.valueOf(ssn);
+        return String.valueOf(SSN);
     }
 
-    @Override
-    public boolean isValid() {
-        return !Database.isIdExists(tableName, idColumn, getId());
-    }
-
-    @Override
-    public int create() {
-        if (!isValid()) {
-            throw new IllegalStateException("Customer already exists!");
-        }
-        return Database.addCustomer(this, this.SSN, this.password);
-    }
-
-    @Override
-    public void delete() {
-        Database.deleteCustomer(this);
-    }
-
-    @Override
-    public int update() {
-        return Database.updateCustomer(this, this.SSN);
-    }
-
-    public boolean changePassword() {
-        return Database.updatePassword(this, this.password);
+    public String getPlainSSN() {
+        return SSN;
     }
 }

@@ -1,10 +1,9 @@
 package bank.atm;
 
-import bank.account.*;
-import bank.customer.Customer;
-import bank.trade.Stock;
-import database.Database;
-import bank.currency.*;
+import bank.accounts.*;
+import bank.customers.Customer;
+import bank.trades.Stock;
+import bank.currencies.*;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -12,16 +11,15 @@ import java.util.List;
 import java.util.ArrayList;
 
 
-public class ManagerATMController implements ManagerATM{
-    private static ManagerATM managerATM = null;
-    private Customer manager;
+public class ManagerATMController extends ATM implements ManagerATM{
+    private static ManagerATMController managerATM = null;
 
 
     private ManagerATMController() {
         // TODO initialize anything that is required
     }
 
-    public static ManagerATM getInstance() {
+    public static ManagerATMController getInstance() {
         if (managerATM == null) {
             managerATM = new ManagerATMController();
         }
@@ -34,17 +32,17 @@ public class ManagerATMController implements ManagerATM{
 
     @Override
     public Customer getCustomer(String email){
-        return Database.getCustomer(email);
+        return customerRepository.readByEmail(email);
     }
 
     @Override
     public List<Customer> getCustomers(){
-        return Database.getCustomers();
+        return customerRepository.read();
     }
 
     @Override
     public List<Transaction> getTransaction(LocalDate todayDate){
-        List<Transaction> transactions = Database.getTransactions();
+        List<Transaction> transactions = transactionRepository.read();
         List<Transaction> transactionOfDate = new ArrayList<>();
         for(Transaction transaction : transactions){
             if(transaction.getTodayDate().equals(todayDate)) {
@@ -56,7 +54,7 @@ public class ManagerATMController implements ManagerATM{
 
     @Override
     public List<Transaction> getTransactions(){
-        return Database.getTransactions();
+        return transactionRepository.read();
     }
 
     @Override
@@ -79,7 +77,7 @@ public class ManagerATMController implements ManagerATM{
 
     @Override
     public void payInterest(double rate){
-        List<? extends Account> savingAccounts = Database.getAccounts(new ArrayList<>(Collections.singletonList(AccountType.SAVING)));
+        List<? extends Account> savingAccounts = accountRepository.readByAccountTypes(new ArrayList<>(Collections.singletonList(AccountType.SAVING)));
 
         if (rate == 0) {
             rate = SAVING_INTEREST_RATE;
@@ -89,14 +87,14 @@ public class ManagerATMController implements ManagerATM{
             SavingAccount savingAccount = (SavingAccount) account;
             if (account.getBalance() > 2) {  // if balance is more than 2 pay interest
                 savingAccount.credit((savingAccount.getBalance() * rate), new USDollar((savingAccount.getBalance() * rate)));
-                savingAccount.update();
+                accountRepository.update(savingAccount);
             }
         }
     }
 
     @Override
     public void chargeInterest(double rate){
-        List<? extends Account> loanAccounts = Database.getAccounts(new ArrayList<>(Collections.singletonList(AccountType.LOAN)));
+        List<? extends Account> loanAccounts = accountRepository.readByAccountTypes(new ArrayList<>(Collections.singletonList(AccountType.LOAN)));
 
         if (rate == 0) {
             rate = LOAN_INTEREST_RATE;  // default rate
@@ -107,24 +105,24 @@ public class ManagerATMController implements ManagerATM{
             if (account.getBalance() < loanAccount.getLoan().getAmount()) {
                 double usedAmount = loanAccount.getLoan().getAmount() - account.getBalance();
                 loanAccount.getLoan().addInterest(usedAmount * rate);
-                loanAccount.getLoan().update();
+                loanRepository.update(loanAccount.getLoan());
             }
         }
     }
 
     @Override
     public String greet() {
-        return "Hi, " + manager.getLastName();
+        return "Hi, " + loggedInPerson.getLastName();
     }
 
     @Override
     public void endSession() {
-        this.manager = null;
+        this.loggedInPerson = null;
         // TODO (shubham) make rest of the stuff also null
     }
 
     @Override
     public void startSession(Customer manager) {
-        this.manager = manager;
+        this.loggedInPerson = manager;
     }
 }

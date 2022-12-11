@@ -4,13 +4,13 @@
  */
 package app;
 
-import bank.account.Account;
-import bank.account.Transaction;
+import bank.accounts.Account;
+import bank.accounts.Transaction;
 import bank.atm.CustomerATM;
 import bank.atm.CustomerATMController;
-import bank.customer.assets.Collateral;
-import bank.trade.Holding;
-import bank.trade.Stock;
+import bank.customers.assets.Collateral;
+import bank.trades.Holding;
+import bank.trades.Stock;
 import javax.swing.DefaultListModel;
 import javax.swing.DefaultListSelectionModel;
 
@@ -20,7 +20,7 @@ import javax.swing.DefaultListSelectionModel;
  * @author shubham
  */
 public class DashBoardScreen extends javax.swing.JFrame {
-    private final CustomerATM customerATM;
+    private final CustomerATMController customerATM;
 
     /**
      * Creates new form DashBoardScreen

@@ -1,7 +1,7 @@
-package bank.account;
+package bank.accounts;
 
-import bank.currency.Currency;
-import bank.currency.USDollar;
+import bank.currencies.Currency;
+import bank.currencies.USDollar;
 
 
 public class SavingAccount extends Account {

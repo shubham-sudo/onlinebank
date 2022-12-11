@@ -1,4 +1,4 @@
-package bank.trade;
+package bank.trades;
 
 
 public class Stock {

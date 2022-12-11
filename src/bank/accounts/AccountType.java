@@ -1,4 +1,4 @@
-package bank.account;
+package bank.accounts;
 
 public enum AccountType {
     SAVING("Saving"),

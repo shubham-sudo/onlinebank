@@ -1,7 +1,7 @@
-package bank.customer.assets;
+package bank.customers.assets;
 
-import database.Database;
-import database.DbModel;
+import databases.DbModel;
+
 
 public class Collateral implements DbModel {
     public static final String tableName = "collateral";
@@ -14,15 +14,11 @@ public class Collateral implements DbModel {
     private boolean inUse;
 
     public Collateral(int id, int cid, String name, double value) {
-        this.id = id != 0 ? id : getNewId();
+        this.id = id;
         this.cid = cid;
         this.name = name;
         this.value = value;
         this.inUse = false;
-    }
-
-    private int getNewId(){
-        return Database.getNewId(tableName, idColumn);
     }
 
     public int getId() {
@@ -47,34 +43,9 @@ public class Collateral implements DbModel {
 
     public void setInUse(){
         this.inUse = true;
-        this.update();
     }
 
     public void setNotInUse(){
         this.inUse = false;
-        this.update();
-    }
-
-    @Override
-    public boolean isValid() {
-        return !Database.isIdExists(tableName, idColumn, getId());
-    }
-
-    @Override
-    public int create() {
-        if (!isValid()) {
-            throw new IllegalStateException("Collateral already exists!");
-        }
-        return Database.addCollateral(this);
-    }
-
-    @Override
-    public void delete() {
-        Database.deleteCollateral(this);
-    }
-
-    @Override
-    public int update() {
-        return Database.updateCollateral(this);
     }
 }

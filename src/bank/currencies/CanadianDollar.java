@@ -1,20 +1,20 @@
-package bank.currency;
+package bank.currencies;
 
 
-public class Euro implements Currency {
-    private static final double BASE_CURRENCY_RATE = 1.05;  // IDEALLY, should be fetched from web
-    private static final double BASE_TO_THIS_RATE = 0.94;   // IDEALLY, should be fetched from web
+public class CanadianDollar implements Currency{
+    private static final double BASE_CURRENCY_RATE = 0.74;  // IDEALLY, should be fetched from web
+    private static final double BASE_TO_THIS_RATE = 1.33;   // IDEALLY, should be fetched from web
     private final double value;
     private final CurrencyType currencyType;
 
-    public Euro(double value) {
+    public CanadianDollar(double value) {
         this.value = value;
-        this.currencyType = CurrencyType.EURO;
+        currencyType = CurrencyType.EURO;
     }
 
     @Override
     public double baseValue() {
-        return value * BASE_CURRENCY_RATE;
+        return this.value * BASE_CURRENCY_RATE;
     }
 
     @Override

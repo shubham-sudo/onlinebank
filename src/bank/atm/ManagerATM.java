@@ -1,8 +1,8 @@
 package bank.atm;
 
-import bank.account.Transaction;
-import bank.customer.Customer;
-import bank.trade.Stock;
+import bank.accounts.Transaction;
+import bank.customers.Customer;
+import bank.trades.Stock;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
  * ManagerATM represents the manager session to view all customers
  * check specific customer, should see the daily reports on transactions.
  */
-public interface ManagerATM extends ATM {
+public interface ManagerATM {
     double LOAN_INTEREST_RATE = 0.05;
     double SAVING_INTEREST_RATE = 0.03;
 

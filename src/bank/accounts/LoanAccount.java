@@ -1,24 +1,30 @@
-package bank.account;
+package bank.accounts;
 
-import bank.currency.Currency;
-import bank.currency.USDollar;
-import bank.loan.Loan;
+import bank.currencies.Currency;
+import bank.currencies.USDollar;
+import bank.loans.Loan;
 
 
 public class LoanAccount extends Account {
     // keeping fixed interest rate for all type of loans for simplicity.
     protected static final double LOAN_INTEREST_RATE = 0.08;  // IDEALLY, should be on pro rata basis.
 
-    private final Loan loan;
+    private Loan loan;
 
-    public LoanAccount(int id, int cid, long accountNo, double balance, Loan loan) {
+    public LoanAccount(int id, int cid, long accountNo, double balance) {
         super(id, cid, accountNo, balance);
         this.accountType = AccountType.LOAN;
-        this.loan = loan;
     }
 
     public Loan getLoan() {
         return loan;
+    }
+
+    public void setLoan(Loan loan) {
+        if (this.loan != null) {
+            throw new IllegalStateException("Can't reset the loan!");
+        }
+        this.loan = loan;
     }
 
     @Override
@@ -42,20 +48,11 @@ public class LoanAccount extends Account {
     @Override
     public boolean transfer(double amount, Account account) {
         synchronized (this) {
-        if (this.debit(amount, new USDollar(amount))) {
-            account.credit(amount, new USDollar(amount));
-            return true;
+            if (this.debit(amount, new USDollar(amount))) {
+                account.credit(amount, new USDollar(amount));
+                return true;
+            }
         }
-    }
         return false;
-    }
-
-    @Override
-    public void delete() {
-        if (balance >= loan.getAmount()) {
-            super.delete();
-            return;
-        }
-        throw new IllegalStateException("Can't close Loan Account with pending due");
     }
 }

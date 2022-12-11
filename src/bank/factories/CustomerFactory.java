@@ -1,6 +1,6 @@
-package bank.factory;
+package bank.factories;
 
-import bank.customer.Customer;
+import bank.customers.Customer;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -14,11 +14,18 @@ public class CustomerFactory {
                 id, firstName, lastName, LocalDate.parse(dob, formatter), email, isManager
         );
         if (phoneNumber != null && !phoneNumber.equals("")) {
-            customer.setPhoneNumber(Integer.parseInt(phoneNumber));
+            customer.setPhoneNumber(Long.parseLong(phoneNumber));
         }
         if (ssn != null && !ssn.equals("")) {
             customer.setSSN(ssn);
         }
+        return customer;
+    }
+
+    public Customer getCustomer(int id, String firstName, String lastName, LocalDate dob, String email, boolean isManager, long phoneNo, String ssn) {
+        Customer customer = new Customer(id, firstName, lastName, dob, email, isManager);
+        customer.setPhoneNumber(phoneNo);
+        customer.setSSN(ssn);
         return customer;
     }
 }

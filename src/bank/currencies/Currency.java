@@ -1,4 +1,4 @@
-package bank.currency;
+package bank.currencies;
 
 
 /**

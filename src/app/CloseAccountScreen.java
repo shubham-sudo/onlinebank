@@ -4,7 +4,7 @@
  */
 package app;
 
-import bank.account.Account;
+import bank.accounts.Account;
 import bank.atm.CustomerATM;
 import bank.atm.CustomerATMController;
 import javax.swing.DefaultComboBoxModel;

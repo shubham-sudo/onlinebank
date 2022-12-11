@@ -1,4 +1,4 @@
-package database;
+package databases;
 
 import java.nio.file.Paths;
 import java.sql.*;

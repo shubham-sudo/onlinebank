@@ -1,13 +1,7 @@
-package bank.account;
+package bank.accounts;
 
-import database.Database;
-import database.DbModel;
-import bank.currency.Currency;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import databases.DbModel;
+import bank.currencies.Currency;
 
 
 /**
@@ -42,18 +36,10 @@ public abstract class Account implements DbModel {
         if (balance < ACCOUNT_STARTING_MIN_BALANCE) {
             throw new IllegalArgumentException("Starting balance should be at-least $ 2!");
         }
-        this.id = id != 0 ? id : getNewId();
+        this.id = id;
         this.cid = cid;
-        this.accountNo = accountNo != 0 ? accountNo : getNewAcNo();
+        this.accountNo = accountNo;
         this.balance = balance;
-    }
-
-    private int getNewId() {
-        return Database.getNewId(tableName, idColumn);
-    }
-
-    private long getNewAcNo(){
-        return ACCOUNT_NO_BASE + id;
     }
 
     public int getId() {
@@ -83,11 +69,7 @@ public abstract class Account implements DbModel {
      */
     public void credit(double amount, Currency currency) {
         double amountToCredit = creditAmount(amount, currency);
-        Transaction transaction = new Transaction(0, id, currency.getCurrencyValue() + "credited amount in " + currency.getCurrencyType().toString(),
-                this.balance, this.balance + amountToCredit, LocalDate.now());
-        transaction.create();
         this.balance += amountToCredit;
-        this.update();
     }
 
     /**
@@ -103,11 +85,7 @@ public abstract class Account implements DbModel {
         }
 
         double amountToDebit = debitAmount(amount, currency);
-        Transaction transaction = new Transaction(0, id, currency.getCurrencyValue() + "debit amount in " + currency.getCurrencyType().toString(),
-                this.balance, this.balance - amountToDebit, LocalDate.now());
-        transaction.create();
         this.balance -= amountToDebit;
-        this.update();
         return true;
     }
 
@@ -115,42 +93,6 @@ public abstract class Account implements DbModel {
     protected abstract double creditAmount(double amount, Currency currency);
     protected abstract double debitAmount(double amount, Currency currency);
     public abstract boolean transfer(double amount, Account account) throws IllegalStateException;
-
-    public List<Transaction> history(){
-        return Database.getTransactions(new ArrayList<>(Collections.singletonList(this)));
-    }
-
-    @Override
-    public boolean isValid() {
-        return !Database.isIdExists(tableName, idColumn, getId());
-    }
-
-    /**
-     * Save new record in database
-     * @return id of newly inserted record
-     */
-    @Override
-    public int create() {
-        if (!isValid()) {
-            throw new IllegalStateException("Account already exists!");
-        }
-        this.balance -= TRANSACTION_SERVICE_CHARGE;  // new account open service
-        // TODO (shubham): add this amount to bank wallet/ account.
-        return Database.addAccount(this);
-    }
-
-    /**
-     * Update the value in database
-     */
-    @Override
-    public int update() {
-        return Database.updateAccount(this);
-    }
-
-    @Override
-    public void delete() {
-        Database.deleteAccount(this);
-    }
 
     @Override
     public String toString() {

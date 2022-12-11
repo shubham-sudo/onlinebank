@@ -1,28 +1,27 @@
 package bank.atm;
 
-import bank.factory.AccountFactory;
-import bank.account.*;
-import bank.currency.Currency;
-import bank.customer.Customer;
-import bank.customer.assets.Collateral;
-import bank.factory.CollateralFactory;
-import bank.trade.Holding;
-import database.Database;
-import java.util.ArrayList;
+import bank.factories.AccountFactory;
+import bank.accounts.*;
+import bank.currencies.Currency;
+import bank.customers.Customer;
+import bank.customers.assets.Collateral;
+import bank.factories.CollateralFactory;
+import bank.factories.LoanFactory;
+import bank.loans.Loan;
+import bank.trades.Holding;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 
-public class CustomerATMController implements CustomerATM{
+public class CustomerATMController extends ATM implements CustomerATM{
     private static final AccountFactory accountFactory = new AccountFactory();
+    private static final LoanFactory loanFactory = new LoanFactory();
     private static final CollateralFactory collateralFactory = new CollateralFactory();
-    private static CustomerATM customerATM = null;
+    private static CustomerATMController customerATM = null;
     private HashMap<Integer, Account> accounts;
-    private HashMap<Integer, Collateral> collaterals;
-    private HashMap<Integer, Holding> holdings;
+    private final HashMap<Integer, Collateral> collaterals;
+    private final HashMap<Integer, Holding> holdings;
     private List<Transaction> transactions;
-    private Customer customer;
 
     private CustomerATMController() {
         this.accounts = new HashMap<>();
@@ -31,7 +30,7 @@ public class CustomerATMController implements CustomerATM{
         this.transactions = new ArrayList<>();
     }
 
-    public static CustomerATM getInstance() {
+    public static CustomerATMController getInstance() {
         if (customerATM == null) {
             customerATM = new CustomerATMController();
         }
@@ -55,14 +54,14 @@ public class CustomerATMController implements CustomerATM{
     }
     
     private void pullCustomerAccounts() {
-        List<Account> accounts = Database.getAccounts(this.customer.getId());
+        List<Account> accounts = accountRepository.readByCustomerId(this.loggedInPerson.getId());
         for (Account account : accounts) {
             this.accounts.put(account.getId(), account);
         }
     }
     
     private void pullLatestTransactions() {
-        this.transactions = Database.getTransactions();
+        this.transactions = transactionRepository.readByCustomerId(this.loggedInPerson.getId());
     }
     
     @Override
@@ -90,31 +89,33 @@ public class CustomerATMController implements CustomerATM{
     
     @Override
     public Customer getLoggedInCustomer(){
-        return this.customer;
+        return this.loggedInPerson;
     }
 
     @Override
     public boolean openAccount(AccountType accountType, double balance) throws IllegalStateException{
-        Account account = accountFactory.createAccount(this.customer, accountType, balance);
-        account.create();
+        Account account = accountFactory.createAccount(this.loggedInPerson, accountType, balance);
+        account = accountRepository.create(account);
         accounts.put(account.getId(), account);
         return true;
     }
 
     @Override
     public boolean closeAccount(Account account, String password) throws IllegalStateException {
-        if (!customer.verifyPassword(password)) {
+        if (!loggedInPerson.verifyPassword(password)) {
             throw new IllegalStateException("Password didn't match, Try again!");
         }
-        account.delete();
-        accounts.remove(account.getId());
-        return true;
+        if (accountRepository.delete(account)) {
+            accounts.remove(account.getId());
+            return true;
+        }
+        return false;
     }
 
     @Override
     public boolean addCollateral(String name, double value) {  // Assuming the customer will add true value
-        Collateral  collateral = collateralFactory.createCollateral(customer, name, value);
-        collateral.create();
+        Collateral  collateral = collateralFactory.createCollateral(loggedInPerson, name, value);
+        collateralRepository.create(collateral);
         return true;
     }
 
@@ -123,14 +124,18 @@ public class CustomerATMController implements CustomerATM{
         if (collateral.getValue() < value) {
             throw new IllegalStateException("Can't issue loan higher than collateral value");
         }
-        Account account = accountFactory.createLoanAccount(customer, value, collateral);
+        Account account = accountFactory.createAccount(customer, AccountType.LOAN, value);
+        Loan loan = loanFactory.createLoan(customer, value, collateral);
+        account = accountRepository.create(account);
+        loan.setAid(account.getId());
+        loan = loanRepository.create(loan);
         accounts.put(account.getId(), account);
         return true;
     }
 
     @Override
     public List<Transaction> viewTransactions(Account account) {
-        return account.history();
+        return transactionRepository.readByAccountIds(new ArrayList<>(Collections.singletonList(account.getId())));
     }
 
     @Override
@@ -143,7 +148,17 @@ public class CustomerATMController implements CustomerATM{
         if (amount < 0) {
             throw new IllegalStateException("Credit amount can't be less than zero");
         }
+        double oldAmount = account.getBalance();
         account.credit(amount, currency);
+        accountRepository.update(account);
+        Transaction depositTransaction = transactionFactory.createTransaction(
+                account.getId(),
+                "Account credited with $" + currency.baseValue(),
+                oldAmount,
+                account.getBalance()
+        );
+        depositTransaction = transactionRepository.create(depositTransaction);
+        transactions.add(depositTransaction);
         return true;
     }
 
@@ -152,37 +167,51 @@ public class CustomerATMController implements CustomerATM{
         if (account.getAccountType() == AccountType.SECURITIES) {
             throw new IllegalStateException("Can't withdrawal money from Securities account");
         }
+        double oldAmount = account.getBalance();
         account.debit(amount, currency);
+        accountRepository.update(account);
+        Transaction withdrawalTransaction = transactionFactory.createTransaction(
+                account.getId(),
+                "Account debited with $" + currency.baseValue(),
+                oldAmount,
+                account.getBalance()
+        );
+        withdrawalTransaction = transactionRepository.create(withdrawalTransaction);
+        transactions.add(withdrawalTransaction);
         return true;
     }
 
     @Override
     public boolean transferAmount(Account from, Account to, double amount) throws IllegalStateException {
         from.transfer(amount, to);
+        accountRepository.update(from);
+        accountRepository.update(to);
         return true;
     }
-    
+
     @Override
     public String greet() {
-        return "Hi " + this.customer.getLastName();
+        return "Hi " + this.loggedInPerson.getLastName();
     }
 
     @Override
     public void startSession(Customer customer) {
-        this.customer = customer;
+        this.loggedInPerson = customer;
         setUpDashBoard();
     }
 
     @Override
     public void endSession() {
         customerATM = null;
-        this.customer = null;
+        this.loggedInPerson = null;
         this.accounts = null;
     }
 
     @Override
     public boolean changePassword() {
-        return customer.changePassword();
+        // TODO (shubham) Update this !!!
+        customerRepository.update(this.loggedInPerson, "");
+        return true;
     }
 
     @Override

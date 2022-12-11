@@ -2,7 +2,6 @@ package bank.repositories;
 
 import bank.accounts.Account;
 import bank.accounts.AccountType;
-import bank.accounts.LoanAccount;
 import bank.factories.AccountFactory;
 import bank.loans.Loan;
 

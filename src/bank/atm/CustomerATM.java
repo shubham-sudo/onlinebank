@@ -1,10 +1,10 @@
 package bank.atm;
 
-import bank.account.*;
-import bank.customer.assets.Collateral;
-import bank.currency.Currency;
-import bank.customer.Customer;
-import bank.trade.Holding;
+import bank.accounts.*;
+import bank.customers.assets.Collateral;
+import bank.currencies.Currency;
+import bank.customers.Customer;
+import bank.trades.Holding;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import java.util.List;
  * ATM can have specific sessions for different customers and
  * one session for ManagerATM.
  */
-public interface CustomerATM extends ATM {
+public interface CustomerATM {
     
     List<Account> getAccounts();
     List<Collateral> getCollaterals();
