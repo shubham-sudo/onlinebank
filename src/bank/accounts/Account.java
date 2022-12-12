@@ -1,6 +1,5 @@
 package bank.accounts;
 
-import databases.DbModel;
 import bank.currencies.Currency;
 
 
@@ -11,7 +10,7 @@ import bank.currencies.Currency;
  * @see SecuritiesAccount
  * @see LoanAccount
  */
-public abstract class Account implements DbModel {
+public abstract class Account {
     protected static final double TRANSACTION_SERVICE_CHARGE = 0.10;
     protected static final double ACCOUNT_STARTING_MIN_BALANCE = 1;
     public static final long ACCOUNT_NO_BASE = 1000;

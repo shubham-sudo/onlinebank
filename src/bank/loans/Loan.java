@@ -1,10 +1,9 @@
 package bank.loans;
 
 import bank.customers.assets.Collateral;
-import databases.DbModel;
 
 
-public class Loan implements DbModel {
+public class Loan {
     public static final String tableName = "loan";
     public static final String idColumn = "id";
     public static final String aidColumn = "aid";

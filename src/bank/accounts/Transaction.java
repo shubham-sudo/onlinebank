@@ -1,7 +1,5 @@
 package bank.accounts;
 
-import databases.DbModel;
-
 import java.time.LocalDate;
 
 
@@ -10,7 +8,7 @@ import java.time.LocalDate;
  * happens on any of the account. It also stores tax info
  * This works similar to the logs of an application.
  */
-public class Transaction implements DbModel {
+public class Transaction {
     public static final String tableName = "operations";
     public static final String idColumn = "id";
     public static final String aidColumn = "aid";

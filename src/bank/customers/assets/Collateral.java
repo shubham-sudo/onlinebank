@@ -1,9 +1,7 @@
 package bank.customers.assets;
 
-import databases.DbModel;
 
-
-public class Collateral implements DbModel {
+public class Collateral {
     public static final String tableName = "collateral";
     public static final String idColumn = "id";
     public static final String cidColumn = "cid";
