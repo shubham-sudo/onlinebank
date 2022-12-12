@@ -15,13 +15,13 @@ import java.util.List;
  * one session for ManagerATM.
  */
 public interface CustomerATM {
-    
+
     List<Account> getAccounts();
     List<Collateral> getCollaterals();
     List<Holding> getHoldings();
     List<Transaction> getLatestTransactions();
     Customer getLoggedInCustomer();
-    
+
     /**
      * Customer can open a new account, the account
      * type would mention the type of account it is.
@@ -101,7 +101,7 @@ public interface CustomerATM {
      * @throws IllegalStateException if not possible
      */
     boolean transferAmount(Account from, Account to, double amount) throws IllegalStateException;
-    
+
     /**
      * Change password of the customer
      * @return true if changed

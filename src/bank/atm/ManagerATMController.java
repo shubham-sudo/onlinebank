@@ -14,9 +14,7 @@ import java.util.ArrayList;
 public class ManagerATMController extends ATM implements ManagerATM{
     private static ManagerATMController managerATM = null;
 
-
     private ManagerATMController() {
-        // TODO initialize anything that is required
     }
 
     public static ManagerATMController getInstance() {

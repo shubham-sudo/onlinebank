@@ -56,7 +56,7 @@ public abstract class ATM {
      * Login anyone from ATM
      * @param email Email address of user
      * @param password of user
-     * 
+     *
      * @return Customer if successful
      */
     public Customer login(String email, String password) {

@@ -4,13 +4,13 @@
  */
 package app;
 
-import bank.atm.CustomerATM;
 import bank.atm.CustomerATMController;
+import bank.atm.ManagerATMController;
 import bank.customers.Customer;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 
 /**
@@ -197,7 +197,11 @@ public class MainScreen extends javax.swing.JFrame {
         } else if (customerATM.login(email, password) != null) {
             Customer customer = customerATM.login(email, password);
             if (customer.isManager()) {
-                // TODO (shubham) POP manager dashboard
+                ManagerATMController managerATMController = ManagerATMController.getInstance();
+                managerATMController.login(email, password);
+                ManagerDashBoard managerDashBoard = new ManagerDashBoard();
+                managerDashBoard.setVisible(true);
+                dispose();
             } else {
                 DashBoardScreen dashBoardScreen = new DashBoardScreen();
                 dashBoardScreen.setVisible(true);

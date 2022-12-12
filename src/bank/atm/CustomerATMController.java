@@ -48,37 +48,37 @@ public class CustomerATMController extends ATM implements CustomerATM{
     private void pullCustomerCollaterals() {
         // TODO : pull customer collaterals
     }
-    
+
     private void pullCustomerHoldings() {
         // TODO: pull customer bought holdings
     }
-    
+
     private void pullCustomerAccounts() {
         List<Account> accounts = accountRepository.readByCustomerId(this.loggedInPerson.getId());
         for (Account account : accounts) {
             this.accounts.put(account.getId(), account);
         }
     }
-    
+
     private void pullLatestTransactions() {
         this.transactions = transactionRepository.readByCustomerId(this.loggedInPerson.getId());
     }
-    
+
     @Override
     public List<Account> getAccounts() {
         return new ArrayList<>(this.accounts.values());
     }
-    
+
     @Override
     public List<Collateral> getCollaterals() {
         return new ArrayList<>(this.collaterals.values());
     }
-    
+
     @Override
     public List<Holding> getHoldings() {
         return new ArrayList<>(this.holdings.values());
     }
-    
+
     @Override
     public List<Transaction> getLatestTransactions() {
         if (this.transactions.size() > 10) {
@@ -86,7 +86,7 @@ public class CustomerATMController extends ATM implements CustomerATM{
         }
         return this.transactions;
     }
-    
+
     @Override
     public Customer getLoggedInCustomer(){
         return this.loggedInPerson;
