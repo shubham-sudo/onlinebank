@@ -1,26 +1,29 @@
 package app;
 
-import javax.swing.*;
-
 import bank.account.Account;
+import bank.account.Transaction;
 import bank.customer.Customer;
+import database.Database;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
-
-import app.viewTransaction;
-import database.Database;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class managerDashBoard extends JFrame {
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new managerDashBoard().setVisible(true);
+                inimanagerDashBoard();
             }
         });
     }
-    public managerDashBoard(){
+    public static void inimanagerDashBoard(){
         /*
         String dateOfBirth="03/10/2000";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -30,7 +33,11 @@ public class managerDashBoard extends JFrame {
         user=customer;
         */
 
-        iniDashBoard();
+        JFrame ManagerDashBoard = new JFrame("managerDashBoard");
+        ManagerDashBoard.setContentPane(new managerDashBoard().BackGround);
+        ManagerDashBoard.pack();
+        ManagerDashBoard.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        ManagerDashBoard.setVisible(true);
 
     }
     private Account act;
@@ -45,18 +52,23 @@ public class managerDashBoard extends JFrame {
     private JButton chargeInterestButton;
     private JTextField pay_interest_rate;
     private JTextField charge_interest_rate;
+    private JScrollPane showAllCustomer;
+    private JTextArea CustomerTextarea;
+    private JScrollPane showAllTransaction;
+    private JLabel p_rate_per;
+    private JLabel c_rate_per;
+    private JTextArea TransactionTextarea;
 
     //@SuppressWarnings("unchecked")
-    private void iniDashBoard() {
-        setContentPane(BackGround);
-        setTitle("Manager DashBoard");
-        setSize(600,600);
-        pack();
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setVisible(true);
-
-        customerInfoButton=new JButton();
+    public managerDashBoard() {
+        //setContentPane(BackGround);
+        //setTitle("Manager DashBoard");
+        //setSize(6000,6000);
+        /*
+        customerInfoButton=new JButton("customer Information");
+        showAllCustomer = new JScrollPane(CustomerTextarea);
         transactionHistoryButton=new JButton();
+        showAllTransaction = new JScrollPane();
         Email=new JTextField();
         CustomerEmail=new JLabel();
         allcustomer =new JButton();
@@ -65,6 +77,15 @@ public class managerDashBoard extends JFrame {
         charge_interest_rate = new JTextField();
         payInterestButton = new JButton();
         chargeInterestButton = new JButton();
+
+         */
+        CustomerTextarea = new JTextArea("show AllCustomer \n");
+        CustomerTextarea.setEditable(true);
+        showAllCustomer.setViewportView(CustomerTextarea);
+
+        TransactionTextarea = new JTextArea("show Alltransaction \n");
+        TransactionTextarea.setEditable(true);
+        showAllTransaction.setViewportView(TransactionTextarea);
 
         BackGround.setBackground(new java.awt.Color(254, 254, 254));
         BackGround.setForeground(new java.awt.Color(254, 254, 254));
@@ -81,7 +102,7 @@ public class managerDashBoard extends JFrame {
         });
         transactionHistoryButton.setText("transaction History");
         transactionHistoryButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            //@Override
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 transactionHistoryButtonMouseClicked(evt);
 
@@ -95,7 +116,13 @@ public class managerDashBoard extends JFrame {
                 allcustomerMouseClicked(evt);
             }
         });
+        showAllCustomer.setPreferredSize(new Dimension(600, 200));
+        showAllCustomer.setVerticalScrollBarPolicy(
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
+        showAllTransaction.setPreferredSize(new Dimension(600, 200));
+        showAllTransaction.setVerticalScrollBarPolicy(
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         payInterestButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -119,17 +146,70 @@ public class managerDashBoard extends JFrame {
         String email=Email.getText();
         //String password="example";
         //cus= Database.getCustomer(email);
-        // jump to Customer Info page here
+        Customer ncus=getCustomer(email);
+        // TODO Here should have a Customer login without password.
+    }
+    private List<Account> getAllAccounts(List<Customer> customers){
+        List<Account> ans = new ArrayList<Account>();
+        for(int i=0;i<customers.size();i++){
+            List<Account> accounti = Database.getAccounts(customers.get(i).getId());
+            Iterator j = accounti.iterator();
+            while (j.hasNext())
+            {
+                ans.add((Account)j.next());
+            }
+        }
+        return ans;
+    }
+    private List<Transaction> getTransaction(LocalDate todayDate){
+        List<Transaction> ans = new ArrayList<Transaction>();
+        List<Customer> customers = getCustomers();
+        for(int i=0;i<customers.size();i++){
+            List<Transaction> transactioni = Database.getTransactions(customers.get(i).getId());
+            Iterator j = transactioni.iterator();
+            while (j.hasNext())
+            {
+                Transaction t = (Transaction)j.next();
+                if(t.getTodayDate().isEqual(todayDate)) {
+                    ans.add(t);
+                }
+            }
+        }
+        return ans;
     }
     private void transactionHistoryButtonMouseClicked(java.awt.event.MouseEvent evt){
-        viewTransaction viewtransaction = new viewTransaction();
-        viewtransaction.setVisible(true);
-        dispose();
+        // TODO for some reason my button does not work so I put them in one interface
+        //viewTransaction viewtransaction = new viewTransaction();
+        //viewtransaction.setVisible(true);
+        //dispose();
+        List<Transaction> transactions = getTransaction(LocalDate.now());
+        for(int i=0;i<transactions.size();i++){
+            TransactionTextarea.append(transactions.get(i).toString()+"\n");
+        }
+        showAllTransaction.setViewportView(TransactionTextarea);
+    }
+
+    private List<Customer> getCustomers(){
+        List<Customer> ans = new ArrayList<Customer>();
+        ans = Database.getAllCustomers();
+        return ans;
     }
     private void allcustomerMouseClicked(java.awt.event.MouseEvent evt){
         //AllcustomerFrame allcustomerFrame = new AllcustomerFrame();
         //allcustomerFrame.setVisible(true);
         //dispose();
+        List<Customer> customers = getCustomers();
+        for(int i=0;i<customers.size();i++){
+            CustomerTextarea.append(
+                      customers.get(i).getFirstName()+" " + customers.get(i).getLastName()
+                    + "\n"
+                    + customers.get(i).getEmail()
+                    + "\n"
+                    + customers.get(i).getPhoneNumber()
+                    + "\n"
+                    );
+        }
+        showAllCustomer.setViewportView(CustomerTextarea);
     }
 
     private void payInterestButtonmouseClicked(MouseEvent e){
@@ -139,17 +219,30 @@ public class managerDashBoard extends JFrame {
     }
 
     void payInterest(float p_rate){
-
+        List<Account> accounts = getAllAccounts(getCustomers());
+        for(int i=0;i<accounts.size();i++){
+            Account a = accounts.get(i);
+            if(a.getAccountType().toString().equals("Saving")){
+                a.interest(p_rate);
+            }
+        }
     }
 
     private void chargeInterestButtonmouseClicked(MouseEvent e){
         float c_rate = Float.valueOf(charge_interest_rate.getText());
+        c_rate = c_rate*-1;
         // note: the pay Interest function in interface should add a float parameter
         chargeInterest(c_rate);
     }
 
     void chargeInterest(float c_rate){
-
+        List<Account> accounts = getAllAccounts(getCustomers());
+        for(int i=0;i<accounts.size();i++){
+            Account a = accounts.get(i);
+            if(a.getAccountType().toString().equals("Loan")){
+                a.interest(c_rate);
+            }
+        }
     }
     /*
     private void createUIComponents() {

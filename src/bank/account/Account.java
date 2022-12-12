@@ -139,6 +139,20 @@ public abstract class Account implements DbModel {
     }
 
     /**
+     * pay or charge interest on an account
+     * @param rate, a percentage of interest rate with sign (for charge interest, it should have a "-")
+     * @return id of newly inserted record
+     */
+    public int interest(float rate){
+        if (!isValid()) {
+            throw new IllegalStateException("Account already exists!");
+        }
+        this.balance = this.balance*(100+rate)/100;
+        // TODO (shubham): add this amount to bank wallet/ account.
+        return Database.addAccount(this);
+    }
+
+    /**
      * Update the value in database
      */
     @Override

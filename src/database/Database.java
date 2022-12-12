@@ -156,6 +156,36 @@ public class Database {
     }
 
     /**
+     * Get all customers for managerDashBoard
+     * @return A list of Customer
+     */
+    public static List<Customer> getAllCustomers() {
+        String query = "SELECT * FROM customer";
+        List<Customer> ans = new ArrayList<Customer>();
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet resultSet = stmt.executeQuery(query);
+            while (resultSet.next()) {
+                if (resultSet.getRow() == 1) {
+                    Customer customer = customerFactory.createCustomer(
+                            resultSet.getInt(1),      // id
+                            resultSet.getString(2),   // firstname
+                            resultSet.getString(3),   // lastname
+                            resultSet.getString(5),   // dob
+                            resultSet.getString(4),   // email
+                            resultSet.getBoolean(5),  // is manager
+                            resultSet.getString(7),   // phoneNumber
+                            resultSet.getString(8)    // ssn
+                    );
+                ans.add(customer);
+                }
+            }
+        }catch (SQLException e) {
+            System.out.println(e.getMessage());  // TODO (shubham): Implement logger
+        }
+        return ans;
+    }
+    /**
      * Get customer from the database upon whenever required
      * @param email email entered by user
      * @param password password entered by user

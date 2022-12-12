@@ -7,6 +7,7 @@ import bank.customer.Customer;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import app.managerDashBoard;
 
 public class viewTransaction extends JFrame {
     public static void main(String[] args) {
@@ -30,9 +31,10 @@ public class viewTransaction extends JFrame {
     private void iniView(){
         setContentPane(BackGround);
         setTitle("All transaction today");
-        pack();
+        //pack();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        //setVisible(true);
+        setVisible(true);
+        setAlwaysOnTop(true);
 
         backButton = new JButton();
         accounts = new JScrollPane();
