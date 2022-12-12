@@ -1,13 +1,8 @@
 package app;
 
 import javax.swing.*;
-import database.Database;
-import bank.account.Account;
-import bank.customer.Customer;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
-import app.managerDashBoard;
 
 public class viewTransaction extends JFrame {
     public static void main(String[] args) {
@@ -51,7 +46,7 @@ public class viewTransaction extends JFrame {
     }
 
     private void backButtonmouseClicked(MouseEvent e){
-        managerDashBoard managerdashboard = new managerDashBoard();
+        ManagerDashBoard managerdashboard = new ManagerDashBoard();
         managerdashboard.setVisible(true);
         dispose();
     }

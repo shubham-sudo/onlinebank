@@ -1,13 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package app;
 
-import bank.account.AccountType;
+import bank.accounts.AccountType;
 import bank.atm.CustomerATM;
 import bank.atm.CustomerATMController;
-import bank.customer.Customer;
+import bank.customers.Customer;
+import bank.repositories.CustomerAdapter;
+import bank.repositories.CustomerRepository;
+import databases.DbConnection;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
@@ -17,11 +18,13 @@ import javax.swing.JOptionPane;
  */
 public class NewAccountScreen extends javax.swing.JFrame {
     private final CustomerATM customerATM;
+    private final CustomerRepository customerRepository;
 
     /**
      * Creates new form NewAccountScreen
      */
     public NewAccountScreen() {
+        this.customerRepository = CustomerAdapter.getInstance(DbConnection.getConnection());
         this.customerATM = CustomerATMController.getInstance();
         Customer customer = customerATM.getLoggedInCustomer();
         initComponents();        
@@ -254,10 +257,10 @@ public class NewAccountScreen extends javax.swing.JFrame {
         String SSN = ssn.getText().trim();
 
         if (!phoneNumber.equals("") && !RegisterScreen.validPhone(phoneNumber)) {
-            JOptionPane.showMessageDialog(this, "Phone number is required for Securities Account!", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Invalid Phone number!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         } else if (!SSN.equals("") && !RegisterScreen.validSSN(SSN)) {
-            JOptionPane.showMessageDialog(this, "SSN is required for Securities Account!", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Invalid SSN!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
         
@@ -274,7 +277,7 @@ public class NewAccountScreen extends javax.swing.JFrame {
                 throw new NumberFormatException();
             }
         } catch (NumberFormatException nfe) {
-            JOptionPane.showMessageDialog(this, "Invalid, balance", "Balance", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Invalid, balance!", "Balance", JOptionPane.ERROR_MESSAGE);
             return;
         }
         
@@ -282,14 +285,14 @@ public class NewAccountScreen extends javax.swing.JFrame {
             boolean customerChanged = false;
             if (!phoneNumber.equals("")) {
                 customerChanged = true;
-                this.customerATM.getLoggedInCustomer().setPhoneNumber(Integer.parseInt(phoneNumber));
+                this.customerATM.getLoggedInCustomer().setPhoneNumber(Long.parseLong(phoneNumber));
             }
             if (!SSN.equals("")) {
                 customerChanged = true;
                 this.customerATM.getLoggedInCustomer().setSSN(SSN);
             }
             if (customerChanged) {
-                this.customerATM.getLoggedInCustomer().save();
+                customerRepository.update(this.customerATM.getLoggedInCustomer());
             }
             this.customerATM.openAccount(accountType, bal);            
             JOptionPane.showMessageDialog(this, "" + accountType.toString() + " Account Opened Successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);

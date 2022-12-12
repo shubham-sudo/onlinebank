@@ -4,13 +4,13 @@
  */
 package app;
 
-import bank.account.Account;
-import bank.account.Transaction;
+import bank.accounts.Account;
+import bank.accounts.Transaction;
 import bank.atm.CustomerATM;
 import bank.atm.CustomerATMController;
-import bank.customer.assets.Collateral;
-import bank.trade.Holding;
-import bank.trade.Stock;
+import bank.customers.assets.Collateral;
+import bank.trades.Holding;
+import bank.trades.Stock;
 import javax.swing.DefaultListModel;
 import javax.swing.DefaultListSelectionModel;
 
@@ -20,7 +20,7 @@ import javax.swing.DefaultListSelectionModel;
  * @author shubham
  */
 public class DashBoardScreen extends javax.swing.JFrame {
-    private final CustomerATM customerATM;
+    private final CustomerATMController customerATM;
 
     /**
      * Creates new form DashBoardScreen
@@ -34,7 +34,7 @@ public class DashBoardScreen extends javax.swing.JFrame {
         DefaultListModel<String> accountsList = new DefaultListModel<>();
         
         for (Account a : this.customerATM.getAccounts()) {
-            accountsList.addElement(a.toString());
+            accountsList.addElement(a.getAccountType() + " | " + a.toString());
         }
         
         accounts.setModel(accountsList);
@@ -224,6 +224,11 @@ public class DashBoardScreen extends javax.swing.JFrame {
         });
 
         jButton3.setText("Close Account");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Collateral");
         jButton4.setToolTipText("");
@@ -231,10 +236,20 @@ public class DashBoardScreen extends javax.swing.JFrame {
         jButton5.setText("Request Loan");
 
         jButton6.setText("Balance");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
 
         jButton7.setText("Transactions");
 
         jButton8.setText("Deposit");
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
 
         jButton9.setText("Withdrawal");
 
@@ -406,6 +421,27 @@ public class DashBoardScreen extends javax.swing.JFrame {
         newAccount.setVisible(true);
         dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        CloseAccountScreen closeAccount = new CloseAccountScreen();
+        closeAccount.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // TODO add your handling code here:
+        BalanceScreen balanceScreen = new BalanceScreen();
+        balanceScreen.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        // TODO add your handling code here:
+        DepositScreen depositScreen = new DepositScreen();
+        depositScreen.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jButton8ActionPerformed
 
     /**
      * @param args the command line arguments

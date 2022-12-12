@@ -1,8 +1,8 @@
 package bank.atm;
 
-import bank.account.Transaction;
-import bank.customer.Customer;
-import bank.trade.Stock;
+import bank.accounts.Transaction;
+import bank.customers.Customer;
+import bank.trades.Stock;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,7 +12,10 @@ import java.util.List;
  * ManagerATM represents the manager session to view all customers
  * check specific customer, should see the daily reports on transactions.
  */
-public interface ManagerATM extends ATM {
+public interface ManagerATM {
+    double LOAN_INTEREST_RATE = 0.05;
+    double SAVING_INTEREST_RATE = 0.03;
+
     /**
      * Get a customer based on the customer email id
      * @param email email id
@@ -66,12 +69,14 @@ public interface ManagerATM extends ATM {
     /**
      * Manager would pay interest on all saving accounts
      * IDEALLY, this should be automatic
+     * @param rate rate to pay interest
      */
-    void payInterest();
+    void payInterest(double rate);
 
     /**
      * Charge interest on all loans
      * IDEALLY, this should be automatic
+     * @param rate rate to charge interest
      */
-    void chargeInterest();
+    void chargeInterest(double rate);
 }

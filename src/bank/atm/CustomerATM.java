@@ -1,10 +1,10 @@
 package bank.atm;
 
-import bank.account.*;
-import bank.customer.assets.Collateral;
-import bank.currency.Currency;
-import bank.customer.Customer;
-import bank.trade.Holding;
+import bank.accounts.*;
+import bank.customers.assets.Collateral;
+import bank.currencies.Currency;
+import bank.customers.Customer;
+import bank.trades.Holding;
 
 import java.util.List;
 
@@ -14,14 +14,14 @@ import java.util.List;
  * ATM can have specific sessions for different customers and
  * one session for ManagerATM.
  */
-public interface CustomerATM extends ATM {
-    
+public interface CustomerATM {
+
     List<Account> getAccounts();
     List<Collateral> getCollaterals();
     List<Holding> getHoldings();
     List<Transaction> getLatestTransactions();
     Customer getLoggedInCustomer();
-    
+
     /**
      * Customer can open a new account, the account
      * type would mention the type of account it is.
@@ -35,10 +35,11 @@ public interface CustomerATM extends ATM {
     /**
      * Customer can request for closing this account
      * @param account Account to be closed
+     * @param password to double check
      * @return true if closed successfully, false otherwise
      * @throws IllegalStateException exception if illegal state
      */
-    boolean closeAccount(Account account) throws IllegalStateException;
+    boolean closeAccount(Account account, String password) throws IllegalStateException;
 
     /**
      * Add new collateral for requesting loan
@@ -100,7 +101,13 @@ public interface CustomerATM extends ATM {
      * @throws IllegalStateException if not possible
      */
     boolean transferAmount(Account from, Account to, double amount) throws IllegalStateException;
-    
+
+    /**
+     * Change password of the customer
+     * @return true if changed
+     */
+    boolean changePassword();
+
     /**
      * Buy stock using securities account
      * @param customer Customer object

@@ -6,9 +6,12 @@ package app;
 
 import bank.atm.CustomerATM;
 import bank.atm.CustomerATMController;
+import bank.atm.ManagerATMController;
+import bank.customers.Customer;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 
 /**
@@ -18,7 +21,7 @@ import javax.swing.JOptionPane;
 public class MainScreen extends javax.swing.JFrame {
     private static final String EMAIL_PATTERN = "^(.+)@(\\S+)$";
     private static final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
-    private final CustomerATM customerATM;
+    private final CustomerATMController customerATM;
 
     /**
      * Creates new form MainScreen
@@ -192,10 +195,19 @@ public class MainScreen extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Invalid, Password cannot be empty!", "Invalid", JOptionPane.ERROR_MESSAGE);
         } else if (!validEmail(email)) {
             JOptionPane.showMessageDialog(this, "Invalid email, Try again!", "Invalid", JOptionPane.ERROR_MESSAGE);
-        } else if (customerATM.login(email, password)) {
-            DashBoardScreen dashBoardScreen = new DashBoardScreen();
-            dashBoardScreen.setVisible(true);
-            dispose();
+        } else if (customerATM.login(email, password) != null) {
+            Customer customer = customerATM.login(email, password);
+            if (customer.isManager()) {
+                ManagerATMController managerATMController = ManagerATMController.getInstance();
+                managerATMController.login(email, password);
+                ManagerDashBoard managerDashBoard = new ManagerDashBoard();
+                managerDashBoard.setVisible(true);
+                dispose();
+            } else {
+                DashBoardScreen dashBoardScreen = new DashBoardScreen();
+                dashBoardScreen.setVisible(true);
+                dispose();
+            }
         } else {
             JOptionPane.showMessageDialog(this, "Invalid email or password, Try again!", "Invalid", JOptionPane.ERROR_MESSAGE);
         }
