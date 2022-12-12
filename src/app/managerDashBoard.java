@@ -24,15 +24,6 @@ public class managerDashBoard extends JFrame {
         });
     }
     public static void inimanagerDashBoard(){
-        /*
-        String dateOfBirth="03/10/2000";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        String dob = dateOfBirth.trim();
-        Customer customer=new Customer(-1,"Example","Example", LocalDate.parse(dob, formatter),"example@bu.edu",false);
-        customer.setPassword("example");
-        user=customer;
-        */
-
         JFrame ManagerDashBoard = new JFrame("managerDashBoard");
         ManagerDashBoard.setContentPane(new managerDashBoard().BackGround);
         ManagerDashBoard.pack();
@@ -40,7 +31,6 @@ public class managerDashBoard extends JFrame {
         ManagerDashBoard.setVisible(true);
 
     }
-    private Account act;
     private Customer cus;
     private JButton customerInfoButton;
     private JButton transactionHistoryButton;
@@ -58,27 +48,7 @@ public class managerDashBoard extends JFrame {
     private JLabel p_rate_per;
     private JLabel c_rate_per;
     private JTextArea TransactionTextarea;
-
-    //@SuppressWarnings("unchecked")
     public managerDashBoard() {
-        //setContentPane(BackGround);
-        //setTitle("Manager DashBoard");
-        //setSize(6000,6000);
-        /*
-        customerInfoButton=new JButton("customer Information");
-        showAllCustomer = new JScrollPane(CustomerTextarea);
-        transactionHistoryButton=new JButton();
-        showAllTransaction = new JScrollPane();
-        Email=new JTextField();
-        CustomerEmail=new JLabel();
-        allcustomer =new JButton();
-        BackGround=new JPanel();
-        pay_interest_rate = new JTextField();
-        charge_interest_rate = new JTextField();
-        payInterestButton = new JButton();
-        chargeInterestButton = new JButton();
-
-         */
         CustomerTextarea = new JTextArea("show AllCustomer \n");
         CustomerTextarea.setEditable(true);
         showAllCustomer.setViewportView(CustomerTextarea);
@@ -123,12 +93,16 @@ public class managerDashBoard extends JFrame {
         showAllTransaction.setPreferredSize(new Dimension(600, 200));
         showAllTransaction.setVerticalScrollBarPolicy(
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+        p_rate_per.setText("Enter pay interest rate(%)");
         payInterestButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 payInterestButtonmouseClicked(e);
             }
         });
+
+        c_rate_per.setText("Enter charge interest rate(%)");
         chargeInterestButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -178,10 +152,6 @@ public class managerDashBoard extends JFrame {
         return ans;
     }
     private void transactionHistoryButtonMouseClicked(java.awt.event.MouseEvent evt){
-        // TODO for some reason my button does not work so I put them in one interface
-        //viewTransaction viewtransaction = new viewTransaction();
-        //viewtransaction.setVisible(true);
-        //dispose();
         List<Transaction> transactions = getTransaction(LocalDate.now());
         for(int i=0;i<transactions.size();i++){
             TransactionTextarea.append(transactions.get(i).toString()+"\n");
@@ -195,9 +165,6 @@ public class managerDashBoard extends JFrame {
         return ans;
     }
     private void allcustomerMouseClicked(java.awt.event.MouseEvent evt){
-        //AllcustomerFrame allcustomerFrame = new AllcustomerFrame();
-        //allcustomerFrame.setVisible(true);
-        //dispose();
         List<Customer> customers = getCustomers();
         for(int i=0;i<customers.size();i++){
             CustomerTextarea.append(
@@ -214,7 +181,7 @@ public class managerDashBoard extends JFrame {
 
     private void payInterestButtonmouseClicked(MouseEvent e){
         float p_rate = Float.valueOf(pay_interest_rate.getText());
-        // note: the pay Interest function in interface should add a float parameter
+        // TODO: the pay Interest function in interface should add a float parameter
         payInterest(p_rate);
     }
 
@@ -231,7 +198,7 @@ public class managerDashBoard extends JFrame {
     private void chargeInterestButtonmouseClicked(MouseEvent e){
         float c_rate = Float.valueOf(charge_interest_rate.getText());
         c_rate = c_rate*-1;
-        // note: the pay Interest function in interface should add a float parameter
+        // TODO: the pay Interest function in interface should add a float parameter
         chargeInterest(c_rate);
     }
 
