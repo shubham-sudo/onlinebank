@@ -4,7 +4,6 @@
  */
 package app;
 
-import bank.atm.CustomerATM;
 import bank.atm.CustomerATMController;
 import bank.atm.ManagerATMController;
 import bank.customers.Customer;
