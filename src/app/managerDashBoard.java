@@ -4,9 +4,13 @@ import javax.swing.*;
 
 import bank.account.Account;
 import bank.customer.Customer;
-import database.Database;
 
-import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+
+import app.viewTransaction;
+import database.Database;
 
 public class managerDashBoard extends JFrame {
     public static void main(String[] args) {
@@ -27,6 +31,7 @@ public class managerDashBoard extends JFrame {
         */
 
         iniDashBoard();
+
     }
     private Account act;
     private Customer cus;
@@ -36,6 +41,10 @@ public class managerDashBoard extends JFrame {
     private JTextField Email;
     private JButton allcustomer;
     private JPanel BackGround;
+    private JButton payInterestButton;
+    private JButton chargeInterestButton;
+    private JTextField pay_interest_rate;
+    private JTextField charge_interest_rate;
 
     //@SuppressWarnings("unchecked")
     private void iniDashBoard() {
@@ -52,6 +61,10 @@ public class managerDashBoard extends JFrame {
         CustomerEmail=new JLabel();
         allcustomer =new JButton();
         BackGround=new JPanel();
+        pay_interest_rate = new JTextField();
+        charge_interest_rate = new JTextField();
+        payInterestButton = new JButton();
+        chargeInterestButton = new JButton();
 
         BackGround.setBackground(new java.awt.Color(254, 254, 254));
         BackGround.setForeground(new java.awt.Color(254, 254, 254));
@@ -60,7 +73,7 @@ public class managerDashBoard extends JFrame {
 
         customerInfoButton.setText("customer Information");
         customerInfoButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            //@Override
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 customerInfoButtonMouseClicked(evt);
 
@@ -83,21 +96,60 @@ public class managerDashBoard extends JFrame {
             }
         });
 
+        payInterestButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                payInterestButtonmouseClicked(e);
+            }
+        });
+        chargeInterestButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                chargeInterestButtonmouseClicked(e);
+            }
+        });
+
+    }
+
+    private Customer getCustomer(String email){
+        cus = Database.getCustomer(email);
+        return cus;
     }
     private void customerInfoButtonMouseClicked(java.awt.event.MouseEvent evt){
         String email=Email.getText();
         //String password="example";
         //cus= Database.getCustomer(email);
+        // jump to Customer Info page here
     }
     private void transactionHistoryButtonMouseClicked(java.awt.event.MouseEvent evt){
-        //TodaytransactionFrame todaytransactionFrame = new TodaytransactionFrame();
-        //todaytransactionFrame.setVisible(true);
-        //dispose();
+        viewTransaction viewtransaction = new viewTransaction();
+        viewtransaction.setVisible(true);
+        dispose();
     }
     private void allcustomerMouseClicked(java.awt.event.MouseEvent evt){
         //AllcustomerFrame allcustomerFrame = new AllcustomerFrame();
         //allcustomerFrame.setVisible(true);
         //dispose();
+    }
+
+    private void payInterestButtonmouseClicked(MouseEvent e){
+        float p_rate = Float.valueOf(pay_interest_rate.getText());
+        // note: the pay Interest function in interface should add a float parameter
+        payInterest(p_rate);
+    }
+
+    void payInterest(float p_rate){
+
+    }
+
+    private void chargeInterestButtonmouseClicked(MouseEvent e){
+        float c_rate = Float.valueOf(charge_interest_rate.getText());
+        // note: the pay Interest function in interface should add a float parameter
+        chargeInterest(c_rate);
+    }
+
+    void chargeInterest(float c_rate){
+
     }
     /*
     private void createUIComponents() {
