@@ -29,6 +29,8 @@ public class ManagerDashBoard extends JFrame {
         ManagerDashBoard.pack();
         ManagerDashBoard.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         ManagerDashBoard.setVisible(true);
+
+        //ManagerDashBoard.dispose();
     }
     private Customer customer;
     private JButton customerInfoButton;
@@ -46,8 +48,8 @@ public class ManagerDashBoard extends JFrame {
     private JScrollPane showAllTransaction;
     private JLabel p_rate_per;
     private JLabel c_rate_per;
+    private JButton back;
     private JTextArea TransactionTextarea;
-
     public ManagerDashBoard() {
         this.managerATMController = ManagerATMController.getInstance();
 
@@ -111,7 +113,20 @@ public class ManagerDashBoard extends JFrame {
                 chargeInterestButtonmouseClicked(e);
             }
         });
+        back.setText("LogOut to MainScreen");
+        back.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                backmouseClicked(e);
+            }
+        });
+    }
 
+    private void backmouseClicked(MouseEvent e){
+        MainScreen mainScreen = new MainScreen();
+        mainScreen.setVisible(true);
+        dispose();
+        managerATMController.logout();
     }
 
     private Customer getCustomer(String email){

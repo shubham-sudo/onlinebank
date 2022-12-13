@@ -200,7 +200,7 @@ public class MainScreen extends javax.swing.JFrame {
                 ManagerATMController managerATMController = ManagerATMController.getInstance();
                 managerATMController.login(email, password);
                 ManagerDashBoard managerDashBoard = new ManagerDashBoard();
-                managerDashBoard.inimanagerDashBoard();
+                managerDashBoard.setVisible(true);
                 dispose();
             } else {
                 DashBoardScreen dashBoardScreen = new DashBoardScreen();

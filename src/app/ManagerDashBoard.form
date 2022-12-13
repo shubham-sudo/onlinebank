@@ -28,6 +28,10 @@
     <rowspec value="center:max(d;4px):noGrow"/>
     <rowspec value="top:4dlu:noGrow"/>
     <rowspec value="center:d:grow"/>
+    <rowspec value="top:4dlu:noGrow"/>
+    <rowspec value="center:max(d;4px):noGrow"/>
+    <rowspec value="top:4dlu:noGrow"/>
+    <rowspec value="center:d:grow"/>
     <colspec value="fill:d:grow"/>
     <colspec value="left:4dlu:noGrow"/>
     <colspec value="fill:d:noGrow"/>
@@ -36,7 +40,7 @@
     <colspec value="left:4dlu:noGrow"/>
     <colspec value="fill:d:grow"/>
     <constraints>
-      <xy x="20" y="20" width="491" height="434"/>
+      <xy x="20" y="20" width="491" height="492"/>
     </constraints>
     <properties>
       <preferredSize width="600" height="400"/>
@@ -163,13 +167,13 @@
       </component>
       <vspacer id="fb46e">
         <constraints>
-          <grid row="26" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+          <grid row="30" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
           <forms defaultalign-vert="false"/>
         </constraints>
       </vspacer>
       <vspacer id="bc437">
         <constraints>
-          <grid row="26" column="4" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+          <grid row="30" column="4" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
           <forms defaultalign-vert="false"/>
         </constraints>
       </vspacer>
@@ -253,6 +257,27 @@
           <text value="Enter charge Interest(%)"/>
         </properties>
       </component>
+      <component id="3948c" class="javax.swing.JButton" binding="back">
+        <constraints>
+          <grid row="28" column="2" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <forms/>
+        </constraints>
+        <properties>
+          <text value="LogOut to MainScreen"/>
+        </properties>
+      </component>
+      <vspacer id="44ca4">
+        <constraints>
+          <grid row="26" column="4" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+          <forms defaultalign-vert="false"/>
+        </constraints>
+      </vspacer>
+      <vspacer id="5b925">
+        <constraints>
+          <grid row="26" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+          <forms defaultalign-vert="false"/>
+        </constraints>
+      </vspacer>
     </children>
   </grid>
 </form>
