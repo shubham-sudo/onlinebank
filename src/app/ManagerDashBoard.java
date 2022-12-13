@@ -148,6 +148,7 @@ public class ManagerDashBoard extends JFrame {
                     customer.getFirstName() + " " + customer.getLastName()
                     + " | " + customer.getEmail()
                     + " | " + customer.getPhoneNumber()
+                    + "\n"
             );
         }
         showAllCustomer.setViewportView(CustomerTextarea);
