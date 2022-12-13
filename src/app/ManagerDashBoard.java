@@ -18,20 +18,11 @@ public class ManagerDashBoard extends JFrame {
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                inimanagerDashBoard();
+                new ManagerDashBoard().setVisible(true);
             }
         });
     }
-    public static void inimanagerDashBoard(){
-        JFrame ManagerDashBoard = new JFrame("managerDashBoard");
-        ManagerDashBoard.setContentPane(new ManagerDashBoard().BackGround);
-        ManagerDashBoard.setSize(100, 100);
-        ManagerDashBoard.pack();
-        ManagerDashBoard.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        ManagerDashBoard.setVisible(true);
 
-        //ManagerDashBoard.dispose();
-    }
     private Customer customer;
     private JButton customerInfoButton;
     private JButton transactionHistoryButton;
@@ -52,7 +43,11 @@ public class ManagerDashBoard extends JFrame {
     private JTextArea TransactionTextarea;
     public ManagerDashBoard() {
         this.managerATMController = ManagerATMController.getInstance();
+        initComponents();
+    }
 
+    private void initComponents() {
+        setContentPane(BackGround);
         CustomerTextarea = new JTextArea("show AllCustomer \n");
         CustomerTextarea.setEditable(true);
         showAllCustomer.setViewportView(CustomerTextarea);
@@ -120,13 +115,15 @@ public class ManagerDashBoard extends JFrame {
                 backmouseClicked(e);
             }
         });
+        setSize(100, 100);
+        pack();
     }
 
     private void backmouseClicked(MouseEvent e){
+        managerATMController.logout();
         MainScreen mainScreen = new MainScreen();
         mainScreen.setVisible(true);
         dispose();
-        managerATMController.logout();
     }
 
     private Customer getCustomer(String email){
@@ -158,6 +155,9 @@ public class ManagerDashBoard extends JFrame {
         return managerATMController.getCustomers();
     }
     private void allcustomerMouseClicked(java.awt.event.MouseEvent evt){
+        CustomerTextarea = new JTextArea("show AllCustomer \n");
+        CustomerTextarea.setEditable(true);
+
         for (Customer customer : getCustomers()) {
             CustomerTextarea.append(
                     customer.getFirstName() + " " + customer.getLastName()
