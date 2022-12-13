@@ -18,18 +18,11 @@ public class ManagerDashBoard extends JFrame {
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                inimanagerDashBoard();
+                new ManagerDashBoard().setVisible(true);
             }
         });
     }
-    public static void inimanagerDashBoard(){
-        JFrame ManagerDashBoard = new JFrame("managerDashBoard");
-        ManagerDashBoard.setContentPane(new ManagerDashBoard().BackGround);
-        ManagerDashBoard.setSize(100, 100);
-        ManagerDashBoard.pack();
-        ManagerDashBoard.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        ManagerDashBoard.setVisible(true);
-    }
+
     private Customer customer;
     private JButton customerInfoButton;
     private JButton transactionHistoryButton;
@@ -46,11 +39,15 @@ public class ManagerDashBoard extends JFrame {
     private JScrollPane showAllTransaction;
     private JLabel p_rate_per;
     private JLabel c_rate_per;
+    private JButton back;
     private JTextArea TransactionTextarea;
-
     public ManagerDashBoard() {
         this.managerATMController = ManagerATMController.getInstance();
+        initComponents();
+    }
 
+    private void initComponents() {
+        setContentPane(BackGround);
         CustomerTextarea = new JTextArea("show AllCustomer \n");
         CustomerTextarea.setEditable(true);
         showAllCustomer.setViewportView(CustomerTextarea);
@@ -111,7 +108,22 @@ public class ManagerDashBoard extends JFrame {
                 chargeInterestButtonmouseClicked(e);
             }
         });
+        back.setText("LogOut to MainScreen");
+        back.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                backmouseClicked(e);
+            }
+        });
+        setSize(100, 100);
+        pack();
+    }
 
+    private void backmouseClicked(MouseEvent e){
+        managerATMController.logout();
+        MainScreen mainScreen = new MainScreen();
+        mainScreen.setVisible(true);
+        dispose();
     }
 
     private Customer getCustomer(String email){
@@ -143,11 +155,15 @@ public class ManagerDashBoard extends JFrame {
         return managerATMController.getCustomers();
     }
     private void allcustomerMouseClicked(java.awt.event.MouseEvent evt){
+        CustomerTextarea = new JTextArea("show AllCustomer \n");
+        CustomerTextarea.setEditable(true);
+
         for (Customer customer : getCustomers()) {
             CustomerTextarea.append(
                     customer.getFirstName() + " " + customer.getLastName()
                     + " | " + customer.getEmail()
                     + " | " + customer.getPhoneNumber()
+                    + "\n"
             );
         }
         showAllCustomer.setViewportView(CustomerTextarea);
