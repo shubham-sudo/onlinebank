@@ -284,6 +284,7 @@ public class ManagerDashBoard extends JFrame {
             return;
         }
         this.managerATMController.payInterest(rate);
+        JOptionPane.showMessageDialog(this, "Interest paid successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void chargeInterestButtonmouseClicked(MouseEvent e){
@@ -300,5 +301,6 @@ public class ManagerDashBoard extends JFrame {
         }
         rate = rate*-1;
         this.managerATMController.chargeInterest(rate);
+        JOptionPane.showMessageDialog(this, "Interest charged successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
     }
 }

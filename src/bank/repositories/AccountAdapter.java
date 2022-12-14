@@ -60,7 +60,7 @@ public class AccountAdapter implements AccountRepository{
         String inTypes = "'" +
                 accountTypes.stream().map(AccountType::toString).collect(Collectors.joining("', '")) +
                 "'";
-        String query = "SELECT * FROM " + Account.tableName + " WHERE account_type IN [" + inTypes + "];";
+        String query = "SELECT * FROM " + Account.tableName + " WHERE account_type IN (" + inTypes + ");";
         return getAccounts(query);
     }
 
