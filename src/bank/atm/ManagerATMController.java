@@ -73,8 +73,9 @@ public class ManagerATMController extends ATM implements ManagerATM{
         Stock stock = stockRepository.readById(stockId);
         if (stock != null) {
             stockRepository.delete(stock);
+            return true;
         }
-        return true;
+        return false;
     }
 
     @Override
