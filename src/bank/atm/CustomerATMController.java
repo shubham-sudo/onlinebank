@@ -1,5 +1,6 @@
 package bank.atm;
 
+import bank.currencies.USDollar;
 import bank.factories.AccountFactory;
 import bank.accounts.*;
 import bank.currencies.Currency;
@@ -9,6 +10,7 @@ import bank.factories.CollateralFactory;
 import bank.factories.LoanFactory;
 import bank.loans.Loan;
 import bank.trades.Holding;
+import bank.trades.Stock;
 
 import java.util.*;
 
@@ -46,11 +48,15 @@ public class CustomerATMController extends ATM implements CustomerATM{
     }
 
     private void pullCustomerCollaterals() {
-        // TODO : pull customer collaterals
+        for (Collateral collateral : collateralRepository.readByCustomerId(this.loggedInPerson.getId())){
+            collaterals.put(collateral.getId(), collateral);
+        }
     }
 
     private void pullCustomerHoldings() {
-        // TODO: pull customer bought holdings
+        for (Holding holding : holdingRepository.readByCustomerId(this.loggedInPerson.getId())) {
+            holdings.put(holding.getId(), holding);
+        }
     }
 
     private void pullCustomerAccounts() {
@@ -210,17 +216,68 @@ public class CustomerATMController extends ATM implements CustomerATM{
     @Override
     public boolean changePassword() {
         // TODO (shubham) Update this !!!
+        //  Link with forgot password
         customerRepository.update(this.loggedInPerson, "");
         return true;
     }
 
     @Override
-    public boolean buyStock(Customer customer, SecuritiesAccount account) {
-        return false;
+    public boolean buyStock(SecuritiesAccount account, Stock stock, int quantity) {
+        if (account.getBalance() < (stock.getValue() * quantity)) {
+            return false;
+        }
+
+        boolean alreadyHolding = false;
+
+        for (Holding holding : holdings.values()) {
+            if (holding.getSid() == stock.getId()) {
+                alreadyHolding = true;
+                holding.setQuantity(holding.getQuantity() + quantity);
+                Holding updatedHolding = holdingRepository.update(holding);
+                holdings.put(updatedHolding.getId(), updatedHolding);
+                break;
+            }
+        }
+        if (!alreadyHolding) {
+            Holding holding = holdingFactory.createHolding(this.loggedInPerson.getId(), stock.getId(), quantity, stock.getValue());
+            holding = holdingRepository.create(holding);
+            holdings.put(holding.getId(), holding);
+        }
+        account.debit(stock.getValue() * quantity, new USDollar(stock.getValue() * quantity));
+        accountRepository.update(account);
+        return true;
     }
 
     @Override
-    public boolean sellStock(Customer customer, SecuritiesAccount account) {
+    public boolean sellStock(SecuritiesAccount account, Stock stock, int quantity) {
+        boolean hasStock = false;
+        Holding holdingStock = null;
+
+        for (Holding holding : holdings.values()) {
+            if (holding.getSid() == stock.getId()) {
+                hasStock = true;
+                holdingStock = holding;
+                break;
+            }
+        }
+
+        if (hasStock) {
+            if (quantity > holdingStock.getQuantity()) {
+                return false;
+            } else {
+                if (quantity == holdingStock.getQuantity()) {
+                    double currentValue = holdingStock.getCurrentValue();
+                    holdingRepository.delete(holdingStock);
+                    account.credit(currentValue, new USDollar(currentValue));
+                } else {
+                    double valueToSell = holdingStock.getBaseValue() * quantity;
+                    holdingStock.setQuantity(holdingStock.getQuantity() - quantity);
+                    holdingRepository.update(holdingStock);
+                    account.credit(valueToSell, new USDollar(valueToSell));
+                }
+                accountRepository.update(account);
+            }
+        }
         return false;
     }
 }

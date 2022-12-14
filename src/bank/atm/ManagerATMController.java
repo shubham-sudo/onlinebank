@@ -2,6 +2,10 @@ package bank.atm;
 
 import bank.accounts.*;
 import bank.customers.Customer;
+import bank.events.EventSender;
+import bank.events.StockUpdateEvent;
+import bank.events.StockUpdateEventReceiver;
+import bank.events.StockUpdateEventSender;
 import bank.trades.Stock;
 import bank.currencies.*;
 
@@ -13,8 +17,10 @@ import java.util.ArrayList;
 
 public class ManagerATMController extends ATM implements ManagerATM{
     private static ManagerATMController managerATM = null;
+    private static final EventSender eventSender = StockUpdateEventSender.getInstance();
 
     private ManagerATMController() {
+        eventSender.addReceiver(new StockUpdateEventReceiver());
     }
 
     public static ManagerATMController getInstance() {
@@ -56,21 +62,31 @@ public class ManagerATMController extends ATM implements ManagerATM{
     }
 
     @Override
-    public boolean addStock(String stock_name, double stock_value){
-        // Todo
-        return false;
+    public boolean addStock(String stockName, double stockValue){
+        Stock stock = stockFactory.createStock(stockName, stockValue);
+        stockRepository.create(stock);
+        return true;
     }
 
     @Override
-    public boolean removeStock(int stock_id){
-        // Todo
-        return false;
+    public boolean removeStock(int stockId){
+        Stock stock = stockRepository.readById(stockId);
+        if (stock != null) {
+            stockRepository.delete(stock);
+        }
+        return true;
     }
 
     @Override
-    public boolean updateStock(int stock_id, double stock_value){
-        // Todo
-        return false;
+    public boolean updateStock(int stockId, double stockValue){
+        Stock stock = stockRepository.readById(stockId);
+        if (stock == null) {
+            return false;
+        }
+        stock.setValue(stockValue);
+        stockRepository.update(stock);
+        eventSender.sendEvents(new StockUpdateEvent(stock));
+        return true;
     }
 
     @Override
