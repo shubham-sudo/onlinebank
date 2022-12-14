@@ -48,6 +48,7 @@ public class ManagerDashBoard extends JFrame {
     private JTextField U_Stock_value;
     private JTextField U_Stock_id;
     private JButton U_stockbuton;
+    private JLabel customerinfolabel;
     private JTextArea TransactionTextarea;
     public ManagerDashBoard() {
         this.managerATMController = ManagerATMController.getInstance();
@@ -68,8 +69,8 @@ public class ManagerDashBoard extends JFrame {
         BackGround.setForeground(new java.awt.Color(254, 254, 254));
 
         CustomerEmail.setText("Enter Customer Email: ");
-
-        customerInfoButton.setText("customer Information");
+        customerinfolabel.setText("customer Information");
+        customerInfoButton.setText("Show Information");
         customerInfoButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -173,12 +174,14 @@ public class ManagerDashBoard extends JFrame {
     }
     private void customerInfoButtonMouseClicked(java.awt.event.MouseEvent evt){
         String email = Email.getText();
-        Customer customer = getCustomer(email);
-        // TODO Here should have a Customer login without password.
-
-        // TODO
-        //  Instead you have to pop a popup window and show this customer information
-        //  the reason is manager is trying to see this information of the customer
+        try {
+            Customer customer = getCustomer(email);
+            String info = customer.getFirstName() + " " + customer.getLastName()
+                    + " | " + customer.getEmail()
+                    + " | " + customer.getPhoneNumber();
+            customerinfolabel.setText(info);
+            }
+        catch(Exception e) {customerinfolabel.setText("Enter email plz");;}
     }
 
     private List<Transaction> getTransaction(LocalDate todayDate){

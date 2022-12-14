@@ -49,15 +49,6 @@
     </properties>
     <border type="none"/>
     <children>
-      <component id="34017" class="javax.swing.JButton" binding="customerInfoButton">
-        <constraints>
-          <grid row="6" column="2" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <forms/>
-        </constraints>
-        <properties>
-          <text value="customer info"/>
-        </properties>
-      </component>
       <component id="d72dc" class="javax.swing.JLabel" binding="CustomerEmail">
         <constraints>
           <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
@@ -366,6 +357,24 @@
         </constraints>
         <properties>
           <text value="Update Stock"/>
+        </properties>
+      </component>
+      <component id="34017" class="javax.swing.JButton" binding="customerInfoButton">
+        <constraints>
+          <grid row="4" column="2" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <forms/>
+        </constraints>
+        <properties>
+          <text value="customer info"/>
+        </properties>
+      </component>
+      <component id="61244" class="javax.swing.JLabel" binding="customerinfolabel">
+        <constraints>
+          <grid row="6" column="2" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <forms/>
+        </constraints>
+        <properties>
+          <text value="Label"/>
         </properties>
       </component>
     </children>
