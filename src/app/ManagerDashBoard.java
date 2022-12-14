@@ -40,6 +40,14 @@ public class ManagerDashBoard extends JFrame {
     private JLabel p_rate_per;
     private JLabel c_rate_per;
     private JButton back;
+    private JTextField D_stock_id;
+    private JButton D_stockbutton;
+    private JTextField A_stock_name;
+    private JTextField A_stock_value;
+    private JButton A_stockbutton;
+    private JTextField U_Stock_value;
+    private JTextField U_Stock_id;
+    private JButton U_stockbuton;
     private JTextArea TransactionTextarea;
     public ManagerDashBoard() {
         this.managerATMController = ManagerATMController.getInstance();
@@ -115,8 +123,41 @@ public class ManagerDashBoard extends JFrame {
                 backmouseClicked(e);
             }
         });
+
+        D_stockbutton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                D_stockbuttonmouseClicked(e);
+            }
+        });
+        A_stockbutton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                A_stockbuttonmouseClicked(e);
+            }
+        });
+        U_stockbuton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                U_stockbuttonmouseClicked(e);
+            }
+        });
         setSize(100, 100);
         pack();
+    }
+    private void D_stockbuttonmouseClicked(MouseEvent e){
+        int stock_id = Integer.parseInt(D_stock_id.getText());
+        managerATMController.removeStock(stock_id);
+    }
+    private void A_stockbuttonmouseClicked(MouseEvent e){
+        String stock_name = A_stock_name.getText();
+        double stock_value = Double.parseDouble(A_stock_value.getText());
+        managerATMController.addStock(stock_name,stock_value);
+    }
+    private void U_stockbuttonmouseClicked(MouseEvent e){
+        int stock_id = Integer.parseInt(U_Stock_id.getText());
+        double stock_value = Double.parseDouble(U_Stock_value.getText());
+        managerATMController.updateStock(stock_id, stock_value);
     }
 
     private void backmouseClicked(MouseEvent e){

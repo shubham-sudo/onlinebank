@@ -56,19 +56,19 @@ public class ManagerATMController extends ATM implements ManagerATM{
     }
 
     @Override
-    public boolean addStock(Stock stock){
+    public boolean addStock(String stock_name, double stock_value){
         // Todo
         return false;
     }
 
     @Override
-    public boolean removeStock(Stock stock){
+    public boolean removeStock(int stock_id){
         // Todo
         return false;
     }
 
     @Override
-    public boolean updateStock(Stock stock){
+    public boolean updateStock(int stock_id, double stock_value){
         // Todo
         return false;
     }
