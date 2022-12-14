@@ -147,18 +147,75 @@ public class ManagerDashBoard extends JFrame {
         pack();
     }
     private void D_stockbuttonmouseClicked(MouseEvent e){
-        int stock_id = Integer.parseInt(D_stock_id.getText());
-        managerATMController.removeStock(stock_id);
+        int stockId;
+
+        try {
+            stockId = Integer.parseInt(D_stock_id.getText());
+        } catch (Exception ase) {
+            JOptionPane.showMessageDialog(this, "Please enter a valid Id", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (managerATMController.removeStock(stockId)) {
+            JOptionPane.showMessageDialog(this, "Stock deleted successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        JOptionPane.showMessageDialog(this, "Couldn't find the stock with Id = " + stockId, "Error", JOptionPane.ERROR_MESSAGE);
     }
+
     private void A_stockbuttonmouseClicked(MouseEvent e){
-        String stock_name = A_stock_name.getText();
-        double stock_value = Double.parseDouble(A_stock_value.getText());
-        managerATMController.addStock(stock_name,stock_value);
+        String stockName = A_stock_name.getText();
+        double stockValue;
+
+        try {
+            stockValue = Double.parseDouble(A_stock_value.getText());
+        } catch (Exception ase) {
+            JOptionPane.showMessageDialog(this, "Please enter a valid Value", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (stockName.trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "Please enter a valid Stock Name", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (stockValue < 1) {
+            JOptionPane.showMessageDialog(this, "Sock value should be greater than $1", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (managerATMController.addStock(stockName, stockValue)) {
+            JOptionPane.showMessageDialog(this, "New Stock " + stockName + " added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        JOptionPane.showMessageDialog(this, "Unable to add New Stock, Try again!", "Error", JOptionPane.ERROR_MESSAGE);
     }
+
     private void U_stockbuttonmouseClicked(MouseEvent e){
-        int stock_id = Integer.parseInt(U_Stock_id.getText());
-        double stock_value = Double.parseDouble(U_Stock_value.getText());
-        managerATMController.updateStock(stock_id, stock_value);
+        int stockId;
+        double stockValue;
+
+        try {
+            stockId = Integer.parseInt(U_Stock_id.getText());
+        } catch (Exception ase) {
+            JOptionPane.showMessageDialog(this, "Please enter a valid Id", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            stockValue = Double.parseDouble(U_Stock_value.getText());
+        } catch (Exception ase) {
+            JOptionPane.showMessageDialog(this, "Please enter a valid Value", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (stockValue < 1) {
+            JOptionPane.showMessageDialog(this, "Sock value should be greater than $1", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (managerATMController.updateStock(stockId, stockValue)) {
+            JOptionPane.showMessageDialog(this, "Stock with Id " + stockId + " updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        JOptionPane.showMessageDialog(this, "Unable to update stock, Try again!", "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     private void backmouseClicked(MouseEvent e){
@@ -172,6 +229,7 @@ public class ManagerDashBoard extends JFrame {
         customer = managerATMController.getCustomer(email);
         return customer;
     }
+
     private void customerInfoButtonMouseClicked(java.awt.event.MouseEvent evt){
         String email = Email.getText();
         try {
