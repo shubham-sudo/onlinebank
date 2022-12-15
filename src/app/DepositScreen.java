@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author saisuryavarshith
+ * @author Greeshma
  */
 public class DepositScreen extends javax.swing.JFrame {
     private final CustomerATM customerATM;

@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author saisuryavarshith
+ * @author Greeshma
  */
 public class BalanceScreen extends javax.swing.JFrame {
     private final CustomerATM customerATM;
