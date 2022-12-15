@@ -4,9 +4,17 @@
 We choose to work on Back-end more to build our object model as rich as possible. Since the whole bank project has
 three parts i.e. UI (frontend), bank (Backend) and database, we structured our project in three packages.
 
-default account for admin is auto created upon initialization
+## Default account for admin is auto created upon initialization
+
 id = admin@mail.com
 pass = admin
+
+## Compile & Run Project
+--------------
+javac -cp ".:bin/sqlite-jdbc-3.40.0.0.jar" -d prod/ @sources.txt
+cd prod/
+java -cp .:../bin/sqlite-jdbc-3.40.0.0.jar Main
+
 
 ## Database
 ---------------------------------------------------------------------------------------------------------------------

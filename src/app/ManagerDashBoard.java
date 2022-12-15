@@ -56,17 +56,20 @@ public class ManagerDashBoard extends JFrame {
     }
 
     private void initComponents() {
+        BackGround = new JPanel();
+        BackGround.setBackground(new java.awt.Color(254, 254, 254));
+        BackGround.setForeground(new java.awt.Color(254, 254, 254));
+
         setContentPane(BackGround);
         CustomerTextarea = new JTextArea("show AllCustomer \n");
         CustomerTextarea.setEditable(true);
+        showAllCustomer = new JScrollPane();
         showAllCustomer.setViewportView(CustomerTextarea);
 
         TransactionTextarea = new JTextArea("show Alltransaction \n");
         TransactionTextarea.setEditable(true);
+        showAllTransaction = new JScrollPane();
         showAllTransaction.setViewportView(TransactionTextarea);
-
-        BackGround.setBackground(new java.awt.Color(254, 254, 254));
-        BackGround.setForeground(new java.awt.Color(254, 254, 254));
 
         CustomerEmail.setText("Enter Customer Email: ");
         customerinfolabel.setText("customer Information");

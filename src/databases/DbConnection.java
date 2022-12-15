@@ -15,7 +15,7 @@ public class DbConnection {
     private DbConnection(){}
 
     public static Connection getConnection(){
-        String dbFilePath = Paths.get(".").normalize().toAbsolutePath() + "/src/databases/" + dbFile;
+        String dbFilePath = Paths.get(".").normalize().toAbsolutePath() + "/" + dbFile;
 
         try {
             if (conn == null || conn.isClosed()) {
