@@ -11,6 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 
 
+/**
+ * Collateral Adapter implements collateral repository
+ */
 public class CollateralAdapter implements CollateralRepository{
     private static final CollateralFactory collateralFactory = new CollateralFactory();
     private static CollateralAdapter collateralAdapter = null;

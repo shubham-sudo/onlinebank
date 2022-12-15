@@ -2,6 +2,9 @@ package bank.factories;
 
 import bank.trades.Stock;
 
+/**
+ * Stock Factory
+ */
 public class StockFactory {
     public Stock createStock(String name, double value) {
         Stock stock;

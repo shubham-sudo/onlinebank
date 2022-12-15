@@ -1,6 +1,9 @@
 package bank.currencies;
 
 
+/**
+ * Euro currency which follows the Currency interface
+ */
 public class Euro implements Currency {
     private static final double BASE_CURRENCY_RATE = 1.05;  // IDEALLY, should be fetched from web
     private static final double BASE_TO_THIS_RATE = 0.94;   // IDEALLY, should be fetched from web

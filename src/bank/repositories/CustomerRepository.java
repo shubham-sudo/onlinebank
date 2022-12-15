@@ -5,6 +5,9 @@ import bank.customers.Customer;
 import java.util.List;
 
 
+/**
+ * Customer Repository extends repository
+ */
 public interface CustomerRepository extends Repository<Customer, Integer>{
     Integer genNewId();
     List<Customer> read();

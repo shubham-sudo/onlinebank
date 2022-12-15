@@ -12,6 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 
 
+/**
+ * Loan Adapter implements Loan Repository
+ */
 public class LoanAdapter implements LoanRepository{
     private static final LoanFactory loanFactory = new LoanFactory();
     private final CollateralRepository collateralRepository;

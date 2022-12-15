@@ -5,6 +5,9 @@ import bank.accounts.Transaction;
 import java.util.List;
 
 
+/**
+ * Transaction Repository extends Repository
+ */
 public interface TransactionRepository extends Repository<Transaction, Integer> {
     Integer genNewId();
     List<Transaction> read();

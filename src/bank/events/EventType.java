@@ -6,7 +6,8 @@ package bank.events;
  * Action taken by the sender would be smart based on type of event
  */
 public enum EventType {
-    STOCK_UPDATE("stock update");
+    STOCK_UPDATE("stock update"),
+    STOCK_DELETE("stock delete");
 
     private final String typeName;
 

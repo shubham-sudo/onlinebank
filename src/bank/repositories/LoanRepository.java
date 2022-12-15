@@ -5,6 +5,9 @@ import bank.loans.Loan;
 import java.util.List;
 
 
+/**
+ * Loan Repository extends Repository
+ */
 public interface LoanRepository extends Repository<Loan, Integer> {
     Integer genNewId();
     List<Loan> read();

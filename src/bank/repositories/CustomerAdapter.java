@@ -11,6 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 
 
+/**
+ * Customer Adapter implemented Customer Repository
+ */
 public class CustomerAdapter implements CustomerRepository{
     private static final CustomerFactory customerFactory = new CustomerFactory();
     private static CustomerAdapter customerAdapter = null;

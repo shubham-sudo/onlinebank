@@ -5,6 +5,9 @@ import bank.accounts.Transaction;
 import java.time.LocalDate;
 
 
+/**
+ * Transaction Factory
+ */
 public class TransactionFactory {
     public Transaction createTransaction(int aid, String message, double oldValue, double newValue){
         return new Transaction(0, aid, message, oldValue, newValue,  LocalDate.now());

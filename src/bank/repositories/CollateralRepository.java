@@ -5,6 +5,9 @@ import bank.customers.assets.Collateral;
 import java.util.List;
 
 
+/**
+ * Collateral Repository extends repository
+ */
 public interface CollateralRepository extends Repository<Collateral, Integer> {
     Integer genNewId();
     List<Collateral> read();

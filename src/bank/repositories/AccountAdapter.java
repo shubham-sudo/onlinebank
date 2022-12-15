@@ -14,6 +14,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
+/**
+ * Account adapter is an adapter based on AccountRepository
+ * This follows AccountRepository interface
+ */
 public class AccountAdapter implements AccountRepository{
     private static final AccountFactory accountFactory = new AccountFactory();
     private final LoanRepository loanRepository;
@@ -190,7 +194,7 @@ public class AccountAdapter implements AccountRepository{
                 Loan loan = null;
 
                 if (accountType == AccountType.LOAN) {
-                    loan = loanRepository.readById(pkId);
+                    loan = loanRepository.readByLoanAccountId(pkId);
                 }
 
                 accounts.add(accountFactory.getAccount(pkId, cid, accountNo, balance, accountType, loan));
