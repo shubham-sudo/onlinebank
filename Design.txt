@@ -4,6 +4,10 @@
 We choose to work on Back-end more to build our object model as rich as possible. Since the whole bank project has
 three parts i.e. UI (frontend), bank (Backend) and database, we structured our project in three packages.
 
+default account for admin is auto created upon initialization
+id = admin@mail.com
+pass = admin
+
 ## Database
 ---------------------------------------------------------------------------------------------------------------------
 The database is the simplest one where we define a singleton class "DbConnection" that provides a database instance.
