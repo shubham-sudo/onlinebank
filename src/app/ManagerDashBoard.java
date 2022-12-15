@@ -40,6 +40,15 @@ public class ManagerDashBoard extends JFrame {
     private JLabel p_rate_per;
     private JLabel c_rate_per;
     private JButton back;
+    private JTextField D_stock_id;
+    private JButton D_stockbutton;
+    private JTextField A_stock_name;
+    private JTextField A_stock_value;
+    private JButton A_stockbutton;
+    private JTextField U_Stock_value;
+    private JTextField U_Stock_id;
+    private JButton U_stockbuton;
+    private JLabel customerinfolabel;
     private JTextArea TransactionTextarea;
     public ManagerDashBoard() {
         this.managerATMController = ManagerATMController.getInstance();
@@ -60,8 +69,8 @@ public class ManagerDashBoard extends JFrame {
         BackGround.setForeground(new java.awt.Color(254, 254, 254));
 
         CustomerEmail.setText("Enter Customer Email: ");
-
-        customerInfoButton.setText("customer Information");
+        customerinfolabel.setText("customer Information");
+        customerInfoButton.setText("Show Information");
         customerInfoButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -115,8 +124,98 @@ public class ManagerDashBoard extends JFrame {
                 backmouseClicked(e);
             }
         });
+
+        D_stockbutton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                D_stockbuttonmouseClicked(e);
+            }
+        });
+        A_stockbutton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                A_stockbuttonmouseClicked(e);
+            }
+        });
+        U_stockbuton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                U_stockbuttonmouseClicked(e);
+            }
+        });
         setSize(100, 100);
         pack();
+    }
+    private void D_stockbuttonmouseClicked(MouseEvent e){
+        int stockId;
+
+        try {
+            stockId = Integer.parseInt(D_stock_id.getText());
+        } catch (Exception ase) {
+            JOptionPane.showMessageDialog(this, "Please enter a valid Id", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (managerATMController.removeStock(stockId)) {
+            JOptionPane.showMessageDialog(this, "Stock deleted successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        JOptionPane.showMessageDialog(this, "Couldn't find the stock with Id = " + stockId, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    private void A_stockbuttonmouseClicked(MouseEvent e){
+        String stockName = A_stock_name.getText();
+        double stockValue;
+
+        try {
+            stockValue = Double.parseDouble(A_stock_value.getText());
+        } catch (Exception ase) {
+            JOptionPane.showMessageDialog(this, "Please enter a valid Value", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (stockName.trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "Please enter a valid Stock Name", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (stockValue < 1) {
+            JOptionPane.showMessageDialog(this, "Sock value should be greater than $1", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (managerATMController.addStock(stockName, stockValue)) {
+            JOptionPane.showMessageDialog(this, "New Stock " + stockName + " added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        JOptionPane.showMessageDialog(this, "Unable to add New Stock, Try again!", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    private void U_stockbuttonmouseClicked(MouseEvent e){
+        int stockId;
+        double stockValue;
+
+        try {
+            stockId = Integer.parseInt(U_Stock_id.getText());
+        } catch (Exception ase) {
+            JOptionPane.showMessageDialog(this, "Please enter a valid Id", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            stockValue = Double.parseDouble(U_Stock_value.getText());
+        } catch (Exception ase) {
+            JOptionPane.showMessageDialog(this, "Please enter a valid Value", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (stockValue < 1) {
+            JOptionPane.showMessageDialog(this, "Sock value should be greater than $1", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (managerATMController.updateStock(stockId, stockValue)) {
+            JOptionPane.showMessageDialog(this, "Stock with Id " + stockId + " updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        JOptionPane.showMessageDialog(this, "Unable to update stock, Try again!", "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     private void backmouseClicked(MouseEvent e){
@@ -130,14 +229,17 @@ public class ManagerDashBoard extends JFrame {
         customer = managerATMController.getCustomer(email);
         return customer;
     }
+
     private void customerInfoButtonMouseClicked(java.awt.event.MouseEvent evt){
         String email = Email.getText();
-        Customer customer = getCustomer(email);
-        // TODO Here should have a Customer login without password.
-
-        // TODO
-        //  Instead you have to pop a popup window and show this customer information
-        //  the reason is manager is trying to see this information of the customer
+        try {
+            Customer customer = getCustomer(email);
+            String info = customer.getFirstName() + " " + customer.getLastName()
+                    + " | " + customer.getEmail()
+                    + " | " + customer.getPhoneNumber();
+            customerinfolabel.setText(info);
+            }
+        catch(Exception e) {customerinfolabel.setText("Enter email plz");;}
     }
 
     private List<Transaction> getTransaction(LocalDate todayDate){
@@ -182,6 +284,7 @@ public class ManagerDashBoard extends JFrame {
             return;
         }
         this.managerATMController.payInterest(rate);
+        JOptionPane.showMessageDialog(this, "Interest paid successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void chargeInterestButtonmouseClicked(MouseEvent e){
@@ -198,5 +301,6 @@ public class ManagerDashBoard extends JFrame {
         }
         rate = rate*-1;
         this.managerATMController.chargeInterest(rate);
+        JOptionPane.showMessageDialog(this, "Interest charged successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
     }
 }

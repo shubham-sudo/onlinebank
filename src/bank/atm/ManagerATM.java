@@ -45,10 +45,10 @@ public interface ManagerATM {
 
     /**
      * Add a new stock to database
-     * @param stock Stock object
+     * @param String stock_name, double stock_value)
      * @return true if success, false otherwise
      */
-    boolean addStock(Stock stock);
+    boolean addStock(String stock_name, double stock_value);
 
     /**
      * Remove stock from database
@@ -57,14 +57,14 @@ public interface ManagerATM {
      * @param stock Stock object
      * @return true if success, false otherwise
      */
-    boolean removeStock(Stock stock);
+    boolean removeStock(int stock_id);
 
     /**
      * Update stock value
      * @param stock Stock object
      * @return true if success, false otherwise
      */
-    boolean updateStock(Stock stock);
+    boolean updateStock(int stock_name, double stock_value);
 
     /**
      * Manager would pay interest on all saving accounts

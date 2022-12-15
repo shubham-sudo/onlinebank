@@ -9,7 +9,7 @@ public class CanadianDollar implements Currency{
 
     public CanadianDollar(double value) {
         this.value = value;
-        currencyType = CurrencyType.EURO;
+        currencyType = CurrencyType.CND;
     }
 
     @Override

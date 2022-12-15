@@ -5,6 +5,7 @@ import bank.customers.assets.Collateral;
 import bank.currencies.Currency;
 import bank.customers.Customer;
 import bank.trades.Holding;
+import bank.trades.Stock;
 
 import java.util.List;
 
@@ -110,17 +111,19 @@ public interface CustomerATM {
 
     /**
      * Buy stock using securities account
-     * @param customer Customer object
      * @param account Account object
+     * @param stock Stock object
+     * @param quantity number of stocks
      * @return true if bought success, false otherwise
      */
-    boolean buyStock(Customer customer, SecuritiesAccount account);
+    boolean buyStock(SecuritiesAccount account, Stock stock, int quantity);
 
     /**
      * Sell stock using securities account
-     * @param customer Customer object
      * @param account Account object
+     * @param stock Stock object
+     * @param quantity number of stocks
      * @return true if sold success, false otherwise
      */
-    boolean sellStock(Customer customer, SecuritiesAccount account);
+    boolean sellStock(SecuritiesAccount account, Stock stock, int quantity);
 }

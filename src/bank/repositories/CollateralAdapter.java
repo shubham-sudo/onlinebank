@@ -57,6 +57,12 @@ public class CollateralAdapter implements CollateralRepository{
     }
 
     @Override
+    public List<Collateral> readByCustomerId(Integer id) {
+        String query = "SELECT * FROM " + Collateral.tableName + " WHERE " + Collateral.cidColumn + " = '" + id + "';";
+        return getCollaterals(query);
+    }
+
+    @Override
     public Collateral create(Collateral collateral) {
         int id = genNewId();
         StringBuilder query = new StringBuilder("INSERT INTO " + Collateral.tableName);
