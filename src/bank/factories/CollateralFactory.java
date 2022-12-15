@@ -3,6 +3,9 @@ package bank.factories;
 import bank.customers.Customer;
 import bank.customers.assets.Collateral;
 
+/**
+ * Collateral Factory
+ */
 public class CollateralFactory {
     public Collateral createCollateral(Customer customer, String name, double value) {
         return new Collateral(0, customer.getId(), name, value);

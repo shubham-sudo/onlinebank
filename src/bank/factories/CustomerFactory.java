@@ -4,6 +4,9 @@ import bank.customers.Customer;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Customer Factory is very helpful for formatting dates and everything
+ */
 public class CustomerFactory {
 
     public Customer createCustomer(int id, String firstName, String lastName, String dob, String email, boolean isManager, String phoneNumber, String ssn) {

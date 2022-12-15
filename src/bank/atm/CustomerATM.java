@@ -22,6 +22,7 @@ public interface CustomerATM {
     List<Holding> getHoldings();
     List<Transaction> getLatestTransactions();
     Customer getLoggedInCustomer();
+    List<Stock> pullAllStocks();
 
     /**
      * Customer can open a new account, the account
@@ -52,12 +53,12 @@ public interface CustomerATM {
 
     /**
      * Customer can request loans
-     * @param customer Customer object
-     * @param collateral using collateral
+     * @param collateralName using collateral
+     * @param collateralValue collateral value
      * @param value amount for loan
      * @return true if success, false otherwise
      */
-    boolean requestLoan(Customer customer, Collateral collateral, double value) throws IllegalStateException;
+    boolean requestLoan(String collateralName, double collateralValue, double value) throws IllegalStateException;
 
     /**
      * View all transactions for any of the account
@@ -105,9 +106,10 @@ public interface CustomerATM {
 
     /**
      * Change password of the customer
+     * @param newPassword new password string
      * @return true if changed
      */
-    boolean changePassword();
+    boolean changePassword(String newPassword);
 
     /**
      * Buy stock using securities account

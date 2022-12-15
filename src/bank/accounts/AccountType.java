@@ -1,5 +1,9 @@
 package bank.accounts;
 
+
+/**
+ * Type of accounts
+ */
 public enum AccountType {
     SAVING("Saving"),
     CHECKING("Checking"),

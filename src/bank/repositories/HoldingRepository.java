@@ -4,6 +4,10 @@ import bank.trades.Holding;
 
 import java.util.List;
 
+
+/**
+ * Holding repository extend repository
+ */
 public interface HoldingRepository extends Repository<Holding, Integer> {
     @Override
     Integer genNewId();

@@ -1,6 +1,9 @@
 package bank.trades;
 
 
+/**
+ * Stock represent stock model
+ */
 public class Stock {
     public static final String tableName = "stock";
     public static final String idColumn = "id";

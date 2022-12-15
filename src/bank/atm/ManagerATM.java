@@ -42,6 +42,8 @@ public interface ManagerATM {
      * @return List of transactions
      */
     List<Transaction> getTransactions();
+    
+    List<Stock> pullAllStocks();
 
     /**
      * Add a new stock to database

@@ -10,6 +10,9 @@ import java.sql.Connection;
 import java.util.List;
 
 
+/**
+ * Common abstract class for both manager and customer
+ */
 public abstract class ATM {
     protected Customer loggedInPerson;
 

@@ -5,6 +5,10 @@ import bank.currencies.USDollar;
 import bank.loans.Loan;
 
 
+/**
+ * Creates a new loan account and also put interest rate on each transaction made through it
+ * The interest rate is fixed for simplicity and it will be added to the loan value.
+ */
 public class LoanAccount extends Account {
     // keeping fixed interest rate for all type of loans for simplicity.
     protected static final double LOAN_INTEREST_RATE = 0.08;  // IDEALLY, should be on pro rata basis.

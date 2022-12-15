@@ -4,6 +4,9 @@ import java.nio.file.Paths;
 import java.sql.*;
 
 
+/**
+ * DbConnection is singleton class for SQLITE database
+ */
 public class DbConnection {
     private static final String dbFile = "onlinebank.sqlite";
     private static Connection conn = null;
@@ -12,7 +15,7 @@ public class DbConnection {
     private DbConnection(){}
 
     public static Connection getConnection(){
-        String dbFilePath = Paths.get(".").normalize().toAbsolutePath() + "/" + dbFile;
+        String dbFilePath = Paths.get(".").normalize().toAbsolutePath() + "/src/databases/" + dbFile;
 
         try {
             if (conn == null || conn.isClosed()) {
@@ -20,7 +23,7 @@ public class DbConnection {
                 conn = DriverManager.getConnection(url);
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());  // TODO (shubham): Implement logging
+            System.out.println(e.getMessage());
         }
         return conn;
     }
@@ -31,7 +34,7 @@ public class DbConnection {
                 conn.close();
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());  // TODO (shubham): Implement logging
+            System.out.println(e.getMessage());
         }
     }
 }

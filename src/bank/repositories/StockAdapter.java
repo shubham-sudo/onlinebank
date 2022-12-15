@@ -10,6 +10,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+
+/**
+ * Stock Adapter implements Stock Repository
+ */
 public class StockAdapter implements StockRepository{
     private static final StockFactory stockFactory = new StockFactory();
     private static StockAdapter stockAdapter = null;

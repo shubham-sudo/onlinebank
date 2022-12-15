@@ -80,7 +80,7 @@ public abstract class Account {
      */
     public boolean debit(double amount, Currency currency) throws IllegalStateException{
         if (!isSafeToDebit(amount, currency)) {
-            throw new IllegalStateException("Operation not possible!");
+            throw new IllegalStateException("Not Safe to debit!");
         }
 
         double amountToDebit = debitAmount(amount, currency);

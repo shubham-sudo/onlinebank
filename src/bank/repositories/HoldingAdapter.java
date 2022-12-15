@@ -2,7 +2,6 @@ package bank.repositories;
 
 import bank.factories.HoldingFactory;
 import bank.trades.Holding;
-import bank.trades.Stock;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -11,6 +10,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+
+/**
+ * Holding repository implements Holding Repository
+ */
 public class HoldingAdapter implements HoldingRepository{
     private static final HoldingFactory holdingFactory = new HoldingFactory();
     private static HoldingAdapter holdingAdapter = null;
@@ -48,7 +51,7 @@ public class HoldingAdapter implements HoldingRepository{
 
     @Override
     public List<Holding> read() {
-        String query = "SELECT * FROM " + Stock.tableName;
+        String query = "SELECT * FROM " + Holding.tableName;
         return getHoldings(query);
     }
 

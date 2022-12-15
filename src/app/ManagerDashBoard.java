@@ -15,13 +15,13 @@ import java.util.List;
 public class ManagerDashBoard extends JFrame {
     private final ManagerATMController managerATMController;
 
-    public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ManagerDashBoard().setVisible(true);
-            }
-        });
-    }
+//    public static void main(String[] args) {
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new ManagerDashBoard().setVisible(true);
+//            }
+//        });
+//    }
 
     private Customer customer;
     private JButton customerInfoButton;

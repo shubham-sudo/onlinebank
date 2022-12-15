@@ -5,13 +5,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class viewTransaction extends JFrame {
-    public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new viewTransaction().setVisible(true);
-            }
-        });
-    }
+//    public static void main(String[] args) {
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new viewTransaction().setVisible(true);
+//            }
+//        });
+//    }
 
     public viewTransaction(){
         iniView();

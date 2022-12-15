@@ -10,6 +10,9 @@ import bank.customers.Customer;
 import bank.loans.Loan;
 
 
+/**
+ * Account factory
+ */
 public class AccountFactory {
 
     public Account createAccount(Customer customer, AccountType accountType, double balance) {
@@ -31,6 +34,7 @@ public class AccountFactory {
                 break;
             case LOAN:
                 account = new LoanAccount(id, cid, accountNo, balance);
+                ((LoanAccount)account).setLoan(loan);
                 break;
         }
         return account;

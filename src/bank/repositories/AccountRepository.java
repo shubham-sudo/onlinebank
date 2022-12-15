@@ -6,6 +6,9 @@ import bank.accounts.AccountType;
 import java.util.List;
 
 
+/**
+ * Account repository extend Repository for db connection
+ */
 public interface AccountRepository extends Repository<Account, Integer> {
     Integer genNewId();
     List<Account> read();

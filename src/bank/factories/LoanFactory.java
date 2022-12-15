@@ -4,6 +4,10 @@ import bank.customers.Customer;
 import bank.customers.assets.Collateral;
 import bank.loans.Loan;
 
+
+/**
+ * Loan factory
+ */
 public class LoanFactory {
 
     public Loan createLoan(Customer customer, double amount, Collateral collateral) {

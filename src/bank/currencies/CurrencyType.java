@@ -1,5 +1,8 @@
 package bank.currencies;
 
+/**
+ * Type of currency
+ */
 public enum CurrencyType {
     USD("USD"),
     EURO("EURO"),

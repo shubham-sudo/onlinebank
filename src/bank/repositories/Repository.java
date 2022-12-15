@@ -5,6 +5,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+
+/**
+ * Repository is a database separation layer which throws
+ * all basic methods we want for CRUD operations
+ *
+ * @param <T>
+ * @param <K>
+ */
 public interface Repository<T, K>{
 
     K genNewId();

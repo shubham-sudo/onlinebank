@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
+/**
+ * Transaction Adapter implements Transaction repository
+ */
 public class TransactionAdapter implements TransactionRepository{
     private static final TransactionFactory transactionFactory = new TransactionFactory();
     private final AccountRepository accountRepository;
