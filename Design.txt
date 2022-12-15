@@ -11,10 +11,9 @@ pass = admin
 
 ## Compile & Run Project
 --------------
-javac -cp ".:bin/sqlite-jdbc-3.40.0.0.jar" -d prod/ @sources.txt
-cd prod/
-java -cp .:../bin/sqlite-jdbc-3.40.0.0.jar Main
-
+javac -cp ".:bin/sqlite-jdbc-3.40.0.0.jar:bin/forms-1.2.1.jar" -d prod/src/ @sources.txt
+cd prod/src/
+java -cp .:../../bin/sqlite-jdbc-3.40.0.0.jar:../../bin/forms-1.2.1.jar Main
 
 ## Database
 ---------------------------------------------------------------------------------------------------------------------
