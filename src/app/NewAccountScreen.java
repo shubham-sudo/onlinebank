@@ -45,10 +45,10 @@ public class NewAccountScreen extends javax.swing.JFrame {
             ssn.setText(customer.getSSN());
         }
         
-        DefaultComboBoxModel accountsComboBoxList = new DefaultComboBoxModel();
+        DefaultComboBoxModel<String> accountsComboBoxList = new DefaultComboBoxModel<String>();
         for (AccountType at : AccountType.values()) {
             if (at != AccountType.LOAN) {
-                accountsComboBoxList.addElement(at);                
+                accountsComboBoxList.addElement(at.toString());
             }
         }
         accountTypes.setModel(accountsComboBoxList);

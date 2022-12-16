@@ -131,7 +131,7 @@ public class CloseAccountScreen extends javax.swing.JFrame {
     private void closeAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeAccountActionPerformed
         // TODO add your handling code here:
         String accountString = (String) accounts.getSelectedItem();
-        String passw = password.getText();
+        String passw = String.valueOf(password.getPassword()).trim();
         
         if (accountString == null) {
             JOptionPane.showMessageDialog(this, "Select account first!", "Invalid", JOptionPane.ERROR_MESSAGE);

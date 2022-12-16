@@ -87,6 +87,8 @@ public class RegisterScreen extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Liberation Sans", 1, 14)); // NOI18N
         jLabel7.setText("SSN");
 
+        phoneNo.setToolTipText("MM/DD/YYYY");
+
         jLabel4.setFont(new java.awt.Font("Liberation Sans", 1, 14)); // NOI18N
         jLabel4.setText("Date Of Birth");
 
@@ -96,7 +98,7 @@ public class RegisterScreen extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Liberation Sans", 1, 14)); // NOI18N
         jLabel8.setText("Password");
 
-        dateOfBirth.setToolTipText("YYYY-MM-DD");
+        dateOfBirth.setToolTipText("dd/MM/yyyy");
 
         jLabel9.setFont(new java.awt.Font("Liberation Sans", 1, 14)); // NOI18N
         jLabel9.setText("Confirm Password");
@@ -153,8 +155,8 @@ public class RegisterScreen extends javax.swing.JFrame {
                                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(49, 49, 49)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35)
                         .addComponent(jLabel1)))
                 .addContainerGap(41, Short.MAX_VALUE))
         );
@@ -264,8 +266,8 @@ public class RegisterScreen extends javax.swing.JFrame {
         String dob = dateOfBirth.getText().trim();
         String phoneNumber = phoneNo.getText().trim();
         String SSN = ssn.getText().trim();
-        String pass = password.getText().trim();
-        String cpass = confirmPassword.getText().trim();
+        String pass = String.valueOf(password.getPassword()).trim();
+        String cpass = String.valueOf(confirmPassword.getPassword()).trim();
 
         if (fName.equals("") || lName.equals("") || mail.equals("") || dob.equals("") || pass.equals("") || cpass.equals("")) {
             JOptionPane.showMessageDialog(this, "All fields are required!");

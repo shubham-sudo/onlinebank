@@ -470,4 +470,5 @@ public class ManagerDashBoard extends JFrame {
     public JComponent $$$getRootComponent$$$() {
         return BackGround;
     }
+
 }

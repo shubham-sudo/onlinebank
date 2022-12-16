@@ -80,7 +80,7 @@ public class CollateralAdapter implements CollateralRepository{
         };
 
         if (Repository.prepareAndExecuteQuery(dbConnection, Repository.prepareInsertQuery(query, requiredColumns)) >= 1) {
-            return collateralFactory.getCollateral(id, collateral.getCid(), collateral.getName(), collateral.getValue());
+            return collateralFactory.getCollateral(id, collateral.getCid(), collateral.getName(), collateral.getValue(), collateral.inUse());
         }
         return collateral;
     }
@@ -96,7 +96,7 @@ public class CollateralAdapter implements CollateralRepository{
         };
 
         if (Repository.prepareAndExecuteQuery(dbConnection, Repository.prepareUpdateQuery(query, columnsToUpdate, Collateral.idColumn, collateral.getId())) >= 1) {
-            Collateral updatedCollateral =  collateralFactory.getCollateral(collateral.getId(), collateral.getCid(), collateral.getName(), collateral.getValue());
+            Collateral updatedCollateral =  collateralFactory.getCollateral(collateral.getId(), collateral.getCid(), collateral.getName(), collateral.getValue(), collateral.inUse());
             if (collateral.inUse()) {
                 updatedCollateral.setInUse();
             }

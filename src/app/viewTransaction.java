@@ -96,4 +96,5 @@ public class viewTransaction extends JFrame {
     public JComponent $$$getRootComponent$$$() {
         return BackGround;
     }
+
 }

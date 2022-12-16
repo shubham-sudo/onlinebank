@@ -107,9 +107,11 @@ public interface CustomerATM {
     /**
      * Change password of the customer
      * @param newPassword new password string
+     * @param email to validate
+     * @param ssn to validate
      * @return true if changed
      */
-    boolean changePassword(String newPassword);
+    boolean changePassword(String email, String ssn, String newPassword);
 
     /**
      * Buy stock using securities account

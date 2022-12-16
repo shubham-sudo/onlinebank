@@ -152,6 +152,7 @@ public class CustomerATMController extends ATM implements CustomerATM{
         loan.setAid(account.getId());
         loan = loanRepository.create(loan);
         accounts.put(account.getId(), account);
+        collaterals.put(newCollateral.getId(), newCollateral);
         return true;
     }
 
@@ -248,8 +249,15 @@ public class CustomerATMController extends ATM implements CustomerATM{
     }
 
     @Override
-    public boolean changePassword(String newPassword) {
-        customerRepository.update(this.loggedInPerson, newPassword);
+    public boolean changePassword(String email, String ssn, String newPassword) throws IllegalStateException{
+        Customer customer = customerRepository.readByEmail(email);
+        if (customer == null) {
+            throw new IllegalStateException("This email doesn't exists");
+        } else if (customer.getPlainSSN() != ssn) {
+            throw new IllegalStateException("SSN provided doesn't match");
+        } else {
+            customerRepository.update(customer, newPassword);
+        }
         return true;
     }
 
