@@ -174,6 +174,9 @@ public class DepositScreen extends javax.swing.JFrame {
         
         try{
             amount = Double.parseDouble(jTextField1.getText());
+            if (amount < 10) {
+                throw new Exception("invalid");
+            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Invalid amount!", "Invalid", JOptionPane.ERROR_MESSAGE);
             return;

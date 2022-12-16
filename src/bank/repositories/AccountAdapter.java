@@ -2,6 +2,7 @@ package bank.repositories;
 
 import bank.accounts.Account;
 import bank.accounts.AccountType;
+import bank.accounts.LoanAccount;
 import bank.factories.AccountFactory;
 import bank.loans.Loan;
 
@@ -101,13 +102,17 @@ public class AccountAdapter implements AccountRepository{
             }
         };
         if (Repository.prepareAndExecuteQuery(dbConnection, Repository.prepareInsertQuery(query, requiredColumns)) >= 1){
+            Loan loan = null;
+            if (account instanceof LoanAccount) {
+                loan = ((LoanAccount) account).getLoan();
+            }
             return accountFactory.getAccount(
                     id,
                     account.getCid(),
                     Account.ACCOUNT_NO_BASE + id,
                     account.getBalance(),
                     account.getAccountType(),
-                    null
+                    loan
             );
         }
         return account;
@@ -130,7 +135,8 @@ public class AccountAdapter implements AccountRepository{
     @Override
     public boolean delete(Account account) {
         StringBuilder query = new StringBuilder("DELETE FROM " + Account.tableName);
-        return Repository.prepareAndExecuteQuery(dbConnection, Repository.prepareDeleteQuery(query, Account.idColumn, account.getId())) >= 1;
+        Repository.prepareAndExecuteQuery(dbConnection, Repository.prepareDeleteQuery(query, Account.idColumn, account.getId()));
+        return true;
     }
 
     @Override

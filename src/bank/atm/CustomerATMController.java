@@ -24,8 +24,8 @@ public class CustomerATMController extends ATM implements CustomerATM{
     private static final CollateralFactory collateralFactory = new CollateralFactory();
     private static CustomerATMController customerATM = null;
     private HashMap<Integer, Account> accounts;
-    private final HashMap<Integer, Collateral> collaterals;
-    private final HashMap<Integer, Holding> holdings;
+    private HashMap<Integer, Collateral> collaterals;
+    private HashMap<Integer, Holding> holdings;
     private List<Transaction> transactions;
 
     private CustomerATMController() {
@@ -148,6 +148,9 @@ public class CustomerATMController extends ATM implements CustomerATM{
         newCollateral.setInUse();
         newCollateral = collateralRepository.create(newCollateral);
         Loan loan = loanFactory.createLoan(this.loggedInPerson, value, newCollateral);
+        if (account instanceof LoanAccount) {
+            ((LoanAccount) account).setLoan(loan);
+        }
         account = accountRepository.create(account);
         loan.setAid(account.getId());
         loan = loanRepository.create(loan);
@@ -246,6 +249,9 @@ public class CustomerATMController extends ATM implements CustomerATM{
         customerATM = null;
         this.loggedInPerson = null;
         this.accounts = null;
+        this.collaterals = null;
+        this.holdings = null;
+        this.transactions = null;
     }
 
     @Override
