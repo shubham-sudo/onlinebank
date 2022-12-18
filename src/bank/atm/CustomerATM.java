@@ -5,6 +5,7 @@ import bank.customers.assets.Collateral;
 import bank.currencies.Currency;
 import bank.customers.Customer;
 import bank.trades.Holding;
+import bank.trades.Stock;
 
 import java.util.List;
 
@@ -15,13 +16,14 @@ import java.util.List;
  * one session for ManagerATM.
  */
 public interface CustomerATM {
-    
+
     List<Account> getAccounts();
     List<Collateral> getCollaterals();
     List<Holding> getHoldings();
     List<Transaction> getLatestTransactions();
     Customer getLoggedInCustomer();
-    
+    List<Stock> pullAllStocks();
+
     /**
      * Customer can open a new account, the account
      * type would mention the type of account it is.
@@ -51,12 +53,12 @@ public interface CustomerATM {
 
     /**
      * Customer can request loans
-     * @param customer Customer object
-     * @param collateral using collateral
+     * @param collateralName using collateral
+     * @param collateralValue collateral value
      * @param value amount for loan
      * @return true if success, false otherwise
      */
-    boolean requestLoan(Customer customer, Collateral collateral, double value) throws IllegalStateException;
+    boolean requestLoan(String collateralName, double collateralValue, double value) throws IllegalStateException;
 
     /**
      * View all transactions for any of the account
@@ -101,26 +103,31 @@ public interface CustomerATM {
      * @throws IllegalStateException if not possible
      */
     boolean transferAmount(Account from, Account to, double amount) throws IllegalStateException;
-    
+
     /**
      * Change password of the customer
+     * @param newPassword new password string
+     * @param email to validate
+     * @param ssn to validate
      * @return true if changed
      */
-    boolean changePassword();
+    boolean changePassword(String email, String ssn, String newPassword);
 
     /**
      * Buy stock using securities account
-     * @param customer Customer object
      * @param account Account object
+     * @param stock Stock object
+     * @param quantity number of stocks
      * @return true if bought success, false otherwise
      */
-    boolean buyStock(Customer customer, SecuritiesAccount account);
+    boolean buyStock(SecuritiesAccount account, Stock stock, int quantity);
 
     /**
      * Sell stock using securities account
-     * @param customer Customer object
      * @param account Account object
+     * @param stock Stock object
+     * @param quantity number of stocks
      * @return true if sold success, false otherwise
      */
-    boolean sellStock(Customer customer, SecuritiesAccount account);
+    boolean sellStock(SecuritiesAccount account, Stock stock, int quantity);
 }

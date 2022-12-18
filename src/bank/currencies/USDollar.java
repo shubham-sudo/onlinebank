@@ -1,6 +1,9 @@
 package bank.currencies;
 
 
+/**
+ * USDollar currency which follows the Currency interface
+ */
 public class USDollar implements Currency {
     private final double value;
     private final CurrencyType currencyType;

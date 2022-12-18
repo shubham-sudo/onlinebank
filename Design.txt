@@ -1,0 +1,54 @@
+
+## Overview
+--------------------------------------------------------------------------------------------------------------------
+We choose to work on Back-end more to build our object model as rich as possible. Since the whole bank project has
+three parts i.e. UI (frontend), bank (Backend) and database, we structured our project in three packages.
+
+## Default account for admin is auto created upon initialization
+
+id = admin@mail.com
+pass = admin
+
+## Compile & Run Project
+--------------
+1. Navigate to the directory "bank" after unzipping the files
+2. javac -cp ".:bin/sqlite-jdbc-3.40.0.0.jar:bin/forms-1.2.1.jar" -d prod/src/ @sources.txt
+3. cd prod/src/
+4. java -cp .:../../bin/sqlite-jdbc-3.40.0.0.jar:../../bin/forms-1.2.1.jar Main
+
+## Database
+---------------------------------------------------------------------------------------------------------------------
+The database is the simplest one where we define a singleton class "DbConnection" that provides a database instance.
+The idea to keep this separate is decouple the whole database and its layer from the backend. The advantage of doing
+so would be that we will be able to change the database in future without changing our business logic.
+
+## UI
+---------------------------------------------------------------------------------------------------------------------
+This part contains all the UI java files. We mostly created several frames and on each click a new window will open
+The UI looks good as it fits all the basic functionality which are required. None of the Frame has access to run its own,
+in other words the whole project has only one main function in Main.java.
+
+## Backend
+---------------------------------------------------------------------------------------------------------------------
+The backend is very strong according the Object-Oriented Programming. The backend provides 2 interfaces one is for
+manager and another is for customer. Both the interfaces are implemented by their respective controller.
+
+The abstract class ATM provides the state to the ATM. The ATM would only work once logged-in by either manager or any
+of the customer. We follow the strategy pattern in different type of accounts, different type of currencies.
+
+The most important pattern which we have used is the repository and adapter pattern. The repository pattern makes sure
+that any new database should follow the interfaces of repository and define a new adapter based on these repositories.
+The factories are used for each and every model which is getting stored in database or used in application.
+
+We have used observer pattern for updating stocks prices. Whenever a manager changes the stock price, the stock sender
+will send signal to all the receivers and ask them to update their current value according to the price.
+
+The loans are handled in a bit different way. The use will always pay a service charge whenever he makes a transaction
+from checking or securities account. The Transactions are stored as a history for all the debits and credits happened.
+
+Why this design is correct - because it decouples user interaction and underneath functionalities.
+---------------------------------------------------------------------------------------------------------------------
+The decoupling of packages allowed us to do minimum modifications and helped us to divide the work.
+1. The repository pattern would help us to never touch the business logic and easily migrate to any other database.
+2. The strategy pattern between accounts and currencies also helps us to change any of the strategies without impacting others.
+3. Bank Event observer pattern help us to write any new event and link with other parts of the application to do cascading updates.

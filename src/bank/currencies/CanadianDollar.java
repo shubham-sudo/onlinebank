@@ -1,6 +1,9 @@
 package bank.currencies;
 
 
+/**
+ * Canadian currency which follows the Currency interface
+ */
 public class CanadianDollar implements Currency{
     private static final double BASE_CURRENCY_RATE = 0.74;  // IDEALLY, should be fetched from web
     private static final double BASE_TO_THIS_RATE = 1.33;   // IDEALLY, should be fetched from web
@@ -9,7 +12,7 @@ public class CanadianDollar implements Currency{
 
     public CanadianDollar(double value) {
         this.value = value;
-        currencyType = CurrencyType.EURO;
+        currencyType = CurrencyType.CND;
     }
 
     @Override

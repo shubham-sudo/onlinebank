@@ -11,6 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 
 
+/**
+ * Collateral Adapter implements collateral repository
+ */
 public class CollateralAdapter implements CollateralRepository{
     private static final CollateralFactory collateralFactory = new CollateralFactory();
     private static CollateralAdapter collateralAdapter = null;
@@ -57,6 +60,12 @@ public class CollateralAdapter implements CollateralRepository{
     }
 
     @Override
+    public List<Collateral> readByCustomerId(Integer id) {
+        String query = "SELECT * FROM " + Collateral.tableName + " WHERE " + Collateral.cidColumn + " = '" + id + "';";
+        return getCollaterals(query);
+    }
+
+    @Override
     public Collateral create(Collateral collateral) {
         int id = genNewId();
         StringBuilder query = new StringBuilder("INSERT INTO " + Collateral.tableName);
@@ -71,7 +80,7 @@ public class CollateralAdapter implements CollateralRepository{
         };
 
         if (Repository.prepareAndExecuteQuery(dbConnection, Repository.prepareInsertQuery(query, requiredColumns)) >= 1) {
-            return collateralFactory.getCollateral(id, collateral.getCid(), collateral.getName(), collateral.getValue());
+            return collateralFactory.getCollateral(id, collateral.getCid(), collateral.getName(), collateral.getValue(), collateral.inUse());
         }
         return collateral;
     }
@@ -87,7 +96,7 @@ public class CollateralAdapter implements CollateralRepository{
         };
 
         if (Repository.prepareAndExecuteQuery(dbConnection, Repository.prepareUpdateQuery(query, columnsToUpdate, Collateral.idColumn, collateral.getId())) >= 1) {
-            Collateral updatedCollateral =  collateralFactory.getCollateral(collateral.getId(), collateral.getCid(), collateral.getName(), collateral.getValue());
+            Collateral updatedCollateral =  collateralFactory.getCollateral(collateral.getId(), collateral.getCid(), collateral.getName(), collateral.getValue(), collateral.inUse());
             if (collateral.inUse()) {
                 updatedCollateral.setInUse();
             }

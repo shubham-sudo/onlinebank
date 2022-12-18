@@ -1,6 +1,9 @@
 package bank.customers.assets;
 
 
+/**
+ * Collateral is to store details of collateral a customer gives
+ */
 public class Collateral {
     public static final String tableName = "collateral";
     public static final String idColumn = "id";
@@ -45,5 +48,10 @@ public class Collateral {
 
     public void setNotInUse(){
         this.inUse = false;
+    }
+
+    @Override
+    public String toString() {
+        return "Name: " + name + "| Value: " + value + "| In Use: " + inUse;
     }
 }

@@ -3,6 +3,9 @@ package bank.loans;
 import bank.customers.assets.Collateral;
 
 
+/**
+ * Loan is for creating new loan for customer
+ */
 public class Loan {
     public static final String tableName = "loan";
     public static final String idColumn = "id";
@@ -13,7 +16,7 @@ public class Loan {
     private final int cid;
     private final String name;
     private double amount;
-    private final Collateral collateral;  // TODO (shubham): create table for collateral [id, name, value, isUsed, aid(if under use)]
+    private final Collateral collateral;
 
     public Loan(int id, int cid, int aid, String name, double amount, Collateral collateral) {
         this.id = id;

@@ -1,19 +1,18 @@
 package bank.atm;
 
 import bank.customers.Customer;
-import bank.factories.AccountFactory;
-import bank.factories.CollateralFactory;
-import bank.factories.LoanFactory;
-import bank.factories.TransactionFactory;
+import bank.factories.*;
 import bank.repositories.*;
 import bank.trades.Stock;
 import databases.DbConnection;
 
 import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * Common abstract class for both manager and customer
+ */
 public abstract class ATM {
     protected Customer loggedInPerson;
 
@@ -24,11 +23,15 @@ public abstract class ATM {
     protected final CustomerRepository customerRepository;
     protected final CollateralRepository collateralRepository;
     protected final TransactionRepository transactionRepository;
+    protected final StockRepository stockRepository;
+    protected final HoldingRepository holdingRepository;
 
     protected static final AccountFactory accountFactory = new AccountFactory();
     protected static final LoanFactory loanFactory = new LoanFactory();
     protected static final CollateralFactory collateralFactory = new CollateralFactory();
     protected static final TransactionFactory transactionFactory = new TransactionFactory();
+    protected static final StockFactory stockFactory = new StockFactory();
+    protected static final HoldingFactory holdingFactory = new HoldingFactory();
 
     public ATM() {
         this.accountRepository = AccountAdapter.getInstance(connection);
@@ -36,6 +39,8 @@ public abstract class ATM {
         this.collateralRepository = CollateralAdapter.getInstance(connection);
         this.transactionRepository = TransactionAdapter.getInstance(connection);
         this.customerRepository = CustomerAdapter.getInstance(connection);
+        this.stockRepository = StockAdapter.getInstance(connection);
+        this.holdingRepository = HoldingAdapter.getInstance(connection);
     }
 
     /**
@@ -43,7 +48,7 @@ public abstract class ATM {
      * @return List of stock
      */
     public List<Stock> pullAllStocks() {
-        return new ArrayList<>(); // TODO (shubham) fix this
+        return stockRepository.read();
     }
 
      /**
@@ -56,7 +61,7 @@ public abstract class ATM {
      * Login anyone from ATM
      * @param email Email address of user
      * @param password of user
-     * 
+     *
      * @return Customer if successful
      */
     public Customer login(String email, String password) {

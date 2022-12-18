@@ -2,6 +2,7 @@ package bank.atm;
 
 import bank.accounts.*;
 import bank.customers.Customer;
+import bank.events.*;
 import bank.trades.Stock;
 import bank.currencies.*;
 
@@ -11,12 +12,17 @@ import java.util.List;
 import java.util.ArrayList;
 
 
+/**
+ * Manager controller is responsible for managing all manager operations
+ */
 public class ManagerATMController extends ATM implements ManagerATM{
     private static ManagerATMController managerATM = null;
-
+    private static final EventSender stockUpdateEvent = StockUpdateEventSender.getInstance();
+    private static final EventSender stockDeleteEvent = StockDeleteEventSender.getInstance();
 
     private ManagerATMController() {
-        // TODO initialize anything that is required
+        stockUpdateEvent.addReceiver(new StockUpdateEventReceiver());
+        stockDeleteEvent.addReceiver(new StockDeleteEventReceiver());
     }
 
     public static ManagerATMController getInstance() {
@@ -58,21 +64,33 @@ public class ManagerATMController extends ATM implements ManagerATM{
     }
 
     @Override
-    public boolean addStock(Stock stock){
-        // Todo
+    public boolean addStock(String stockName, double stockValue){
+        Stock stock = stockFactory.createStock(stockName, stockValue);
+        stockRepository.create(stock);
+        return true;
+    }
+
+    @Override
+    public boolean removeStock(int stockId){
+        Stock stock = stockRepository.readById(stockId);
+        if (stock != null) {
+            stockDeleteEvent.sendEvents(new StockDeleteEvent(stock));
+            stockRepository.delete(stock);
+            return true;
+        }
         return false;
     }
 
     @Override
-    public boolean removeStock(Stock stock){
-        // Todo
-        return false;
-    }
-
-    @Override
-    public boolean updateStock(Stock stock){
-        // Todo
-        return false;
+    public boolean updateStock(int stockId, double stockValue){
+        Stock stock = stockRepository.readById(stockId);
+        if (stock == null) {
+            return false;
+        }
+        stock.setValue(stockValue);
+        stockRepository.update(stock);
+        stockUpdateEvent.sendEvents(new StockUpdateEvent(stock));
+        return true;
     }
 
     @Override

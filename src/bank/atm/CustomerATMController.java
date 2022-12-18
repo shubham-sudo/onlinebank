@@ -1,5 +1,6 @@
 package bank.atm;
 
+import bank.currencies.USDollar;
 import bank.factories.AccountFactory;
 import bank.accounts.*;
 import bank.currencies.Currency;
@@ -9,10 +10,14 @@ import bank.factories.CollateralFactory;
 import bank.factories.LoanFactory;
 import bank.loans.Loan;
 import bank.trades.Holding;
+import bank.trades.Stock;
 
 import java.util.*;
 
 
+/**
+ * Customer controller is responsible for managing all customer operations
+ */
 public class CustomerATMController extends ATM implements CustomerATM{
     private static final AccountFactory accountFactory = new AccountFactory();
     private static final LoanFactory loanFactory = new LoanFactory();
@@ -46,39 +51,43 @@ public class CustomerATMController extends ATM implements CustomerATM{
     }
 
     private void pullCustomerCollaterals() {
-        // TODO : pull customer collaterals
+        for (Collateral collateral : collateralRepository.readByCustomerId(this.loggedInPerson.getId())){
+            collaterals.put(collateral.getId(), collateral);
+        }
     }
-    
+
     private void pullCustomerHoldings() {
-        // TODO: pull customer bought holdings
+        for (Holding holding : holdingRepository.readByCustomerId(this.loggedInPerson.getId())) {
+            holdings.put(holding.getId(), holding);
+        }
     }
-    
+
     private void pullCustomerAccounts() {
         List<Account> accounts = accountRepository.readByCustomerId(this.loggedInPerson.getId());
         for (Account account : accounts) {
             this.accounts.put(account.getId(), account);
         }
     }
-    
+
     private void pullLatestTransactions() {
         this.transactions = transactionRepository.readByCustomerId(this.loggedInPerson.getId());
     }
-    
+
     @Override
     public List<Account> getAccounts() {
         return new ArrayList<>(this.accounts.values());
     }
-    
+
     @Override
     public List<Collateral> getCollaterals() {
         return new ArrayList<>(this.collaterals.values());
     }
-    
+
     @Override
     public List<Holding> getHoldings() {
         return new ArrayList<>(this.holdings.values());
     }
-    
+
     @Override
     public List<Transaction> getLatestTransactions() {
         if (this.transactions.size() > 10) {
@@ -86,7 +95,7 @@ public class CustomerATMController extends ATM implements CustomerATM{
         }
         return this.transactions;
     }
-    
+
     @Override
     public Customer getLoggedInCustomer(){
         return this.loggedInPerson;
@@ -105,7 +114,17 @@ public class CustomerATMController extends ATM implements CustomerATM{
         if (!loggedInPerson.verifyPassword(password)) {
             throw new IllegalStateException("Password didn't match, Try again!");
         }
+
+        if (account.getAccountType() == AccountType.LOAN) {
+            if (account.getBalance() < ((LoanAccount)account).getLoan().getAmount()) {
+                throw new IllegalStateException("Account can't be closed\nPending due amount " + ((((LoanAccount)account).getLoan().getAmount()) - account.getBalance()));
+            }
+        }
+
         if (accountRepository.delete(account)) {
+            if (account.getAccountType() == AccountType.LOAN) {
+                ((LoanAccount)account).getLoan().getCollateral().setNotInUse();
+            }
             accounts.remove(account.getId());
             return true;
         }
@@ -120,16 +139,20 @@ public class CustomerATMController extends ATM implements CustomerATM{
     }
 
     @Override
-    public boolean requestLoan(Customer customer, Collateral collateral, double value) throws IllegalStateException {
-        if (collateral.getValue() < value) {
+    public boolean requestLoan(String collateralName, double collateralValue, double value) throws IllegalStateException {
+        if (collateralValue < value) {
             throw new IllegalStateException("Can't issue loan higher than collateral value");
         }
-        Account account = accountFactory.createAccount(customer, AccountType.LOAN, value);
-        Loan loan = loanFactory.createLoan(customer, value, collateral);
+        Account account = accountFactory.createAccount(this.loggedInPerson, AccountType.LOAN, value);
+        Collateral newCollateral = collateralFactory.createCollateral(this.loggedInPerson, collateralName, collateralValue);
+        newCollateral.setInUse();
+        newCollateral = collateralRepository.create(newCollateral);
+        Loan loan = loanFactory.createLoan(this.loggedInPerson, value, newCollateral);
         account = accountRepository.create(account);
         loan.setAid(account.getId());
         loan = loanRepository.create(loan);
         accounts.put(account.getId(), account);
+        collaterals.put(newCollateral.getId(), newCollateral);
         return true;
     }
 
@@ -184,7 +207,25 @@ public class CustomerATMController extends ATM implements CustomerATM{
     @Override
     public boolean transferAmount(Account from, Account to, double amount) throws IllegalStateException {
         from.transfer(amount, to);
+        double oldAmount = from.getBalance();
+        Transaction fromAccountTransaction = transactionFactory.createTransaction(
+                from.getId(),
+                "Account debited with $" + amount,
+                oldAmount,
+                from.getBalance()
+        );
+        fromAccountTransaction = transactionRepository.create(fromAccountTransaction);
+        transactions.add(fromAccountTransaction);
         accountRepository.update(from);
+        double toOldAmount = from.getBalance();
+        Transaction toAccountTransaction = transactionFactory.createTransaction(
+                to.getId(),
+                "Account credited with $" + amount,
+                toOldAmount,
+                to.getBalance()
+        );
+        toAccountTransaction = transactionRepository.create(toAccountTransaction);
+        transactions.add(toAccountTransaction);
         accountRepository.update(to);
         return true;
     }
@@ -208,19 +249,103 @@ public class CustomerATMController extends ATM implements CustomerATM{
     }
 
     @Override
-    public boolean changePassword() {
-        // TODO (shubham) Update this !!!
-        customerRepository.update(this.loggedInPerson, "");
+    public boolean changePassword(String email, String ssn, String newPassword) throws IllegalStateException{
+        Customer customer = customerRepository.readByEmail(email);
+        if (customer == null) {
+            throw new IllegalStateException("This email doesn't exists");
+        } else if (customer.getPlainSSN() != ssn) {
+            throw new IllegalStateException("SSN provided doesn't match");
+        } else {
+            customerRepository.update(customer, newPassword);
+        }
         return true;
     }
 
     @Override
-    public boolean buyStock(Customer customer, SecuritiesAccount account) {
-        return false;
+    public boolean buyStock(SecuritiesAccount account, Stock stock, int quantity) throws IllegalStateException {
+        if (account.getBalance() < (stock.getValue() * quantity)) {
+            throw new IllegalStateException("Not enough funds to buy!!");
+        }
+
+        boolean alreadyHolding = false;
+
+        for (Holding holding : holdings.values()) {
+            if (holding.getSid() == stock.getId()) {
+                alreadyHolding = true;
+                holding.setQuantity(holding.getQuantity() + quantity);
+                Holding updatedHolding = holdingRepository.update(holding);
+                holdings.put(updatedHolding.getId(), updatedHolding);
+                break;
+            }
+        }
+        if (!alreadyHolding) {
+            Holding holding = holdingFactory.createHolding(this.loggedInPerson.getId(), stock.getId(), quantity, stock.getValue());
+            holding = holdingRepository.create(holding);
+            holdings.put(holding.getId(), holding);
+        }
+        double oldAmount = account.getBalance();
+        account.debit(stock.getValue() * quantity, new USDollar(stock.getValue() * quantity));
+        Transaction buyStock = transactionFactory.createTransaction(
+                account.getId(),
+                "Account debited with $" + stock.getValue() * quantity,
+                oldAmount,
+                account.getBalance()
+        );
+        buyStock = transactionRepository.create(buyStock);
+        transactions.add(buyStock);
+        accountRepository.update(account);
+        return true;
     }
 
     @Override
-    public boolean sellStock(Customer customer, SecuritiesAccount account) {
-        return false;
+    public boolean sellStock(SecuritiesAccount account, Stock stock, int quantity) throws IllegalStateException {
+        boolean hasStock = false;
+        Holding holdingStock = null;
+
+        for (Holding holding : holdings.values()) {
+            if (holding.getSid() == stock.getId()) {
+                hasStock = true;
+                holdingStock = holding;
+                break;
+            }
+        }
+
+        if (hasStock) {
+            if (quantity > holdingStock.getQuantity()) {
+                throw new IllegalStateException("Invalid quantity mentioned");
+            } else {
+                if (quantity == holdingStock.getQuantity()) {
+                    double currentValue = holdingStock.getCurrentValue();
+                    holdingRepository.delete(holdingStock);
+                    double oldAmount = account.getBalance();
+                    account.credit(currentValue, new USDollar(currentValue));
+                    Transaction stockSold = transactionFactory.createTransaction(
+                            account.getId(),
+                            "Account credited with $" + currentValue,
+                            oldAmount,
+                            account.getBalance()
+                    );
+                    stockSold = transactionRepository.create(stockSold);
+                    transactions.add(stockSold);
+                } else {
+                    double valueToSell = holdingStock.getBaseValue() * quantity;
+                    holdingStock.setQuantity(holdingStock.getQuantity() - quantity);
+                    holdingRepository.update(holdingStock);
+                    double oldAmount = account.getBalance();
+                    account.credit(valueToSell, new USDollar(valueToSell));
+                    Transaction stockSold = transactionFactory.createTransaction(
+                            account.getId(),
+                            "Account credited with $" + valueToSell,
+                            oldAmount,
+                            account.getBalance()
+                    );
+                    stockSold = transactionRepository.create(stockSold);
+                    transactions.add(stockSold);
+                }
+                accountRepository.update(account);
+                return true;
+            }
+        }
+        throw new IllegalStateException("Stock Not found in holdings!");
     }
 }

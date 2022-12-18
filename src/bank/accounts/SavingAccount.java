@@ -4,6 +4,9 @@ import bank.currencies.Currency;
 import bank.currencies.USDollar;
 
 
+/**
+ * Child class of account to manage all saving account operations
+ */
 public class SavingAccount extends Account {
     protected static final double ACCOUNT_MIN_BALANCE = 2500;
 

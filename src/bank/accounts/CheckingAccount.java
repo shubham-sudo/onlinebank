@@ -4,6 +4,9 @@ import bank.currencies.Currency;
 import bank.currencies.USDollar;
 
 
+/**
+ * Checking account extend account to apply TRANSACTION SERVICE CHARGES on each transaction
+ */
 public class CheckingAccount extends Account{
     public CheckingAccount(int id, int cid, long accountNo, double balance) {
         super(id, cid, accountNo, balance);

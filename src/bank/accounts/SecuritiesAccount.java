@@ -4,6 +4,10 @@ import bank.currencies.Currency;
 import bank.currencies.USDollar;
 
 
+/**
+ * Child class of Account and manages all Securities related operations
+ * to buy and sell stocks using this account
+ */
 public class SecuritiesAccount extends Account{
     private static final double MINIMUM_SAVING_ACCOUNT_BALANCE = 5000;  // minimum $ for opening security account
 
